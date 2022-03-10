@@ -1,0 +1,11 @@
+DO NOT COMMIT PERSONAL GRADLE FILES:
+build.gradle (Project)
+gradle.xml
+gradle-wrapper.properties
+vcs.xml
+
+ON NEW PROJECT IMPORT:
+ctrl+alt+shift+S to open Project Structure menu
+Project tab
+Android Gradle Plugin Version -> 7.1.1
+Gradle Version -> 7.2
