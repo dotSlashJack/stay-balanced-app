@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Fragment00">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- TODO: (Default task defined by Android Studio) Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
