@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph00"
+    app:startDestination="@id/fragment00">
+
+    <!--It's recommended that android:label is set to a String defined in
+        the Project's values resource files since these labels could be made
+        to appear on the screen with certain method calls.-->
+    <fragment
+        android:id="@+id/fragment00"
+        android:name="edu.staybalanced.staybalanced.Fragment00"
+        android:label="fragment_00"
+        tools:layout="@layout/fragment_00" >
+        <action
+            android:id="@+id/action_fragment00_to_placeholder"
+            app:destination="@id/placeholder" />
+    </fragment>
+    <!--TODO: Add another Fragment in place of Placeholder-->
+    <fragment android:id="@+id/placeholder" />
+</navigation>
