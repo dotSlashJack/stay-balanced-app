@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
              * using the Stream's iterator.  If it is true (1) then we demonstrate using a SafeArgs
              * setter; otherwise, we use the Navigation Action's default value defined in the
              * NavGraph.
+             *
+             * Reference: https://www.baeldung.com/java-generating-random-numbers#3-javautilconcurrentthreadlocalrandom
              */
             IntStream randomizer = ThreadLocalRandom.current().ints(1, 0, 3);
             int i = randomizer.iterator().nextInt();
