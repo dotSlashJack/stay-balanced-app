@@ -3,11 +3,14 @@ package edu.staybalanced.staybalanced;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.Navigation;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,64 +18,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /* This check for a savedInstanceState prevents the Fragment from being instantiated when it
-           already has been instantiated.  If the Activity's configuration changes and onCreate() is
-           called again, the Fragment is automatically restored from the savedInstanceState.
-         */
-        if (savedInstanceState == null) {
-            /* Example of using a FragmentManager to programmatically swap in a Fragment in a
-               FragmentContainerView
-
-               .setReorderingAllowed() is usually always set to true for a FragmentTransaction
-               .add(): A Bundle of values can be passed as the 3rd argument to help instantiate the
-                  Fragment Class named in the 2nd argument.  This bundle can be unpacked in the
-                  Fragment's onCreate() method.
-                * .replace() is an alternative to .add() which, in essence, first calls .remove() on
-                  all Fragments currently in a FragmentContainerView before calling .add().
-                * .add() and .replace() also have a 4th argument: String _tag_  -- This argument is
-                  used to programmatically assign a Tag to a Fragment (the equivalent of naming such
-                  a tag in the Fragment's XML using "android: tag='' ") which can be used to obtain
-                  a reference to the Fragment with findFragmentByTag().
-                   * Alternative to this, you can find a Fragment by its ID:
-                     fragmentManager.findFragmentById(_id-of-the-Fragment-Container-View);
-               .addToBackStack(): This method adds all the Fragments instantiated as part of this
-                  transaction to the Back Stack.  The user can then remove these Fragments by
-                  pressing the Back button.
-                * A String _name_ argument can be given to this method to allow us to go back to a
-                  specific Back stack state by referring to its name.
-                * AppCompatActivity.getSupportFragmentManager().popBackStack() can be called to
-                  programmatically "press" the Back button.
-                * If you call .remove() on a Fragment and don't also call .addToBackStack() on the
-                  FragmentTransaction, then the Fragment is Destroyed.  If you do, then the Fragment
-                  is only Stopped and can later be Resumed.
-             */
-            Bundle fragArgs = new Bundle();
-            fragArgs.putString("a_string", "A String from MainActivity");
-
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.frag_container, Fragment00.class, fragArgs)
-                    .addToBackStack(null)
-                    .commit();
-        }
-
-
     }
 
     public void onClick(View view) {
         /* Steps for using Navigation to go to a different arrangement of Fragments (a Destination)
-           rather than teh FragmentManager
+           rather than the FragmentManager that was used in onCreate() in previous commits
 
-           1) We must get a reference to the NavHost in the FragmentContainerView.
-           2) Using SafeArg's generated Classes and methods, we generate an Action based on the
-              Actions defined in our NavGraph XML.
-           3) We get a reference to the NavHost's NavController object
-           4) Using the NavController, we execute the Navigation Action
+           1) Get a reference to the FragmentViewContainer's NavController
+           2) Use SafeArgs' Classes that are created according to the NavGraph XML to select a
+              navigation action.  At this time, I was unable to figure out how to determine which
+              Fragment is currently on display, so I could not choose the correct action based on
+              that.  Instead, I had to use a hacky try-catch syntax as a placeholder.  I presume
+              that this will be replaced by more specific methods instead of 1 catch-all method when
+              a proper BottomNavigationBar is implemented.
+           3) Use the NavController to perform the action
          */
-        NavHostFragment navHostFrag = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.frag_container);
-        NavDirections action = Fragment00Directions.actionFragment00ToPlaceholder();
-        NavController navController = navHostFrag.getNavController();
-        navController.navigate(action);
+        NavController navController = Navigation.findNavController(this, R.id.frag_container);
+        try {
+            // First try to navigate from Fragment00 to Fragment01
+            NavDirections action = Fragment00Directions.action00to01();
+            navController.navigate(action);
+        } catch (IllegalArgumentException e) {
+            // If that fails, Fragment01 is currently in view.  Navigate to Fragment00 instead.
+            Fragment01Directions.Action01to00 action = Fragment01Directions.action01to00();
+
+            /* This code is extra and only used to showcase how SafeArgs' generated Classes have
+             * setters that can be used to pass in arguments other than the default ones specified
+             * in the NavGraph.
+             *
+             * Java 8+ provides the ThreadLocalRandom API to generate a stream of ints.  Here we use
+             * it to generate a stream of 1 int from the range [0,3).  We extract the random int
+             * using the Stream's iterator.  If it is true (1) then we demonstrate using a SafeArgs
+             * setter; otherwise, we use the Navigation Action's default value defined in the
+             * NavGraph.
+             */
+            IntStream randomizer = ThreadLocalRandom.current().ints(1, 0, 3);
+            int i = randomizer.iterator().nextInt();
+            Log.d("Randomizer", String.valueOf(i));
+            if (i == 1) { action.setNewMsg("Main's Default Message"); }
+
+            navController.navigate(action);
+        }
     }
 }

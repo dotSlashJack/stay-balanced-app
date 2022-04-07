@@ -9,19 +9,19 @@
     <!--* This container provides a space for a Fragment to be instantiated
         programmatically.
         * The NavHostFragment is added as a namespace to support Navigation's
-        functions on this Container View
+        attributes on this Container View
         * Only 1 Container per Layout can be designated as the defaultNavHost.
         This attribute determines which Container's changes affect the Back
-        Stack.-->
+        Stack for this Layout's Activity.-->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frag_container"
-        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph00"/>
 

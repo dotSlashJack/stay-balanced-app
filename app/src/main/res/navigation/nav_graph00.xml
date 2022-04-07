@@ -15,9 +15,40 @@
         android:label="fragment_00"
         tools:layout="@layout/fragment_00" >
         <action
-            android:id="@+id/action_fragment00_to_placeholder"
-            app:destination="@id/placeholder" />
+            android:id="@+id/action_00to01"
+            app:destination="@id/fragment01"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+        <!--Declare a parameter that this Destination will accept.  Arguments
+            declared like this can be unpacked and used in the Fragment's code.
+            Note that this is how Fragments can be instantiated with arguments;
+            they do not need Constructors with Parameters to be defined.-->
+        <argument
+            android:name="newMsg"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="00's Default Message" />
     </fragment>
-    <!--TODO: Add another Fragment in place of Placeholder-->
-    <fragment android:id="@+id/placeholder" />
+    <fragment
+        android:id="@+id/fragment01"
+        android:name="edu.staybalanced.staybalanced.Fragment01"
+        android:label="fragment_01"
+        tools:layout="@layout/fragment_01" >
+        <action
+            android:id="@+id/action_01to00"
+            app:destination="@id/fragment00"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right">
+            <!--An Argument nested in an Action must correspond to the name and
+                type of an Argument declared in the destination.  The
+                defaultValue here will override the defaultValue of the
+                destination.  Note that because a defaultValue is defined here,
+                Fragment00's default message will only ever display when the
+                App is first started (because it is the startDestination)-->
+            <argument
+                android:name="newMsg"
+                android:defaultValue="01's Default Message"
+                app:argType="string" />
+        </action>
+    </fragment>
 </navigation>
