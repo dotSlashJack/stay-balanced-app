@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StayBalanced">
         <activity
+            android:name=".Recycler_view_searchable_activity"
+            android:exported="false" />
+        <activity
+            android:name=".bottom_bar_activity"
+            android:exported="false" />
+        <activity
             android:name=".JackTesting"
             android:exported="false" />
         <activity
