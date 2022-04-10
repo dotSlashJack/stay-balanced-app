@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".JackTesting">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="153dp"
+        tools:layout_editor_absoluteY="328dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
