@@ -47,9 +47,14 @@ public class Recycler_view_searchable_activity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
+        // inflate the menu layout
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        // set the menu item
         MenuItem item = menu.findItem(R.id.action_search);
+        // get the action view from the menu item and set as a serach view
         SearchView searchView = (SearchView) item.getActionView();
+
+        // set the search filter
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -59,6 +64,8 @@ public class Recycler_view_searchable_activity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 excerciseAdapter.getFilter().filter(newText);
+                // false if the SearchView should perform the default action of showing any suggestions if available
+                // KEEP FALSE
                 return false;
             }
         });

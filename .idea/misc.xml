@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/layout/activity_main.xml" value="0.5708333333333333" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/layout/activity_recycler_view_searchable.xml" value="0.1" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/menu/main_menu.xml" value="0.5708333333333333" />
         <entry key="app/src/main/res/layout/activity_jack_testing.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24635416666666668" />
       </map>

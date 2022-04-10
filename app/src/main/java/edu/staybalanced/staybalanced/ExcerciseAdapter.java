@@ -17,6 +17,8 @@ import java.util.Collection;
 
 // extends adapter, but also implement filterable for search bar
 public class ExcerciseAdapter extends RecyclerView.Adapter<ExcerciseAdapter.ExcerciseRowHolder> implements Filterable {
+
+    // two array, 1 contains all excercises, the other contains the filtered for the filter search
     ArrayList<Excercise> excerciseData;
     Context context;
     ArrayList<Excercise> allExcercises;
@@ -58,8 +60,9 @@ public class ExcerciseAdapter extends RecyclerView.Adapter<ExcerciseAdapter.Exce
 
     Filter filter = new Filter() {
         @Override
-        // run on backgound thread automatically
+        // run on background thread automatically
         protected FilterResults performFiltering(CharSequence charSequence) {
+            // array containing filtered excercises
             ArrayList<Excercise> filteredExcercises = new ArrayList<>();
 
             if (charSequence.toString().isEmpty()){
@@ -72,6 +75,7 @@ public class ExcerciseAdapter extends RecyclerView.Adapter<ExcerciseAdapter.Exce
                     }
                 }
             }
+            // create filtered results object that will contain all excercises that match the search
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredExcercises;
             return filterResults;
@@ -80,6 +84,7 @@ public class ExcerciseAdapter extends RecyclerView.Adapter<ExcerciseAdapter.Exce
         // runs on ui thread
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            // change the list of displayed excercise data
             excerciseData.clear();
             excerciseData.addAll((Collection<? extends Excercise>) filterResults.values);
             notifyDataSetChanged();
