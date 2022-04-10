@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/button"
+        app:layout_constraintBottom_toTopOf="@id/button01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -27,14 +27,28 @@
         app:navGraph="@navigation/nav_graph00"/>
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:id="@+id/button01"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Change Destination"
         android:onClick="onClick"
         app:layout_constraintBottom_toTopOf="@+id/menu_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginStart="5dp"
+        app:layout_constraintEnd_toStartOf="@id/button02"
+        android:layout_marginEnd="5dp"/>
+
+    <Button
+        android:id="@+id/button02"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Fullscreen Gyro"
+        android:onClick="startGyro"
+        app:layout_constraintTop_toTopOf="@+id/button01"
+        app:layout_constraintBottom_toBottomOf="@id/button01"
+        app:layout_constraintStart_toEndOf="@+id/button01"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="5dp"/>
 
     <!--Notice we link the resource defined in res/menu/ to this NavigationBar-->
     <com.google.android.material.bottomnavigation.BottomNavigationView

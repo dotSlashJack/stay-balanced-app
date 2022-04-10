@@ -73,4 +73,14 @@
         app:destination="@id/fragment01"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim" />
+    <activity
+        android:id="@+id/calibrationPlaceholder"
+        android:name="edu.staybalanced.staybalanced.GyroscopePlaceholder"
+        android:label="activity_calibration_placeholder"
+        tools:layout="@layout/activity_gyroscope_placeholder" />
+    <action
+        android:id="@+id/to_gyro"
+        app:destination="@id/calibrationPlaceholder"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
 </navigation>

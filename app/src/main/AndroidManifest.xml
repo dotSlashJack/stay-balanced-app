@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StayBalanced">
         <activity
+            android:name=".GyroscopePlaceholder"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/fullscreen_activity_title"
+            android:theme="@style/Theme.StayBalanced.Fullscreen" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

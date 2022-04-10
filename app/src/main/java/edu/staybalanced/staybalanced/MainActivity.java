@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     public void onClick(View view) {
         /* Steps for using Navigation to go to a different arrangement of Fragments (a Destination)
            rather than the FragmentManager that was used in onCreate() in previous commits
@@ -99,5 +97,10 @@ public class MainActivity extends AppCompatActivity {
 
             navController.navigate(action);
         }
+    }
+
+    public void startGyro(View view){
+        NavController navController = Navigation.findNavController(this, R.id.frag_container);
+        navController.navigate(NavGraph00Directions.toGyro());
     }
 }
