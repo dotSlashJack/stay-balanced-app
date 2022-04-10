@@ -56,6 +56,8 @@
         android:name="edu.staybalanced.staybalanced.Fragment02"
         android:label="fragment_02"
         tools:layout="@layout/fragment_02" />
+    <!--Here, global Actions are defined to be used by the BottomNavigationBar, but any
+        Fragment can call on these at any time as well.-->
     <action
         android:id="@+id/to_settings"
         app:destination="@id/fragment02"

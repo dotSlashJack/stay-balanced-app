@@ -23,7 +23,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set up the BottomNavigationView
         bottomMenu = findViewById(R.id.menu_view);
+        /* Set the initially selected button.  This should correspond to the screen that's brought
+         * up by default whenever this Activity is launched.  In this example, this default screen
+         * is declared in the NavGraph as the startDestination.
+         *
+         * Note how the NavigationBarView Class handles highlighting the appropriate button as
+         * selected whenever its Listener changes the Fragment.  If the Fragment is changed by a
+         * different process (like the onClick() method below) this automatic highlighting will not
+         * occure.  That other process should be sure to call .setSelectedItemId() where necessary.
+         */
         bottomMenu.setSelectedItemId(R.id.menu_item_home);
         bottomMenu.setOnItemSelectedListener(item -> {
             NavController navController = Navigation.findNavController(findViewById(R.id.frag_container));
@@ -53,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
            rather than the FragmentManager that was used in onCreate() in previous commits
 
            1) Get a reference to the FragmentViewContainer's NavController
-           2) Use SafeArgs' Classes that are created according to the NavGraph XML to select a
+           2) Use SafeArgs' Classes that are auto-created according to the NavGraph XML to select a
               navigation action.  At this time, I was unable to figure out how to determine which
               Fragment is currently on display, so I could not choose the correct action based on
               that.  Instead, I had to use a hacky try-catch syntax as a placeholder.  I presume

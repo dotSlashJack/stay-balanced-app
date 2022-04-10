@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--This resource file defines the buttons of a BottomNavigationView along
+    with their icons and labels.
+    * A BottomNav can only hold up to 5 buttons.-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_item_settings"
         android:enabled="true"

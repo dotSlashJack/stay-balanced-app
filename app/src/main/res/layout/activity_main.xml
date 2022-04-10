@@ -36,9 +36,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!--Notice we link the resource defined in res/menu/ to this NavigationBar-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/menu_view"
-        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/menu_items"

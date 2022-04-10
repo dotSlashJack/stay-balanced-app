@@ -18,6 +18,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!--Note how the text assigned here is never displayed.  This is because
+            A default argument is given in the NavGraph for this Fragment's entry
+            and the Fragment's code sets this text to whatever value it is passed
+            when it is instantiated.-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -30,10 +34,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--Note how the text assigned here is never displayed.  This is because
-        A default argument is given in the NavGraph for this Fragment's entry
-        and the Fragment's code sets this text to whatever value it is passed
-        when it is instantiated.-->
 
 </FrameLayout>
