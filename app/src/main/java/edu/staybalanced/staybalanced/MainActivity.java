@@ -85,14 +85,14 @@ public class MainActivity extends AppCompatActivity {
              * in the NavGraph.
              *
              * Java 8+ provides the ThreadLocalRandom API to generate a stream of ints.  Here we use
-             * it to generate a stream of 1 int from the range [0,3).  We extract the random int
+             * it to generate a stream of 1 int from the range [0,2).  We extract the random int
              * using the Stream's iterator.  If it is true (1) then we demonstrate using a SafeArgs
              * setter; otherwise, we use the Navigation Action's default value defined in the
              * NavGraph.
              *
              * Reference: https://www.baeldung.com/java-generating-random-numbers#3-javautilconcurrentthreadlocalrandom
              */
-            IntStream randomizer = ThreadLocalRandom.current().ints(1, 0, 3);
+            IntStream randomizer = ThreadLocalRandom.current().ints(1, 0, 2);
             int i = randomizer.iterator().nextInt();
             Log.d("Randomizer", String.valueOf(i));
             if (i == 1) { action.setNewMsg("Main's Default Message"); }
