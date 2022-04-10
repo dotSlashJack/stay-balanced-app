@@ -51,4 +51,24 @@
                 app:argType="string" />
         </action>
     </fragment>
+    <fragment
+        android:id="@+id/fragment02"
+        android:name="edu.staybalanced.staybalanced.Fragment02"
+        android:label="fragment_02"
+        tools:layout="@layout/fragment_02" />
+    <action
+        android:id="@+id/to_settings"
+        app:destination="@id/fragment02"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+    <action
+        android:id="@+id/to_home"
+        app:destination="@id/fragment00"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+    <action
+        android:id="@+id/to_history"
+        app:destination="@id/fragment01"
+        app:enterAnim="@animator/nav_default_enter_anim"
+        app:exitAnim="@animator/nav_default_exit_anim" />
 </navigation>

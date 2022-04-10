@@ -9,16 +9,44 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 public class MainActivity extends AppCompatActivity {
 
+    NavigationBarView bottomMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        bottomMenu = findViewById(R.id.menu_view);
+        bottomMenu.setSelectedItemId(R.id.menu_item_home);
+        bottomMenu.setOnItemSelectedListener(item -> {
+            NavController navController = Navigation.findNavController(findViewById(R.id.frag_container));
+            switch(item.getItemId()) {
+                case R.id.menu_item_settings:
+                    // Navigate to Settings Fragment
+                    navController.navigate(NavGraph00Directions.toSettings());
+                    return true;
+                case R.id.menu_item_home:
+                    // Navigate to Home Fragment
+                    navController.navigate(NavGraph00Directions.toHome());
+                    return true;
+                case R.id.menu_item_history:
+                    // Navigate to History Fragment
+                    navController.navigate(NavGraph00Directions.toHistory());
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
+
+
 
     public void onClick(View view) {
         /* Steps for using Navigation to go to a different arrangement of Fragments (a Destination)
