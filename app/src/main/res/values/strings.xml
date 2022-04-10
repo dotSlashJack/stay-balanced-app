@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Stay Balanced</string>
+    <string name="vibrate">\tVibrate</string>
+    <string name="pressMe">Click Me</string>
+    <string name="resetPress">Reset Clicks</string>
 </resources>
