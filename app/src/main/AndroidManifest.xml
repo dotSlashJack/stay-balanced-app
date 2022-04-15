@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StayBalanced">
         <activity
-            android:name=".GyroscopePlaceholder"
+            android:name=".Gyroscope"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="@string/fullscreen_activity_title"

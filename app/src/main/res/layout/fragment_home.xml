@@ -54,23 +54,23 @@
 
         <Button
             android:id="@+id/home_btnStartExercise"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home_strStartExercise"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/home_btnAddExercise"
-            app:layout_constraintStart_toStartOf="@id/home_btnAddExercise"
-            app:layout_constraintEnd_toEndOf="@id/home_btnAddExercise" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/home_btnAddExercise"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/home_strAddExercise"
             app:layout_constraintTop_toBottomOf="@+id/home_btnStartExercise"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintStart_toStartOf="@id/home_btnStartExercise"
+            app:layout_constraintEnd_toEndOf="@id/home_btnStartExercise"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

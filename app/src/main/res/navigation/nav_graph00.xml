@@ -28,14 +28,14 @@
         tools:layout="@layout/fragment_select" />
     <fragment
         android:id="@+id/dest_newExercise"
-        android:name="edu.staybalanced.staybalanced.NewExercise"
+        android:name="edu.staybalanced.staybalanced.AddExercise"
         android:label="New Exercise"
-        tools:layout="@layout/fragment_new_exercise" />
+        tools:layout="@layout/fragment_add_exercise" />
     <activity
         android:id="@+id/dest_calibrationPlaceholder"
-        android:name="edu.staybalanced.staybalanced.GyroscopePlaceholder"
+        android:name="edu.staybalanced.staybalanced.Gyroscope"
         android:label="activity_calibration_placeholder"
-        tools:layout="@layout/activity_gyroscope_placeholder" />
+        tools:layout="@layout/activity_gyroscope" />
 
     <!--For some unknown reason, SafeArgs is not recognizing nested actions.
     It is not generating a DestHomeDirections Class when an Action is
