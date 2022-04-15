@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 
 public class Home extends Fragment {
 
-    final NavController NAVIGATION = Navigation.findNavController(requireActivity(), R.id.frag_container);
+    NavController navController;
+    View.OnClickListener homeButtonListener;
 
     public Home() {
         // Required empty public constructor
@@ -28,19 +29,19 @@ public class Home extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    View.OnClickListener homeButtonListener = view -> {
-        switch (view.getId()) {
-            case R.id.home_btnStartExercise:
-                NAVIGATION.navigate(NavGraph00Directions.toGyro());
-                break;
-            case R.id.home_btnAddExercise:
-                //NAVIGATION.navigate();
-        }
-    };
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+        homeButtonListener = view1 -> {
+            switch (view1.getId()) {
+                case R.id.home_btnStartExercise:
+                    navController.navigate(NavGraph00Directions.toGyro());
+                    break;
+                case R.id.home_btnAddExercise:
+                    navController.navigate(NavGraph00Directions.toNewExercise());
+            }
+        };
         view.findViewById(R.id.home_btnStartExercise).setOnClickListener(homeButtonListener);
         view.findViewById(R.id.home_btnAddExercise).setOnClickListener(homeButtonListener);
     }
