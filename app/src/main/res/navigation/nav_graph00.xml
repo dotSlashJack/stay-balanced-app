@@ -4,27 +4,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph00"
-    app:startDestination="@id/dest_home">
+    app:startDestination="@id/dest_Home">
 
     <fragment
-        android:id="@+id/dest_home"
+        android:id="@+id/dest_Home"
         android:name="edu.staybalanced.staybalanced.Home"
         android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/home_to_select"
             app:destination="@id/dest_select"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/home_to_newExercise"
             app:destination="@id/dest_newExercise"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
+    <!--<fragment
+        android:id="@+id/fragment00"
+        android:name="edu.staybalanced.staybalanced.Fragment00"
+        android:label="fragment_00"
+        tools:layout="@layout/fragment_00" >
+        <action
+            android:id="@+id/action_00to01"
+            app:destination="@id/fragment01"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+            Declare a parameter that this Destination will accept.  Arguments
+            declared like this can be unpacked and used in the Fragment's code.
+            Note that this is how Fragments can be instantiated with arguments;
+            they do not need Constructors with Parameters to be defined.
+        <argument
+            android:name="newMsg"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="00's Default Message" />
+    </fragment>-->
     <action
         android:id="@+id/to_home"
-        app:destination="@id/dest_home"
+        app:destination="@id/dest_Home"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim" />
 

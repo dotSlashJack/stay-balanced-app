@@ -34,7 +34,7 @@ public class Home extends Fragment {
                 NAVIGATION.navigate(NavGraph00Directions.toGyro());
                 break;
             case R.id.home_btnAddExercise:
-                NAVIGATION.navigate();
+                //NAVIGATION.navigate();
         }
     };
 
