@@ -4,83 +4,72 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph00"
-    app:startDestination="@id/fragment00">
+    app:startDestination="@id/dest_home">
 
-    <!--It's recommended that android:label is set to a String defined in
-        the Project's values resource files since these labels could be made
-        to appear on the screen with certain method calls.-->
     <fragment
-        android:id="@+id/fragment00"
-        android:name="edu.staybalanced.staybalanced.Fragment00"
-        android:label="fragment_00"
-        tools:layout="@layout/fragment_00" >
+        android:id="@+id/dest_home"
+        android:name="edu.staybalanced.staybalanced.Home"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_00to01"
-            app:destination="@id/fragment01"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
-        <!--Declare a parameter that this Destination will accept.  Arguments
-            declared like this can be unpacked and used in the Fragment's code.
-            Note that this is how Fragments can be instantiated with arguments;
-            they do not need Constructors with Parameters to be defined.-->
-        <argument
-            android:name="newMsg"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="00's Default Message" />
-    </fragment>
-    <fragment
-        android:id="@+id/fragment01"
-        android:name="edu.staybalanced.staybalanced.Fragment01"
-        android:label="fragment_01"
-        tools:layout="@layout/fragment_01" >
+            android:id="@+id/home_to_select"
+            app:destination="@id/dest_select"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
         <action
-            android:id="@+id/action_01to00"
-            app:destination="@id/fragment00"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right">
-            <!--An Argument nested in an Action must correspond to the name and
-                type of an Argument declared in the destination.  The
-                defaultValue here will override the defaultValue of the
-                destination.  Note that because a defaultValue is defined here,
-                Fragment00's default message will only ever display when the
-                App is first started (because it is the startDestination)-->
-            <argument
-                android:name="newMsg"
-                android:defaultValue="01's Default Message"
-                app:argType="string" />
-        </action>
+            android:id="@+id/home_to_newExercise"
+            app:destination="@id/dest_newExercise"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
-    <fragment
-        android:id="@+id/fragment02"
-        android:name="edu.staybalanced.staybalanced.Fragment02"
-        android:label="fragment_02"
-        tools:layout="@layout/fragment_02" />
-    <!--Here, global Actions are defined to be used by the BottomNavigationBar, but any
-        Fragment can call on these at any time as well.-->
-    <action
-        android:id="@+id/to_settings"
-        app:destination="@id/fragment02"
-        app:enterAnim="@anim/nav_default_enter_anim"
-        app:exitAnim="@anim/nav_default_exit_anim" />
     <action
         android:id="@+id/to_home"
-        app:destination="@id/fragment00"
+        app:destination="@id/dest_home"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim" />
+
+    <fragment
+        android:id="@+id/dest_settings"
+        android:name="edu.staybalanced.staybalanced.Settings"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+    <action
+        android:id="@+id/to_settings"
+        app:destination="@id/dest_settings"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+
+    <fragment
+        android:id="@+id/dest_history"
+        android:name="edu.staybalanced.staybalanced.History"
+        android:label="History"
+        tools:layout="@layout/fragment_history" />
     <action
         android:id="@+id/to_history"
-        app:destination="@id/fragment01"
+        app:destination="@id/dest_history"
         app:enterAnim="@animator/nav_default_enter_anim"
         app:exitAnim="@animator/nav_default_exit_anim" />
+
+    <fragment
+        android:id="@+id/dest_select"
+        android:name="edu.staybalanced.staybalanced.Select"
+        android:label="Exercise Select"
+        tools:layout="@layout/fragment_select" >
+    </fragment>
+    <fragment
+        android:id="@+id/dest_newExercise"
+        android:name="edu.staybalanced.staybalanced.NewExercise"
+        android:label="New Exercise"
+        tools:layout="@layout/fragment_new_exercise" />
+
     <activity
-        android:id="@+id/calibrationPlaceholder"
+        android:id="@+id/dest_calibrationPlaceholder"
         android:name="edu.staybalanced.staybalanced.GyroscopePlaceholder"
         android:label="activity_calibration_placeholder"
         tools:layout="@layout/activity_gyroscope_placeholder" />
     <action
         android:id="@+id/to_gyro"
-        app:destination="@id/calibrationPlaceholder"
+        app:destination="@id/dest_calibrationPlaceholder"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim" />
 </navigation>
