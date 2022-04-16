@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddExercise">
+
+    <TextView
+        android:id="@+id/add_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_title"
+        android:textSize="30sp"
+        android:layout_margin="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/add_lbl_name"
+        android:labelFor="@+id/add_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_name"
+        app:layout_constraintBottom_toBottomOf="@+id/add_name"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="3dp"/>
+    <AutoCompleteTextView
+        android:id="@+id/add_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="3dp"
+        android:minHeight="48dp"
+        android:inputType="textAutoComplete"
+        android:completionThreshold="1"
+        android:nextFocusDown="@+id/add_desc"
+        android:imeOptions="actionNext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/add_lbl_name"
+        app:layout_constraintTop_toBottomOf="@+id/add_title"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/add_lbl_desc"
+        android:labelFor="@+id/add_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_desc"
+        app:layout_constraintBottom_toBottomOf="@+id/add_desc"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="3dp"/>
+    <EditText
+        android:id="@+id/add_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:inputType="text"
+        android:importantForAutofill="no"
+        android:nextFocusDown="@+id/add_reps"
+        android:imeOptions="actionNext"
+        app:layout_constraintTop_toBottomOf="@+id/add_name"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@+id/add_lbl_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="3dp"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/add_desc"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/add_lbl_reps"
+            android:labelFor="@+id/add_reps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_reps"
+            app:layout_constraintBottom_toBottomOf="@+id/add_reps"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="3dp" />
+        <EditText
+            android:id="@+id/add_reps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="00"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:nextFocusDown="@+id/add_sets"
+            android:imeOptions="actionNext"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:textAlignment="viewEnd"
+            app:layout_constraintStart_toEndOf="@+id/add_lbl_reps"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/add_lbl_sets"
+            android:labelFor="@+id/add_sets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_sets"
+            app:layout_constraintBottom_toBottomOf="@+id/add_lbl_reps"
+            app:layout_constraintStart_toEndOf="@id/add_reps"
+            android:layout_marginStart="10dp"/>
+        <EditText
+            android:id="@+id/add_sets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
+            android:inputType="number"
+            android:nextFocusDown="@+id/add_secs"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:hint="00"
+            android:textAlignment="viewEnd"
+            app:layout_constraintTop_toTopOf="@+id/add_reps"
+            app:layout_constraintStart_toEndOf="@+id/add_lbl_sets"
+            android:layout_marginEnd="3dp"/>
+
+        <TextView
+            android:id="@+id/add_lbl_secs"
+            android:labelFor="@+id/add_secs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_secs"
+            app:layout_constraintBottom_toBottomOf="@+id/add_lbl_reps"
+            app:layout_constraintStart_toEndOf="@id/add_sets"
+            android:layout_marginStart="10dp"/>
+        <EditText
+            android:id="@+id/add_secs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
+            android:inputType="number"
+            android:nextFocusDown="@+id/add_button"
+            android:importantForAutofill="no"
+            android:hint="0000"
+            android:textAlignment="viewEnd"
+            app:layout_constraintStart_toEndOf="@+id/add_lbl_secs"
+            app:layout_constraintTop_toTopOf="@+id/add_reps" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

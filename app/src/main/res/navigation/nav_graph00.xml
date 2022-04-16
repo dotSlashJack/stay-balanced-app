@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph00"
+    app:startDestination="@id/dest_Home">
+
+    <fragment
+        android:id="@+id/dest_Home"
+        android:name="edu.staybalanced.staybalanced.Home"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/dest_settings"
+        android:name="edu.staybalanced.staybalanced.Settings"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/dest_history"
+        android:name="edu.staybalanced.staybalanced.History"
+        android:label="History"
+        tools:layout="@layout/fragment_history" />
+    <fragment
+        android:id="@+id/dest_select"
+        android:name="edu.staybalanced.staybalanced.Select"
+        android:label="Exercise Select"
+        tools:layout="@layout/fragment_select" />
+    <fragment
+        android:id="@+id/dest_newExercise"
+        android:name="edu.staybalanced.staybalanced.AddExercise"
+        android:label="New Exercise"
+        tools:layout="@layout/fragment_add_exercise" />
+    <activity
+        android:id="@+id/dest_calibrationPlaceholder"
+        android:name="edu.staybalanced.staybalanced.Gyroscope"
+        android:label="activity_calibration_placeholder"
+        tools:layout="@layout/activity_gyroscope" />
+
+    <!--For some unknown reason, SafeArgs is not recognizing nested actions.
+    It is not generating a DestHomeDirections Class when an Action is
+    embedded in it for instance.  Thus, all Actions are defined globally.-->
+    <action
+        android:id="@+id/to_home"
+        app:destination="@id/dest_Home"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+    <action
+        android:id="@+id/to_settings"
+        app:destination="@id/dest_settings"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+    <action
+        android:id="@+id/to_history"
+        app:destination="@id/dest_history"
+        app:enterAnim="@animator/nav_default_enter_anim"
+        app:exitAnim="@animator/nav_default_exit_anim" />
+    <action
+        android:id="@+id/to_select"
+        app:destination="@id/dest_select"
+        app:enterAnim="@android:anim/slide_in_left"
+        app:exitAnim="@android:anim/slide_out_right" />
+    <action
+        android:id="@+id/to_newExercise"
+        app:destination="@id/dest_newExercise"
+        app:enterAnim="@android:anim/slide_in_left"
+        app:exitAnim="@android:anim/slide_out_right" />
+    <action
+        android:id="@+id/to_gyro"
+        app:destination="@id/dest_calibrationPlaceholder"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim" />
+</navigation>

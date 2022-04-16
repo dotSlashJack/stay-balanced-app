@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Stay Balanced</string>
+
+    <!--Bottom Navigation Menu Strings-->
+    <string name="menu_settings">Settings</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_history">History</string>
+
+    <!--Home Fragment Strings-->
+    <string name="home_strStartExercise">Start Exercise</string>
+    <string name="home_strAddExercise">Add Exercise</string>
+
+    <!--Add Exercise Strings-->
+    <string name="add_title">Add Exercise</string>
+    <string name="add_name">Name</string>
+    <string name="add_desc">Description</string>
+    <string name="add_reps">Reps</string>
+    <string name="add_sets">Sets</string>
+    <string name="add_secs">Seconds Per Rep</string>
+    <string name="add_btn">Add</string>
+
+    <!--Placeholders for Dev Use-->
+    <string name="fullscreen_activity_title">CalibrationPlaceholder</string>
 </resources>
