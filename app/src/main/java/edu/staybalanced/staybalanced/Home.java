@@ -37,7 +37,7 @@ public class Home extends Fragment {
             switch (view1.getId()) {
                 case R.id.home_btnStartExercise:
                     // TODO: Button should go to ExerciseSelector
-                    navController.navigate(NavGraph00Directions.toGyro());
+                    navController.navigate(NavGraph00Directions.toDoExercise());
                     break;
                 case R.id.home_btnAddExercise:
                     navController.navigate(NavGraph00Directions.toNewExercise());
