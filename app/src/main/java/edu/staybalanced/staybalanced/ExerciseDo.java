@@ -3,10 +3,18 @@ package edu.staybalanced.staybalanced;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
 
@@ -16,7 +24,7 @@ import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
  *
  * TODO: Instance saving not implemented.  Screen's state will be reset on orientation change.
  */
-public class ExerciseDo extends AppCompatActivity {
+public class ExerciseDo extends AppCompatActivity implements SensorEventListener{
 
     // Determines whether or not the controls should be auto-hidden after {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
     private static final boolean AUTO_HIDE = true;
@@ -38,6 +46,13 @@ public class ExerciseDo extends AppCompatActivity {
     private View unhiddenContent;
     // References the FrameLayout containing the Activity's controls.
     private View controlsContainer;
+
+    // JACK'S GYROSCOPE ACTIVITY CLASS VARIABLES
+    private SensorManager sensorManager;
+    private Sensor gyro;
+    private SensorEventListener gyroListener;
+    //private float[] gyroVals = new float[100];
+    private ArrayList<Float> gyroVals;
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
@@ -120,6 +135,15 @@ public class ExerciseDo extends AppCompatActivity {
         binding = ActivityExerciseDoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // BEGIN JACK'S GYROSCOPE CODE
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+        if(gyro == null){
+            Toast.makeText(this,"error in gyro", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
         mVisible = true;
         unhiddenContent = binding.fullscreenContent;
         controlsContainer = binding.fullscreenContentControls;
@@ -186,5 +210,67 @@ public class ExerciseDo extends AppCompatActivity {
 
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.postDelayed(runnableShow, UI_ANIMATION_DELAY);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //sensorManager.registerListener(gyroListener, gyro, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(gyroListener);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        TextView t = findViewById(R.id.fullscreen_content);
+        //Toast toast = Toast.makeText(getApplicationContext(), "sddssd", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), (String)"okokok",
+        //        Toast.LENGTH_LONG).show();
+        /*if(sensorEvent.values[2] > 0.5f){
+            //TextView t = findViewById(R.id.textView);
+            //String gyro_reading = String.valueOf(sensorEvent.values[2]);
+            gyroVals[index] = sensorEvent.values[2];
+            index+=1;
+            t.setText(Arrays.toString(gyroVals));
+            //t.setText(gyro_reading);
+            //t.setText()
+        } else if(sensorEvent.values[2] < -.05f){
+
+            gyroVals[index] = sensorEvent.values[2];
+            index+=1;
+            t.setText(Arrays.toString(gyroVals));
+            //TextView t = findViewById(R.id.textView);
+            String gyro_reading = String.valueOf(sensorEvent.values[2]);
+
+            //t.setText(gyro_reading);
+            //index+=1;
+        }*/
+        /*if(sensorEvent.values[2]>0.05f || sensorEvent.values[2]<-0.05f){
+            gyroVals[index] = sensorEvent.values[2];
+            index+=1;
+            t.setText(Arrays.toString(gyroVals));
+        }*/
+        //t.setText("ssssss");
+        Gyroscope g = new Gyroscope(sensorEvent);
+        //g.updateGyroVals(gyroVals);
+        gyroVals = g.returnVals();
+
+        StringBuilder str = new StringBuilder();
+        for (Float v : gyroVals) {
+            str.append(v.toString());
+            str.append(" ");
+        }
+        t.setText(str);
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
