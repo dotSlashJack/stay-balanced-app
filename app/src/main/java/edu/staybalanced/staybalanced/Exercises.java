@@ -29,8 +29,6 @@ public class Exercises {
     }
 
     // toString
-
-
     @Override
     public String toString() {
         return "Exercises{" +
