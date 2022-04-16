@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SHARED_PREFS = "sharedPrefs";
     private Button settingsPrefs;
+    private Button dbDemo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(saveSettings);
             }
         });
+
+        dbDemo = (Button) findViewById(R.id.DbDemoBtn);
+        dbDemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openDbDemo = new Intent(MainActivity.this, DatabaseDemo.class);
+                startActivity(openDbDemo);
+            }
+        });
+
+        // SharedPrefs Demo
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String clicked = "The button in SaveSettings has a click count of: "
+                + sharedPreferences.getInt("count", 0);
+        TextView tv_savedPrefs = findViewById(R.id.tv_savedPrefs);
+        tv_savedPrefs.setText(clicked);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // SharedPrefs Demo
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);

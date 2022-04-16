@@ -23,14 +23,15 @@ public class SaveSettingsTesting extends AppCompatActivity {
     public static final int CLICK_VIBRATE = 2;
     public static final int CLICK_RESET = 3;
 
+    // Preferred alternative to enums
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({CLICK_PRESSME, CLICK_VIBRATE, CLICK_RESET})
     public @interface CLICKED{}
-
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String PRESS_COUNT = "count";
     public static final String VIBRATE_SETTING = "vibration";
 
+    // Final state
     private String prefsText;
     private Boolean vibrateOnOff;
 
@@ -77,6 +78,7 @@ public class SaveSettingsTesting extends AppCompatActivity {
         loadPrefs();
         updatePrefsViews();
     }
+
 
     private void savePrefs(@CLICKED int value) {
     SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);

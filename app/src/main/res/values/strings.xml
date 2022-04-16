@@ -3,4 +3,6 @@
     <string name="vibrate">\tVibrate</string>
     <string name="pressMe">Click Me</string>
     <string name="resetPress">Reset Clicks</string>
+    <string name="add_new_exercise">Add new exercise</string>
+    <string name="view_all_exercises">View all exercises</string>
 </resources>
