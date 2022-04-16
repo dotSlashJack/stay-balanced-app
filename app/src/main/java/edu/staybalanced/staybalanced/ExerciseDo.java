@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
-import edu.staybalanced.staybalanced.databinding.ActivityGyroscopeBinding;
+import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
 
 /**
  * An example full-screen activity that shows and hides the Activity's controls UI
@@ -16,7 +16,7 @@ import edu.staybalanced.staybalanced.databinding.ActivityGyroscopeBinding;
  *
  * TODO: Instance saving not implemented.  Screen's state will be reset on orientation change.
  */
-public class Gyroscope extends AppCompatActivity {
+public class ExerciseDo extends AppCompatActivity {
 
     // Determines whether or not the controls should be auto-hidden after {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
     private static final boolean AUTO_HIDE = true;
@@ -31,7 +31,7 @@ public class Gyroscope extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 0; //300;
 
     // Layout binding that allows us to reference Views without findViewById()
-    private ActivityGyroscopeBinding binding;
+    private ActivityExerciseDoBinding binding;
     // Represents whether the controls are visible or not
     private boolean mVisible;
     // References the FrameLayout holding the Activity's content that will not be hidden
@@ -117,7 +117,7 @@ public class Gyroscope extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) { actionBar.hide(); }
 
-        binding = ActivityGyroscopeBinding.inflate(getLayoutInflater());
+        binding = ActivityExerciseDoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mVisible = true;

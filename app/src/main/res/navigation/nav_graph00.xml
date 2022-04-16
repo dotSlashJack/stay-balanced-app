@@ -32,10 +32,10 @@
         android:label="New Exercise"
         tools:layout="@layout/fragment_add_exercise" />
     <activity
-        android:id="@+id/dest_calibrationPlaceholder"
-        android:name="edu.staybalanced.staybalanced.Gyroscope"
+        android:id="@+id/dest_doExercise"
+        android:name="edu.staybalanced.staybalanced.ExerciseDo"
         android:label="activity_calibration_placeholder"
-        tools:layout="@layout/activity_gyroscope" />
+        tools:layout="@layout/activity_exercise_do" />
 
     <!--For some unknown reason, SafeArgs is not recognizing nested actions.
     It is not generating a DestHomeDirections Class when an Action is
@@ -66,8 +66,8 @@
         app:enterAnim="@android:anim/slide_in_left"
         app:exitAnim="@android:anim/slide_out_right" />
     <action
-        android:id="@+id/to_gyro"
-        app:destination="@id/dest_calibrationPlaceholder"
+        android:id="@+id/to_doExercise"
+        app:destination="@id/dest_doExercise"
         app:enterAnim="@anim/nav_default_enter_anim"
         app:exitAnim="@anim/nav_default_exit_anim" />
 </navigation>
