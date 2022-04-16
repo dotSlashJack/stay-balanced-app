@@ -12,11 +12,19 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class JackTesting extends AppCompatActivity implements SensorEventListener{
 
     private SensorManager sensorManager;
     private Sensor gyro;
     private SensorEventListener gyroListener;
+    //private float[] gyroVals = new float[100];
+    private ArrayList<Float> gyroVals;
+    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +43,9 @@ public class JackTesting extends AppCompatActivity implements SensorEventListene
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 TextView t = findViewById(R.id.textView);
-                t.setText("ssssss");
-                if(sensorEvent.values[2] > 0.5f){
-                    //TextView t = findViewById(R.id.textView);
-                    t.setText("OOOWWOOO");
-                } else if(sensorEvent.values[2] < -.05f){
-                    //TextView t = findViewById(R.id.textView);
-                    t.setText("reeee");
-                    //Toast toast = Toast.makeText(getApplicationContext(), "sddssd", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), (String)"okokok",
-                            Toast.LENGTH_LONG).show();
-                }
+                //t.setText("ssssss");
+                //Gyroscope g = new Gyroscope(sensorEvent);
+                //t.setText(Arrays.toString(g.returnVals()));
             }
 
             @Override
@@ -74,15 +74,42 @@ public class JackTesting extends AppCompatActivity implements SensorEventListene
         //Toast toast = Toast.makeText(getApplicationContext(), "sddssd", Toast.LENGTH_SHORT).show();
         //Toast.makeText(getApplicationContext(), (String)"okokok",
         //        Toast.LENGTH_LONG).show();
-        if(sensorEvent.values[2] > 0.5f){
+        /*if(sensorEvent.values[2] > 0.5f){
             //TextView t = findViewById(R.id.textView);
-            String gyro_reading = String.valueOf(sensorEvent.values[2]);
-            t.setText(gyro_reading);
+            //String gyro_reading = String.valueOf(sensorEvent.values[2]);
+            gyroVals[index] = sensorEvent.values[2];
+            index+=1;
+            t.setText(Arrays.toString(gyroVals));
+            //t.setText(gyro_reading);
+            //t.setText()
         } else if(sensorEvent.values[2] < -.05f){
+
+            gyroVals[index] = sensorEvent.values[2];
+            index+=1;
+            t.setText(Arrays.toString(gyroVals));
             //TextView t = findViewById(R.id.textView);
             String gyro_reading = String.valueOf(sensorEvent.values[2]);
-            t.setText(gyro_reading);
+
+            //t.setText(gyro_reading);
+            //index+=1;
+        }*/
+        /*if(sensorEvent.values[2]>0.05f || sensorEvent.values[2]<-0.05f){
+            gyroVals[index] = sensorEvent.values[2];
+            index+=1;
+            t.setText(Arrays.toString(gyroVals));
+        }*/
+        //t.setText("ssssss");
+        Gyroscope g = new Gyroscope(sensorEvent);
+        //g.updateGyroVals(gyroVals);
+        gyroVals = g.returnVals();
+
+        StringBuilder str = new StringBuilder();
+        for (Float v : gyroVals) {
+            str.append(v.toString());
+            str.append(" ");
         }
+        t.setText(str);
+
     }
 
     @Override
