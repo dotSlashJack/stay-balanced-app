@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 public class Home extends Fragment {
 
+
     NavController navController;
     View.OnClickListener homeButtonListener;
 
@@ -25,6 +26,7 @@ public class Home extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO merge unlocked assets class to populate award place holder
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }

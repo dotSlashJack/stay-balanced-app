@@ -47,6 +47,9 @@ public class Select extends Fragment {
 
         excercises = new ArrayList<>();
 
+        //TODO currently at the create step it makes the excercises, pull the excercise data
+        //from the database and then add them to the excercises variable (List)
+        // Also add a generic icon for any excercises we don't kno
         //adding placeholder excercises
         excercises.add(new ExcerciseItem("Wall Squat", R.drawable.eicon_squat));
         excercises.add(new ExcerciseItem("Plank", R.drawable.eicon_plank));
