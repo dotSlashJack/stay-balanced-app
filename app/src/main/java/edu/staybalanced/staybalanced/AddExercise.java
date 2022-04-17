@@ -13,10 +13,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddExercise extends Fragment {
     //TODO icon selector activity, if we have time
     AutoCompleteTextView name;
+    EditText desc, reps, sets, secs;
 
     public AddExercise() {
         // Required empty public constructor
@@ -33,15 +36,41 @@ public class AddExercise extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        name = view.findViewById(R.id.add_name);
+        desc = view.findViewById(R.id.add_desc);
+        reps = view.findViewById(R.id.add_reps);
+        sets = view.findViewById(R.id.add_sets);
+        secs = view.findViewById(R.id.add_secs);
+
         // TODO: Replace list with array of names retrieved from database
         String[] exampleNameList = new String[] { "Plank", "Wall Sits" };
         ArrayAdapter<String> nameAutocomplete = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, exampleNameList);
-        name = view.findViewById(R.id.add_name);
         name.setAdapter(nameAutocomplete);
 
         Button add = view.findViewById(R.id.add_button);
         add.setOnClickListener(addButton -> {
-            // TODO: Write input to database
+            // TODO: Confirm if keeping Toasts
+            Exercises new_exercise;
+            try {
+                new_exercise = new Exercises(-1,
+                        name.getText().toString(),
+                        desc.getText().toString(),
+                        Integer.parseInt(sets.getText().toString()),
+                        Integer.parseInt(reps.getText().toString()),
+                        Integer.parseInt(secs.getText().toString()),
+                        // setting default values for gyro measurements
+                        0.0, 0.0, 0.0
+                );
+                Toast.makeText(view.getContext(), "New exercise " + name.getText().toString() + " created", Toast.LENGTH_SHORT).show();
+            }
+            catch (Exception e) {
+                Toast.makeText(view.getContext(), "Error adding exercise", Toast.LENGTH_SHORT).show();
+                new_exercise = new Exercises(-1, "error", "error while adding exercise", 0, 0, 0, 0, 0, 0);
+            }
+            DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
+            boolean success = databaseHelper.addExercise(new_exercise);
+
+            Toast.makeText(view.getContext(), "Success = " + success, Toast.LENGTH_SHORT).show();
         });
     }
 
