@@ -51,8 +51,8 @@ public class History extends Fragment {
 
         excercises = new ArrayList<>();
 
-        //TODO: interacting with databse here to display history
-        //adding placeholder excercises
+        //TODO: interacting with database here to display history
+        //adding placeholder exercises
         excercises.add(new ExcerciseItem("Wall Squat", R.drawable.eicon_squat));
         excercises.add(new ExcerciseItem("Plank", R.drawable.eicon_plank));
         excercises.add(new ExcerciseItem("Bicep Curl Hold", R.drawable.eicon_b_curl));
@@ -66,6 +66,7 @@ public class History extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(excerciseAdapter);
 
+        // TODO: Search bar interaction not optimal.  Opening and closing is clunky.
         FloatingActionButton searchButton = view.findViewById(R.id.hist_fab);
         searchButton.setOnClickListener(fab -> {
             if (menuItem.isActionViewExpanded()) {
