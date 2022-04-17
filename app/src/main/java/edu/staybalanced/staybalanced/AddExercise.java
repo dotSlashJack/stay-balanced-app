@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddExercise extends Fragment {
-
+    //TODO icon selector activity, if we have time
     AutoCompleteTextView name;
     EditText desc, reps, sets, secs;
 
