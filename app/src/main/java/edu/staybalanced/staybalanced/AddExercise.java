@@ -15,7 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 public class AddExercise extends Fragment {
-
+    //TODO icon selector activity, if we have time
     AutoCompleteTextView name;
 
     public AddExercise() {

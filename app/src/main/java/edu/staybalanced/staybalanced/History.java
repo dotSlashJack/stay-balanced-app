@@ -21,7 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class History extends Fragment {
-
+    //TODO add code for making graph
     RecyclerView recyclerView;
     ArrayList<ExcerciseItem> excercises;
     ExcerciseAdapter excerciseAdapter;
@@ -51,6 +51,7 @@ public class History extends Fragment {
 
         excercises = new ArrayList<>();
 
+        //TODO: interacting with databse here to display history
         //adding placeholder excercises
         excercises.add(new ExcerciseItem("Wall Squat", R.drawable.eicon_squat));
         excercises.add(new ExcerciseItem("Plank", R.drawable.eicon_plank));
