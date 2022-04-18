@@ -50,6 +50,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     // JACK'S GYROSCOPE ACTIVITY CLASS VARIABLES
     private SensorManager sensorManager;
     private Sensor gyro;
+    private Sensor rotation_vector;
     private SensorEventListener gyroListener;
     //private float[] gyroVals = new float[100];
     private ArrayList<Float> gyroVals;
@@ -138,9 +139,13 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         // BEGIN JACK'S GYROSCOPE CODE
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        rotation_vector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         if(gyro == null){
             Toast.makeText(this,"error in gyro", Toast.LENGTH_LONG).show();
+            finish();
+        } else if(rotation_vector == null){
+            Toast.makeText(this,"error in rotation sensor", Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -217,45 +222,21 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         super.onResume();
         //sensorManager.registerListener(gyroListener, gyro, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, rotation_vector, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(gyroListener);
+        //sensorManager.unregisterListener(rotationListener);
+        //TODO: make sure we do the same for the rotation sesnor
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         TextView t = findViewById(R.id.fullscreen_content);
-        //Toast toast = Toast.makeText(getApplicationContext(), "sddssd", Toast.LENGTH_SHORT).show();
-        //Toast.makeText(getApplicationContext(), (String)"okokok",
-        //        Toast.LENGTH_LONG).show();
-        /*if(sensorEvent.values[2] > 0.5f){
-            //TextView t = findViewById(R.id.textView);
-            //String gyro_reading = String.valueOf(sensorEvent.values[2]);
-            gyroVals[index] = sensorEvent.values[2];
-            index+=1;
-            t.setText(Arrays.toString(gyroVals));
-            //t.setText(gyro_reading);
-            //t.setText()
-        } else if(sensorEvent.values[2] < -.05f){
 
-            gyroVals[index] = sensorEvent.values[2];
-            index+=1;
-            t.setText(Arrays.toString(gyroVals));
-            //TextView t = findViewById(R.id.textView);
-            String gyro_reading = String.valueOf(sensorEvent.values[2]);
-
-            //t.setText(gyro_reading);
-            //index+=1;
-        }*/
-        /*if(sensorEvent.values[2]>0.05f || sensorEvent.values[2]<-0.05f){
-            gyroVals[index] = sensorEvent.values[2];
-            index+=1;
-            t.setText(Arrays.toString(gyroVals));
-        }*/
-        //t.setText("ssssss");
         Gyroscope g = new Gyroscope(sensorEvent);
         //g.updateGyroVals(gyroVals);
         gyroVals = g.returnVals();
