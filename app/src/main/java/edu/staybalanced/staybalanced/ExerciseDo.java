@@ -9,12 +9,14 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 
 import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
 
@@ -48,12 +50,16 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private View controlsContainer;
 
     // JACK'S GYROSCOPE ACTIVITY CLASS VARIABLES
-    private SensorManager sensorManager;
+    private SensorManager sensorManagerGyro;
+    private SensorManager sensorManagerRotation;
     private Sensor gyro;
-    private Sensor rotation_vector;
+    private Sensor rotationVector;
+    private SensorEvent gyroEvent;
+    private SensorEvent rotationEvent;
     private SensorEventListener gyroListener;
-    //private float[] gyroVals = new float[100];
+    private SensorEventListener rotationListener;
     private ArrayList<Float> gyroVals;
+    private ArrayList<Float> rotationVals;
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
@@ -137,14 +143,15 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         setContentView(binding.getRoot());
 
         // BEGIN JACK'S GYROSCOPE CODE
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        rotation_vector = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        sensorManagerGyro = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManagerRotation = (SensorManager) getSystemService(SENSOR_SERVICE);
+        gyro = sensorManagerGyro.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        rotationVector = sensorManagerRotation.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
         if(gyro == null){
             Toast.makeText(this,"error in gyro", Toast.LENGTH_LONG).show();
             finish();
-        } else if(rotation_vector == null){
+        } else if(rotationVector == null){
             Toast.makeText(this,"error in rotation sensor", Toast.LENGTH_LONG).show();
             finish();
         }
@@ -221,15 +228,15 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     protected void onResume() {
         super.onResume();
         //sensorManager.registerListener(gyroListener, gyro, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, rotation_vector, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerGyro.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerRotation.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(gyroListener);
-        //sensorManager.unregisterListener(rotationListener);
+        sensorManagerGyro.unregisterListener(gyroListener);
+        sensorManagerRotation.unregisterListener(rotationListener);
         //TODO: make sure we do the same for the rotation sesnor
     }
 
@@ -237,16 +244,33 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     public void onSensorChanged(SensorEvent sensorEvent) {
         TextView t = findViewById(R.id.fullscreen_content);
 
-        Gyroscope g = new Gyroscope(sensorEvent);
-        //g.updateGyroVals(gyroVals);
-        gyroVals = g.returnVals();
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            Gyroscope g = new Gyroscope(sensorEvent,"ROTATION_VECTOR");
+            gyroVals = g.returnRotationVals();
 
-        StringBuilder str = new StringBuilder();
-        for (Float v : gyroVals) {
-            str.append(v.toString());
-            str.append(" ");
+            StringBuilder str = new StringBuilder();
+            for (Float v : gyroVals) {
+                str.append(v.toString());
+                str.append(" ");
+            }
+            t.setText(str);
+
+        } else if(sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+            Gyroscope g2 = new Gyroscope(sensorEvent, "GYROSCOPE");
+            rotationVals = g2.returnGyroVals();
+
+            StringBuilder str = new StringBuilder();
+            for (Float v : rotationVals) {
+                str.append(v.toString());
+                str.append(" ");
+            }
+            t.setText(str);
         }
-        t.setText(str);
+
+        //g.updateGyroVals(gyroVals);
+        //gyroVals = g.returnVals();
+
+
 
     }
 
