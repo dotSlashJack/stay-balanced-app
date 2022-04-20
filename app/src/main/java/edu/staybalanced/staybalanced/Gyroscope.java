@@ -31,6 +31,8 @@ public class Gyroscope{
 
     private static ArrayList<Float> inflectionPoints; // this is where we'll store the points after loading in the proper calibration
 
+    String eventTypeGyro;
+
     // rotation around x
 
     public static float getGyroX(){ return gyroSensor.values[0]; }
@@ -384,16 +386,28 @@ public class Gyroscope{
 
     }
 
-    // constructor for initialization/calibration
-    //public Gyroscope(SensorEvent gyroEvent, SensorEvent vectorEvent){
-    public Gyroscope(SensorEvent event, String eventType){
-        if(eventType=="GYROSCOPE"){
-            this.gyroSensor = event;
+    public void updateEvent(SensorEvent eventIn) {
+        if(eventTypeGyro=="GYROSCOPE"){
+            this.gyroSensor = eventIn;
         }
-        else if(eventType=="ROTATION_VECTOR"){
-            this.rotationSensor = event;
+        else if(eventTypeGyro=="ROTATION_VECTOR"){
+            this.rotationSensor = eventIn;
 
         }
+    }
+
+    // constructor for initialization/calibration
+    //public Gyroscope(SensorEvent gyroEvent, SensorEvent vectorEvent){
+    public Gyroscope(String eventType){
+        this.eventTypeGyro = eventType;
+
+//        if(eventType=="GYROSCOPE"){
+//            this.gyroSensor = event;
+//        }
+//        else if(eventType=="ROTATION_VECTOR"){
+//            this.rotationSensor = event;
+//
+//        }
 
         //this.gyroVals = new ArrayList<Float>();
     }

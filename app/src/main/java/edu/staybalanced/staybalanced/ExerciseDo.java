@@ -9,14 +9,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.Hashtable;
 
 import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
@@ -61,6 +59,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorEventListener rotationListener;
     private Hashtable<String, ArrayList<Float>> gyroVals;
     private Hashtable<String, ArrayList<Float>> rotationVals;
+
+    //Calibration in progress TODO
+    boolean isCalibrating = false;
+    Gyroscope rotationObject;
+    Gyroscope gyroObject;
+
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
@@ -136,6 +140,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        rotationObject = new Gyroscope("ROTATION_VECTOR"); // create gyroscope
+        gyroObject = new Gyroscope("GYROSCOPE");
+
+        Hashtable<String, ArrayList<Float>> rotationVals = null;
+
+
         // Hide the default bar containing the Activity's name
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) { actionBar.hide(); }
@@ -176,6 +186,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             @Override
             public void onClick(View view) {
                 binding.fullscreenContent.setText("Dummy Button 1 Pressed");
+                isCalibrating = true;
             }
         });
         binding.dummyButton1.setOnTouchListener(mDelayHideTouchListener);
@@ -245,7 +256,25 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     public void onSensorChanged(SensorEvent sensorEvent) {
         TextView t = findViewById(R.id.fullscreen_content);
 
-        //TODO: add checks for both to make sure empty/null only provided first time around
+        // if the user is calibrations
+        if (isCalibrating) {
+            // get rotation vector and sensor
+            if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+                // collecting x,y,z data, if null collect current data
+                rotationObject.updateEvent(sensorEvent);
+                // keep null because we only want the last set recorded
+                // TODO set threshold
+                rotationVals = rotationObject.returnRotationVals(null);
+            }
+
+            else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                gyroObject.updateEvent(sensorEvent);
+                gyroVals = gyroObject.returnGyroVals(null);
+            }
+        }
+
+
+      /*  //TODO: add checks for both to make sure empty/null only provided first time around
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             Gyroscope g = new Gyroscope(sensorEvent,"ROTATION_VECTOR");
             gyroVals = g.returnRotationVals(null);
@@ -256,7 +285,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 str.append(" ");
             }
             t.setText(str);
-
+*/
         } /*else if(sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE){
             Gyroscope g2 = new Gyroscope(sensorEvent, "GYROSCOPE");
             if(gyroVals == null || gyroVals.size() < 1) { //TODO: uncomment this again and fix null bug
