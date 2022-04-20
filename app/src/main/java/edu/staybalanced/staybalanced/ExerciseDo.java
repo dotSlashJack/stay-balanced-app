@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.Hashtable;
 
 import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
 
@@ -58,8 +59,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorEvent rotationEvent;
     private SensorEventListener gyroListener;
     private SensorEventListener rotationListener;
-    private ArrayList<Float> gyroVals;
-    private ArrayList<Float> rotationVals;
+    private Hashtable<String, ArrayList<Float>> gyroVals;
+    private Hashtable<String, ArrayList<Float>> rotationVals;
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
@@ -244,28 +245,44 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     public void onSensorChanged(SensorEvent sensorEvent) {
         TextView t = findViewById(R.id.fullscreen_content);
 
+        //TODO: add checks for both to make sure empty/null only provided first time around
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             Gyroscope g = new Gyroscope(sensorEvent,"ROTATION_VECTOR");
-            gyroVals = g.returnRotationVals();
+            gyroVals = g.returnRotationVals(null);
 
             StringBuilder str = new StringBuilder();
-            for (Float v : gyroVals) {
+            for (Float v : gyroVals.get("rotation_x")) {
                 str.append(v.toString());
                 str.append(" ");
             }
             t.setText(str);
 
-        } else if(sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+        } /*else if(sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE){
             Gyroscope g2 = new Gyroscope(sensorEvent, "GYROSCOPE");
-            rotationVals = g2.returnGyroVals();
+            if(gyroVals == null || gyroVals.size() < 1) { //TODO: uncomment this again and fix null bug
+                gyroVals = g2.returnGyroVals(null);
+            }
+            else{
+                gyroVals = g2.returnGyroVals(gyroVals);
+                t.setText("");
+                StringBuilder str = new StringBuilder();
+                for (Float v : gyroVals.get("gyro_x")) {
+                    str.append(v.toString());
+                    str.append(" ");
+                }
+                t.setText(str);
+                //g2.update();
+            }*/
 
-            StringBuilder str = new StringBuilder();
+            //g2.
+
+            /*StringBuilder str = new StringBuilder();
             for (Float v : rotationVals) {
                 str.append(v.toString());
                 str.append(" ");
             }
             t.setText(str);
-        }
+        }*/
 
         //g.updateGyroVals(gyroVals);
         //gyroVals = g.returnVals();
