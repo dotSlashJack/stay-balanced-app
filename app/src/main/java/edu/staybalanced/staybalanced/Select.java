@@ -21,8 +21,8 @@ import java.util.ArrayList;
 public class Select extends Fragment {
 
     RecyclerView recyclerView;
-    ArrayList<ExcerciseItem> excercises;
-    ExcerciseAdapter excerciseAdapter;
+    ArrayList<ExerciseItem> individualExercises;
+    ExerciseAdapter exerciseAdapter;
 
     public Select() {
         // Required empty public constructor
@@ -45,24 +45,26 @@ public class Select extends Fragment {
         // initialize recyclerview
         recyclerView = view.findViewById(R.id.recycler_view);
 
-        excercises = new ArrayList<>();
+        // TODO currently at the create step it makes the exercises, pull the exercise data
+        // from the database and then add them to the exercises variable (List)
+        // Also add a generic icon for any exercises we don't kno
 
-        //TODO currently at the create step it makes the excercises, pull the excercise data
-        //from the database and then add them to the excercises variable (List)
-        // Also add a generic icon for any excercises we don't kno
-        //adding placeholder excercises
-        excercises.add(new ExcerciseItem("Wall Squat", R.drawable.eicon_squat));
-        excercises.add(new ExcerciseItem("Plank", R.drawable.eicon_plank));
-        excercises.add(new ExcerciseItem("Bicep Curl Hold", R.drawable.eicon_b_curl));
+        // get database exercise items
+        DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
+        individualExercises = databaseHelper.getAllExerciseItems();
 
-        for (int i = 0; i < 20; i ++){
-            String nameE = "Example " + Integer.toString(i);
-            excercises.add(new ExcerciseItem(nameE, R.drawable.eicon_plank));
+        //adding default exercises if db is empty
+        if (individualExercises.isEmpty()) {
+            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", "Squat with back to the wall", 1, 1, 1 , 0,0,0 , R.drawable.eicon_squat));
+            databaseHelper.addExercise(new Exercises(-1, "Plank", "Holding body straight off the ground", 1, 1,1, 0, 0, 0, R.drawable.eicon_plank));
+            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", "Hold dumbbell in position", 1, 1, 1, 0, 0, 0, R.drawable.eicon_b_curl));
+            individualExercises = databaseHelper.getAllExerciseItems();
         }
 
-        excerciseAdapter = new ExcerciseAdapter(excercises,view.getContext());
+        // put individual exercises into adapter
+        exerciseAdapter = new ExerciseAdapter(individualExercises,view.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(excerciseAdapter);
+        recyclerView.setAdapter(exerciseAdapter);
     }
 
     @Override
@@ -86,7 +88,7 @@ public class Select extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                excerciseAdapter.getFilter().filter(newText);
+                exerciseAdapter.getFilter().filter(newText);
                 // false if the SearchView should perform the default action of showing any suggestions if available
                 // KEEP FALSE
                 return false;

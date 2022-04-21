@@ -20,7 +20,7 @@
             app:cardCornerRadius="9dp">
 
             <ImageView
-                android:id="@+id/image_excercise"
+                android:id="@+id/image_exercise"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
@@ -28,7 +28,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/txt_excercise_name"
+            android:id="@+id/txt_exercise_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="95dp"

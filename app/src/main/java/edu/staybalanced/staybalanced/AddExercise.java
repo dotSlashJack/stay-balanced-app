@@ -58,14 +58,14 @@ public class AddExercise extends Fragment {
                         Integer.parseInt(sets.getText().toString()),
                         Integer.parseInt(reps.getText().toString()),
                         Integer.parseInt(secs.getText().toString()),
-                        // setting default values for gyro measurements
-                        0.0, 0.0, 0.0
+                        // setting default values for gyro measurements and image
+                        0.0, 0.0, 0.0 , R.drawable.eicon_b_curl
                 );
                 Toast.makeText(view.getContext(), "New exercise " + name.getText().toString() + " created", Toast.LENGTH_SHORT).show();
             }
             catch (Exception e) {
                 Toast.makeText(view.getContext(), "Error adding exercise", Toast.LENGTH_SHORT).show();
-                new_exercise = new Exercises(-1, "error", "error while adding exercise", 0, 0, 0, 0, 0, 0);
+                new_exercise = new Exercises(-1, "error", "error while adding exercise", 0, 0, 0, 0, 0, 0, 0);
             }
             DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
             boolean success = databaseHelper.addExercise(new_exercise);
