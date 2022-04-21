@@ -10,7 +10,11 @@
     <string name="home_strStartExercise">Start Exercise</string>
     <string name="home_strAddExercise">Add Exercise</string>
 
-    <!--Add Exercise Strings-->
+    <!--Settings Fragment Strings-->
+    <string name="set_silentOn">You\'ll be notified when a rep is done with <b>only vibrations</b></string>
+    <string name="set_silentOff">You\'ll be notified when a rep is done with <b>sounds and vibrations</b></string>
+
+    <!--AddExercise Strings-->
     <string name="add_title">Add Exercise</string>
     <string name="add_name">Name</string>
     <string name="add_desc">Description</string>

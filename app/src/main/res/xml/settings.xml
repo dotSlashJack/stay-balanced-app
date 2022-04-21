@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--This resource file is used by the Settings Fragment
+See https://developer.android.com/guide/topics/ui/settings/customize-your-settings
+for a reference-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreferenceCompat
+        android:key="silent"
+        android:defaultValue="false"
+        android:title="Silent Mode"/>
+</PreferenceScreen>
