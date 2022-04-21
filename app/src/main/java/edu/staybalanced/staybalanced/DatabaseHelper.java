@@ -34,7 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_HISTORY_SECONDS_IN_POSITION  = "SECONDS_IN_POSITION";
 
     // Unlocked Assets table with columns in order
-    private static final String UNLOCKED_ASSETS_TABLE = "EXERCISE_HISTORY_TABLE";
+    private static final String UNLOCKED_ASSETS_TABLE = "ASSETS_TABLE";
     public static final String COLUMN_ASSET_ID = "ASSET_ID";
     public static final String COLUMN_ASSET_FILENAME = "ASSET_FILENAME";
     public static final String COLUMN_ASSET_UNLOCKED = "ASSET_UNLOCKED";
@@ -95,6 +95,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // gets connection to database
         SQLiteDatabase db = this.getWritableDatabase();
+
+        //clearDb();
 
         // creates row content values and adds in each row's content
         ContentValues cv = new ContentValues();
