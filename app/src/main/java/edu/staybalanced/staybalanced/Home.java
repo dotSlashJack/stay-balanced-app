@@ -38,7 +38,7 @@ public class Home extends Fragment {
         homeButtonListener = view1 -> {
             switch (view1.getId()) {
                 case R.id.home_btnStartExercise:
-                    navController.navigate(NavGraph00Directions.toSelect());
+                    navController.navigate(NavGraph00Directions.toSelect()); //TODO: make sure this goes to the righth activity
                     break;
                 case R.id.home_btnAddExercise:
                     navController.navigate(NavGraph00Directions.toNewExercise());
