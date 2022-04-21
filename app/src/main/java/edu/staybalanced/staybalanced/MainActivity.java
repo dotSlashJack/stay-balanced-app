@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
          *
          * Note how the NavigationBarView Class handles highlighting the appropriate button as
          * selected whenever its Listener changes the Fragment.  If the Fragment is changed by a
-         * different process (like the onClick() method below) this automatic highlighting will not
-         * occur.  That other process should be sure to call .setSelectedItemId() where necessary.
+         * different process (like an onClick() method) this automatic highlighting will not occur.
+         * That other process should be sure to call .setSelectedItemId() where necessary.
          */
         bottomMenu.setSelectedItemId(R.id.menu_item_home);
         bottomMenu.setOnItemSelectedListener(item -> {

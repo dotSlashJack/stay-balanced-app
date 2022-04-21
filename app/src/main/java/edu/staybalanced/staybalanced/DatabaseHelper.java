@@ -10,7 +10,6 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -22,9 +21,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EXERCISE_SETS = "EXERCISE_SETS";
     public static final String COLUMN_EXERCISE_REPS = "EXERCISE_REPS";
     public static final String COLUMN_SECONDS_PER_REP = "SECONDS_PER_REP";
-    public static final String COLUMN_GYROX = "GYROX";
-    public static final String COLUMN_GYROY = "GYROY";
-    public static final String COLUMN_GYROZ = "GYROZ";
+    public static final String COLUMN_GYRO_X = "GYROX";
+    public static final String COLUMN_GYRO_Y = "GYROY";
+    public static final String COLUMN_GYRO_Z = "GYROZ";
+    public static final String COLUMN_IMAGE = "EXERCISE_IMAGE";
 
     // Exercise History table with columns in order
     private static final String HISTORY_TABLE = "EXERCISE_HISTORY_TABLE";
@@ -46,20 +46,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // When we first try to access the database create appropriate tables if they don't exist
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createExercisesTable = "CREATE TABLE " + EXERCISES_TABLE + " (" +
+
+        String createExercisesTable = "CREATE TABLE " + EXERCISES_TABLE + " ( " +
                 COLUMN_EXERCISE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_EXERCISE_NAME + " TEXT, " +
                 COLUMN_EXERCISE_DESCRIPTION + " TEXT, " +
                 COLUMN_EXERCISE_SETS + " INT, " +
                 COLUMN_EXERCISE_REPS + " INT, " +
                 COLUMN_SECONDS_PER_REP + " INT, " +
-                COLUMN_GYROX + " INT, " +
-                COLUMN_GYROY + " INT, " +
-                COLUMN_GYROZ + " INT ) ";
+                COLUMN_GYRO_X + " INT, " +
+                COLUMN_GYRO_Y + " INT, " +
+                COLUMN_GYRO_Z + " INT, " +
+                COLUMN_IMAGE + " INT ) ";
 
         db.execSQL(createExercisesTable);
 
-        String createExerciseHistoryTable = "CREATE TABLE " + HISTORY_TABLE + " (" +
+        String createExerciseHistoryTable = "CREATE TABLE " + HISTORY_TABLE + " ( " +
                 COLUMN_HISTORY_INSTANCE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_HISTORY_EXERCISE_ID + " INT, " +
                 COLUMN_HISTORY_EPOCH_SECONDS + " INT, " +
@@ -72,13 +74,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_ASSET_FILENAME + " TEXT, " +
                 COLUMN_ASSET_UNLOCKED + " INT ) ";
 
-        db.execSQL(createExerciseHistoryTable);
+        db.execSQL(createUnlockedAssetsTable);
     }
 
     // When different database versions exist and app is trying to access non-compliant database design
     // Helps with forward and backward compatibility
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        db.execSQL("DROP TABLE IF EXISTS " + EXERCISES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + UNLOCKED_ASSETS_TABLE);
+        onCreate(db);
     }
 
     // adds new record to exercises table
@@ -97,9 +103,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_EXERCISE_SETS, new_exercise.getSets());
         cv.put(COLUMN_EXERCISE_REPS, new_exercise.getReps());
         cv.put(COLUMN_SECONDS_PER_REP, new_exercise.getSecondsPerRep());
-        cv.put(COLUMN_GYROX, new_exercise.getGyroX());
-        cv.put(COLUMN_GYROY, new_exercise.getGyroY());
-        cv.put(COLUMN_GYROZ, new_exercise.getGyroZ());
+        cv.put(COLUMN_GYRO_X, new_exercise.getGyroX());
+        cv.put(COLUMN_GYRO_Y, new_exercise.getGyroY());
+        cv.put(COLUMN_GYRO_Z, new_exercise.getGyroZ());
+        cv.put(COLUMN_IMAGE, new_exercise.getImage());
 
         Log.d("sql app", "adding data " + new_exercise + " to " + EXERCISES_TABLE);
 
@@ -152,9 +159,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return (insert_result == 1);
     }
 
-    public List<Exercises> getAllExercises(){
+    public void clearDb(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + EXERCISES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + UNLOCKED_ASSETS_TABLE);
+        onCreate(db);
+        db.close();
+    }
 
-        List<Exercises> all_exercises = new ArrayList<>();
+    public ArrayList<ExerciseItem> getAllExerciseItems(){
+        ArrayList<ExerciseItem> all_exercise_items = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String getAllExerciseItemsQuery = "SELECT " + COLUMN_EXERCISE_ID + " , " + COLUMN_EXERCISE_NAME + " , " + COLUMN_IMAGE + " FROM " + EXERCISES_TABLE;
+        Cursor cursor = db.rawQuery(getAllExerciseItemsQuery, null);
+
+        // if the cursor contains at least one item
+        if (cursor.moveToFirst()) {
+            // loop through result set
+            do {
+                // get value of exercise at current cursor
+                int ex_id = cursor.getInt(0);
+                String ex_name = cursor.getString(1);
+                int image = cursor.getInt(2);
+                ExerciseItem current_exercise_item = new ExerciseItem(ex_id, ex_name, image);
+                all_exercise_items.add(current_exercise_item);
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return all_exercise_items;
+    }
+
+    public ArrayList<Exercises> getAllExercises(){
+
+        ArrayList<Exercises> all_exercises = new ArrayList<>();
 
         String getAllExercisesQuery = "SELECT * FROM " + EXERCISES_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -174,15 +217,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 double ex_gyro_x = cursor.getDouble(6);
                 double ex_gyro_y = cursor.getDouble(7);
                 double ex_gyro_z = cursor.getDouble(8);
+                int image = cursor.getInt(9);
 
                 // make it into a new Exercises instance and add it to final list
-                Exercises current_exercise = new Exercises(ex_id, ex_name, ex_desc, ex_sets, ex_reps, ex_secs_per_rep, ex_gyro_x, ex_gyro_y, ex_gyro_z);
+                Exercises current_exercise = new Exercises(ex_id, ex_name, ex_desc, ex_sets, ex_reps, ex_secs_per_rep, ex_gyro_x, ex_gyro_y, ex_gyro_z, image);
                 all_exercises.add(current_exercise);
 
             } while (cursor.moveToNext());
 
-        } else {
-            // nothing was in the result set
         }
 
         cursor.close();
@@ -191,10 +233,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return all_exercises;
     }
 
+    public ArrayList<ExerciseHistory> getAllExercisesHistory(){
+
+        ArrayList<ExerciseHistory> history_all_exercises = new ArrayList<>();
+
+        String getAllExercisesHistoryQuery = "SELECT * FROM " + HISTORY_TABLE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(getAllExercisesHistoryQuery, null);
+
+        // if the cursor contains at least one item
+        if (cursor.moveToFirst()) {
+            // loop through result set
+            do {
+                // get value of exercise at current cursor
+                int ex_history_id = cursor.getInt(0);
+                int ex_id = cursor.getInt(1);
+                int ex_epoch_seconds = cursor.getInt(2);
+                int ex_seconds_in_position = cursor.getInt(3);
+
+                // make it into a new ExerciseHistory instance and add it to final list
+                ExerciseHistory current_exercise = new ExerciseHistory(ex_history_id, ex_id, ex_epoch_seconds, ex_seconds_in_position);
+                history_all_exercises.add(current_exercise);
+
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return history_all_exercises;
+    }
+
+    public int getImageIntFromID(int exerciseID){
+        String getImageInt = "SELECT " + COLUMN_IMAGE + " FROM " + EXERCISES_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = " + exerciseID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(getImageInt, null);
+
+        // if our query has a result, return img number or set image to default 0
+        int imageInt = 0;
+        if (cursor.moveToFirst()) {
+            imageInt = cursor.getInt(9);
+        }
+
+        cursor.close();
+        db.close();
+
+        return imageInt;
+    }
+
+    public Boolean deleteExerciseHistory(ExerciseHistory historyItem) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String deleteQuery = "DELETE FROM " + HISTORY_TABLE + " WHERE " + COLUMN_HISTORY_INSTANCE_ID + " = " + historyItem.getId();
+        Cursor cursor = db.rawQuery(deleteQuery, null);
+        cursor.close();
+        db.close();
+        return cursor.moveToFirst();
+    }
+
     public Boolean deleteExercise(Exercises exercise) {
         SQLiteDatabase db = this.getWritableDatabase();
         String deleteQuery = "DELETE FROM " + EXERCISES_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = " + exercise.getId();
         Cursor cursor = db.rawQuery(deleteQuery, null);
+        cursor.close();
+        db.close();
         return cursor.moveToFirst();
     }
 

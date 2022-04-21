@@ -10,7 +10,12 @@
     <string name="home_strStartExercise">Start Exercise</string>
     <string name="home_strAddExercise">Add Exercise</string>
 
-    <!--Add Exercise Strings-->
+    <!--Settings Fragment Strings
+    The androidx.preference API does not seem capable of displaying string resource formatting-->
+    <string name="set_silentOn">You\'ll be notified when a rep is done with only vibrations</string>
+    <string name="set_silentOff">You\'ll be notified when a rep is done with sounds and vibrations</string>
+
+    <!--AddExercise Strings-->
     <string name="add_title">Add Exercise</string>
     <string name="add_name">Name</string>
     <string name="add_desc">Description</string>

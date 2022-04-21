@@ -12,9 +12,10 @@ public class Exercises {
     private double gyroX;
     private double gyroY;
     private double gyroZ;
+    private int image;
 
     // Default constructors
-    public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ) {
+    public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, int image) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -24,6 +25,7 @@ public class Exercises {
         this.gyroX = gyroX;
         this.gyroY = gyroY;
         this.gyroZ = gyroZ;
+        this.image = image;
     }
     public Exercises() {
     }
@@ -84,19 +86,25 @@ public class Exercises {
     public double getGyroX() {
         return gyroX;
     }
-    public void setGyroX(int gyroX) {
+    public void setGyroX(double gyroX) {
         this.gyroX = gyroX;
     }
     public double getGyroY() {
         return gyroY;
     }
-    public void setGyroY(int gyroY) {
+    public void setGyroY(double gyroY) {
         this.gyroY = gyroY;
     }
     public double getGyroZ() {
         return gyroZ;
     }
-    public void setGyroZ(int gyroZ) {
+    public void setGyroZ(double gyroZ) {
         this.gyroZ = gyroZ;
+    }
+    public int getImage() {
+        return image;
+    }
+    public void setImage(int image) {
+        this.image =  image;
     }
 }
