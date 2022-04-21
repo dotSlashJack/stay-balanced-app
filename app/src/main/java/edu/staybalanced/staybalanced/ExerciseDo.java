@@ -57,11 +57,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorEvent rotationEvent;
     private SensorEventListener gyroListener;
     private SensorEventListener rotationListener;
-    private Hashtable<String, ArrayList<Float>> gyroVals;
-    private Hashtable<String, ArrayList<Float>> rotationVals;
+    private Hashtable<String, Float> gyroVals;
+    private Hashtable<String, Float> rotationVals;
 
-    //Calibration in progress TODO
     boolean isCalibrating = false;
+    boolean isExercising = false; //TODO: link exdrcising to a button
     Gyroscope rotationObject;
     Gyroscope gyroObject;
 
@@ -159,6 +159,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         gyro = sensorManagerGyro.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         rotationVector = sensorManagerRotation.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
+        //TODO: this seems to work to catch at least a lack of gyroscope, but we may want to test this a bit more
         if(gyro == null){
             Toast.makeText(this,"error in gyro", Toast.LENGTH_LONG).show();
             finish();
@@ -264,57 +265,31 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 rotationObject.updateEvent(sensorEvent);
                 // keep null because we only want the last set recorded
                 // TODO set threshold
-                rotationVals = rotationObject.returnRotationVals(null);
+                rotationVals = rotationObject.returnRotationVals();
             }
 
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
                 gyroObject.updateEvent(sensorEvent);
-                gyroVals = gyroObject.returnGyroVals(null);
+                gyroVals = gyroObject.returnGyroVals();
             }
+        } else if(isExercising){
+            boolean exerciseOnTrack;
+            if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+                // collecting x,y,z data, if null collect current data
+                rotationObject.updateEvent(sensorEvent);
+                // keep null because we only want the last set recorded
+                // TODO set threshold
+                exerciseOnTrack = rotationObject.exerciseTracker();
+                //TODO: keep track of how many events were true/false to get proportion with good form, maybe add time stamp
+            }
+
+            else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                gyroObject.updateEvent(sensorEvent);
+                exerciseOnTrack = gyroObject.exerciseTracker();
+            }
+
+            //need to create a tracker
         }
-
-
-      /*  //TODO: add checks for both to make sure empty/null only provided first time around
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            Gyroscope g = new Gyroscope(sensorEvent,"ROTATION_VECTOR");
-            gyroVals = g.returnRotationVals(null);
-
-            StringBuilder str = new StringBuilder();
-            for (Float v : gyroVals.get("rotation_x")) {
-                str.append(v.toString());
-                str.append(" ");
-            }
-            t.setText(str);
-*/
-        } /*else if(sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-            Gyroscope g2 = new Gyroscope(sensorEvent, "GYROSCOPE");
-            if(gyroVals == null || gyroVals.size() < 1) { //TODO: uncomment this again and fix null bug
-                gyroVals = g2.returnGyroVals(null);
-            }
-            else{
-                gyroVals = g2.returnGyroVals(gyroVals);
-                t.setText("");
-                StringBuilder str = new StringBuilder();
-                for (Float v : gyroVals.get("gyro_x")) {
-                    str.append(v.toString());
-                    str.append(" ");
-                }
-                t.setText(str);
-                //g2.update();
-            }*/
-
-            //g2.
-
-            /*StringBuilder str = new StringBuilder();
-            for (Float v : rotationVals) {
-                str.append(v.toString());
-                str.append(" ");
-            }
-            t.setText(str);
-        }*/
-
-        //g.updateGyroVals(gyroVals);
-        //gyroVals = g.returnVals();
 
 
 
