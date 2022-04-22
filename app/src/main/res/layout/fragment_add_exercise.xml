@@ -71,6 +71,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/add_nested_constraint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/add_desc"
@@ -151,6 +152,46 @@
             app:layout_constraintStart_toEndOf="@+id/add_lbl_secs"
             app:layout_constraintTop_toTopOf="@+id/add_reps" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/add_icon_instruct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/add_nested_constraint"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_icon_recycler"
+        app:layout_constraintStart_toStartOf="@id/add_lbl_desc"
+        android:text="@string/add_icon"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/add_icon_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/add_icon_instruct"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@id/add_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/add_selected_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/add_icon_recycler"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/add_button"/>
+    <TextView
+        android:id="@+id/add_icon_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/add_button"

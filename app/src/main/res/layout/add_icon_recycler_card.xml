@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A Vertical LinearLayout whose width is set to fill up the Parent's
+     (RecyclerView.GridLayoutManager) columns and whose child elements have centered
+     gravity allows us to display each item, centered in its column.
+     https://stackoverflow.com/a/38625829/13084818 -->
+<android.widget.LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp">
+
+    <!--Resize images as necessary with these attributes:
+        https://stackoverflow.com/a/15117536/13084818 -->
+    <ImageButton
+        android:id="@+id/add_icon_button"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:background="@color/white"
+        android:adjustViewBounds="true"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        tools:ignore="SpeakableTextPresentCheck"
+        android:layout_gravity="center_horizontal" />
+
+</android.widget.LinearLayout>

@@ -5,6 +5,31 @@ import androidx.annotation.NonNull;
 @SuppressWarnings("unused")
 public class Exercises {
 
+    /**
+     * TODO: It may not be a good idea to store image ID numbers.  These are generated at runtime
+     * and may not be the same across all instances of the App.  Filenames should be stored instead.
+     */
+    /**
+     * HOW TO: Reference a resource programmatically by name.
+     * context.getResources().getIdentifier("name", "type", "package")
+     *
+     * Returns an int ID that refers to the resource, which can then be fed into one of the App's
+     * getters [like getDrawable()] to retrieve the resource.  Note that "name" should not include
+     * the resource's file extension.
+     *
+     * See reference for getIdentifier() on this page:
+     * https://developer.android.com/reference/android/content/res/Resources
+     *
+     * int myid = this.getResources().getIdentifier("sticker000", "drawable", getPackageName());
+     * Log.d("DEBUG", String.valueOf(myid));
+     * ImageView i = findViewById(R.id.test_img);
+     * i.setImageResource(myid);
+     *
+     * HOW TO: Return the name of a Resource when you have its ID number:
+     * context.getResources().getResourceEntryName(int resId)
+     *
+     * .getResourceName() returns a fully qualified path, "[packageName]:[type]/[resName]", instead
+     */
     // Exercises { id: Numerical, name: String, description: String, sets: Numerical, reps: Numerical, secondsPerRep: Numerical, gyroX: Numerical, gyroY: Numerical, gyroZ: Numerical }
     private int id;
     private String name;
