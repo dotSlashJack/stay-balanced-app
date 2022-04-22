@@ -27,6 +27,7 @@ import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
  *
  * TODO: Instance saving not implemented.  Screen's state will be reset on orientation change.
  */
+@SuppressWarnings("Convert2Lambda")
 public class ExerciseDo extends AppCompatActivity implements SensorEventListener{
 
     // Determines whether or not the controls should be auto-hidden after {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -61,7 +62,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorEventListener rotationListener;
 
     boolean isCalibrating;// = false;
-    boolean isExercising = false; //TODO: link exdrcising to a button
+    boolean isExercising;// TODO: link exdrcising to a button
+
     Gyroscope rotationObject;
     Gyroscope gyroObject;
     Hashtable<String, Float> rotationVals = new Hashtable<String, Float>();
@@ -126,7 +128,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
      * system UI. This is to prevent the jarring behavior of controls going away
      * while interacting with activity UI.
      *
-     * view.performClick() will call any onClickListeners that've been defined for the tapped View
+     * view.performClick() will call any onClickListeners that have been defined for the tapped View
      */
     private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
@@ -290,7 +292,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         super.onPause();
         sensorManagerGyro.unregisterListener(gyroListener);
         sensorManagerRotation.unregisterListener(rotationListener);
-        //TODO: make sure we do the same for the rotation sesnor
+        //TODO: make sure we do the same for the rotation sensor
     }
 
     @Override

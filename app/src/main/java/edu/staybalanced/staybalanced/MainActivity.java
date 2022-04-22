@@ -5,7 +5,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.material.navigation.NavigationBarView;
 

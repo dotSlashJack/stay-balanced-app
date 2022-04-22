@@ -55,9 +55,9 @@ public class Select extends Fragment {
 
         //adding default exercises if db is empty
         if (individualExercises.isEmpty()) {
-            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", "Squat with back to the wall", 1, 1, 1 , 0,0,0 , R.drawable.eicon_squat));
-            databaseHelper.addExercise(new Exercises(-1, "Plank", "Holding body straight off the ground", 1, 1,1, 0, 0, 0, R.drawable.eicon_plank));
-            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", "Hold dumbbell in position", 1, 1, 1, 0, 0, 0, R.drawable.eicon_b_curl));
+            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", "Squat with back to the wall", 1, 1, 1, R.drawable.eicon_squat));
+            databaseHelper.addExercise(new Exercises(-1, "Plank", "Holding body straight off the ground", 1, 1, 1, R.drawable.eicon_plank));
+            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", "Hold dumbbell in position", 1, 1, 1, R.drawable.eicon_b_curl));
             individualExercises = databaseHelper.getAllExerciseItems();
         }
 

@@ -23,6 +23,7 @@
     <string name="add_sets">Sets</string>
     <string name="add_secs">Seconds Per Rep</string>
     <string name="add_btn">Add</string>
+    <string name="add_icon">Select an Icon</string>
 
     <!--Placeholders for Dev Use-->
     <string name="fullscreen_activity_title">CalibrationPlaceholder</string>
