@@ -1,5 +1,9 @@
 package edu.staybalanced.staybalanced;
 
+import androidx.annotation.NonNull;
+
+// not all default setters/getters are used, suppress warning for it
+@SuppressWarnings("unused")
 public class UnlockedAssets {
 
     // UnlockedAssets { assetId: Numerical, resourceFilename: String, unlocked: Boolean }
@@ -15,6 +19,7 @@ public class UnlockedAssets {
     public UnlockedAssets() {
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "UnlockedAssets{" +

@@ -72,10 +72,8 @@ public class History extends Fragment {
         searchButton.setOnClickListener(fab -> {
             if (menuItem.isActionViewExpanded()) {
                 menuItem.collapseActionView();
-                menuItem.expandActionView();
-            } else {
-                menuItem.expandActionView();
             }
+            menuItem.expandActionView();
         });
     }
 

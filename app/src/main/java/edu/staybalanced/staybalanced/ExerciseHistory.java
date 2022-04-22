@@ -1,5 +1,9 @@
 package edu.staybalanced.staybalanced;
 
+import androidx.annotation.NonNull;
+
+// not all default setters/getters are used, suppress warning for it
+@SuppressWarnings("unused")
 public class ExerciseHistory {
 
     // ExerciseHistory { historyId: Numerical , exercisesId: Numerical,  epochSeconds: Numerical, secondsInPosition: Numerical }
@@ -17,6 +21,7 @@ public class ExerciseHistory {
     }
     public ExerciseHistory(){}
 
+    @NonNull
     @Override
     public String toString() {
         return "ExerciseHistory{" +

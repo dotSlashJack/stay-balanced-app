@@ -1,5 +1,8 @@
 package edu.staybalanced.staybalanced;
 
+import androidx.annotation.NonNull;
+// not all default setters/getters are used, suppress warning for it
+@SuppressWarnings("unused")
 public class Exercises {
 
     // Exercises { id: Numerical, name: String, description: String, sets: Numerical, reps: Numerical, secondsPerRep: Numerical, gyroX: Numerical, gyroY: Numerical, gyroZ: Numerical }
@@ -39,6 +42,7 @@ public class Exercises {
         new Exercises(id, name, description, sets, reps, secondsPerRep, 0, 0, 0, 0, 0, 0, image);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Exercises{" +
