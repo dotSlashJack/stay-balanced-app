@@ -3,6 +3,8 @@ package edu.staybalanced.staybalanced;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -58,17 +60,25 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorEvent rotationEvent;
     private SensorEventListener gyroListener;
     private SensorEventListener rotationListener;
-    private Hashtable<String, Float> gyroVals;
-    private Hashtable<String, Float> rotationVals;
 
-    boolean isCalibrating = false;
-    boolean isExercising = false; //TODO: link exercising to a button
+    boolean isCalibrating;// = false;
+    boolean isExercising;// TODO: link exdrcising to a button
+
     Gyroscope rotationObject;
     Gyroscope gyroObject;
+    Hashtable<String, Float> rotationVals = new Hashtable<String, Float>();
+    Hashtable<String, Float> gyroVals = new Hashtable<String, Float>();
+    boolean gotRotation = false;
+    boolean gotGyro = false;
 
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
+
+    public boolean changeCalibration(){
+        isCalibrating = !isCalibrating;
+        return isCalibrating;
+    }
 
     /**
      * An unused Runnable.  This was used to hide the Android System's Notification bar (top of the
@@ -141,10 +151,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        rotationVals = null;
+        gyroVals = null;
+
         rotationObject = new Gyroscope("ROTATION_VECTOR"); // create gyroscope
         gyroObject = new Gyroscope("GYROSCOPE");
 
-        Hashtable<String, ArrayList<Float>> rotationVals = null;
 
 
         // Hide the default bar containing the Activity's name
@@ -181,17 +193,46 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             }
         });
 
+        isCalibrating = false;
+        boolean didSave = false;
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         binding.dummyButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.fullscreenContent.setText("Dummy Button 1 Pressed");
-                isCalibrating = true;
+
+                //binding.fullscreenContent.setText("Dummy Button 1 Pressed");
+                //binding.fullscreenContent.setText(Boolean.toString(isCalibrating));
+
+                isCalibrating = !isCalibrating;
+                if(!isCalibrating){
+                    if(rotationVals!=null && gyroVals!=null){
+                        String printVals = "finished calibration, rotation values are: x "+Float.toString(rotationVals.get("rotation_x"))+" y "+Float.toString(rotationVals.get("rotation_y")) + " z "+Float.toString(rotationVals.get("rotation_z")) +"\n" + " gyro vals are: x "+Float.toString(gyroVals.get("gyro_x"))+ " y "+Float.toString(gyroVals.get("gyro_y")) + " z " + Float.toString(gyroVals.get("gyro_z"));
+                        binding.fullscreenContent.setText(printVals);
+                        Gyroscope saveGyro = new Gyroscope(gyroVals, rotationVals);
+                        boolean didSave = saveGyro.saveCalibration();
+                        if(didSave!=true){
+                            Toast toast = Toast.makeText(getApplicationContext(), "ERROR: calibration did NOT save correctly. Please try again.", Toast.LENGTH_LONG);
+                            toast.show();
+                        }else if(didSave){
+                            Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
+                    else{
+                        binding.fullscreenContent.setText("not calibrating, click btn 1 to starts");
+                    }
+                }
+
+                /*if(rotationVals!=null && isCalibrating==false){21
+                    //Toast toast = Toast.makeText(getApplicationContext(), Float.toString(rotationVals.get("rotation_x")), Toast.LENGTH_LONG);
+                    //toast.show();
+                }*/
+
             }
         });
-        binding.dummyButton1.setOnTouchListener(mDelayHideTouchListener);
+        //binding.dummyButton1.setOnTouchListener(mDelayHideTouchListener); //TODO: if this needs to be working, then figure out a way to prevent it from resetting the boolean
         binding.dummyButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,10 +297,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        TextView t = findViewById(R.id.fullscreen_content);
-
+        //TextView t = findViewById(R.id.fullscreen_content);
         // if the user is calibrations
         if (isCalibrating) {
+            /*if(gotRotation && gotGyro){
+                isCalibrating = false;
+            }*/
             // get rotation vector and sensor
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 // collecting x,y,z data, if null collect current data
@@ -267,11 +310,15 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 // keep null because we only want the last set recorded
                 // TODO set threshold
                 rotationVals = rotationObject.returnRotationVals();
+                //t.setText("rot");
+                //TODO: call storage method
+                //gotRotation = true;
             }
 
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
                 gyroObject.updateEvent(sensorEvent);
                 gyroVals = gyroObject.returnGyroVals();
+                //gyroObject.saveCalibration(gyroVals.get("gyro_x"), gyroVals.get("gyro_y"),gyroVals.get("gyro_z"), "GYROSCOPE");
             }
         } else if(isExercising){
             boolean exerciseOnTrack;

@@ -100,6 +100,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // gets connection to database
         SQLiteDatabase db = this.getWritableDatabase();
 
+        //clearDb();
+
         // creates row content values and adds in each row's content
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_EXERCISE_NAME, new_exercise.getName());
