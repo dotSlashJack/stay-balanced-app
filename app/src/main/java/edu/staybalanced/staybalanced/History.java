@@ -21,7 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class History extends Fragment {
-    //TODO add code for making graph
+    //TODO: add code for making graph
     RecyclerView recyclerView;
     ArrayList<ExerciseItem> exercises;
     ExerciseAdapter exerciseAdapter;
@@ -51,32 +51,17 @@ public class History extends Fragment {
 
         exercises = new ArrayList<>();
 
-        //TODO: interacting with database here to display history
-        //adding placeholder exercises
-
         // get database exercise items
         DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
         exercises = databaseHelper.getAllExerciseItems();
 
         //adding default exercises if db is empty
         if (exercises.isEmpty()) {
-            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", "Squat with back to the wall", 1, 1, 1 , 0,0,0 , R.drawable.eicon_squat));
-            databaseHelper.addExercise(new Exercises(-1, "Plank", "Holding body straight off the ground", 1, 1,1, 0, 0, 0, R.drawable.eicon_plank));
-            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", "Hold dumbbell in position", 1, 1, 1, 0, 0, 0, R.drawable.eicon_b_curl));
+            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", "Squat with back to the wall", 1, 1, 1 , R.drawable.eicon_squat));
+            databaseHelper.addExercise(new Exercises(-1, "Plank", "Holding body straight off the ground", 1, 1,1, R.drawable.eicon_plank));
+            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", "Hold dumbbell in position", 1, 1, 1, R.drawable.eicon_b_curl));
             exercises = databaseHelper.getAllExerciseItems();
         }
-
-        // Go through database and get history
-
-
-        // make unique exercise items from db history
-
-        // put exercise items into exercise adapter
-//
-//        exercises.add(new ExerciseItem(-1, "Wall Squat", R.drawable.eicon_squat));
-//        exercises.add(new ExerciseItem(-1,"Plank", R.drawable.eicon_plank));
-//        exercises.add(new ExerciseItem(-1, "Bicep Curl Hold", R.drawable.eicon_b_curl));
-
 
         exerciseAdapter = new ExerciseAdapter(exercises,view.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));

@@ -12,10 +12,13 @@ public class Exercises {
     private double gyroX;
     private double gyroY;
     private double gyroZ;
+    private double rotationX;
+    private double rotationY;
+    private double rotationZ;
     private int image;
 
-    // Default constructors
-    public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, int image) {
+    // Full constructor
+    public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -25,12 +28,17 @@ public class Exercises {
         this.gyroX = gyroX;
         this.gyroY = gyroY;
         this.gyroZ = gyroZ;
+        this.rotationX = rotationX;
+        this.rotationY = rotationY;
+        this.rotationZ = rotationZ;
         this.image = image;
     }
-    public Exercises() {
+
+    // Default calibration values constructor
+    public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, int image){
+        new Exercises(id, name, description, sets, reps, secondsPerRep, 0, 0, 0, 0, 0, 0, image);
     }
 
-    // toString
     @Override
     public String toString() {
         return "Exercises{" +
@@ -43,6 +51,10 @@ public class Exercises {
                 ", gyroX=" + gyroX +
                 ", gyroY=" + gyroY +
                 ", gyroZ=" + gyroZ +
+                ", rotationX=" + rotationX +
+                ", rotationY=" + rotationY +
+                ", rotationZ=" + rotationZ +
+                ", image=" + image +
                 '}';
     }
 
@@ -101,10 +113,29 @@ public class Exercises {
     public void setGyroZ(double gyroZ) {
         this.gyroZ = gyroZ;
     }
+    public double getRotationX() {
+        return rotationX;
+    }
+    public void setRotationX(double rotationX) {
+        this.rotationX = rotationX;
+    }
+    public double getRotationY() {
+        return rotationY;
+    }
+    public void setRotationY(double rotationY) {
+        this.rotationY = rotationY;
+    }
+    public double getRotationZ() {
+        return rotationZ;
+    }
+    public void setRotationZ(double rotationZ) {
+        this.rotationZ = rotationZ;
+    }
     public int getImage() {
         return image;
     }
     public void setImage(int image) {
         this.image =  image;
     }
+
 }
