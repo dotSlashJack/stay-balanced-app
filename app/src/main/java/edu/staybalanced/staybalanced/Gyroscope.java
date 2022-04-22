@@ -25,6 +25,9 @@ public class Gyroscope{
     private static ArrayList<Float> rotationValsY = new ArrayList<Float>();
     private static ArrayList<Float> rotationValsZ = new ArrayList<Float>();
 
+    Hashtable<String, Float> calibratedGyroVals = new Hashtable<String, Float>();
+    Hashtable<String, Float> calibratedRotationVals = new Hashtable<String, Float>();
+
     //private static SensorEvent sensorEvent;
     private static SensorEvent gyroSensor;
     private static SensorEvent rotationSensor;
@@ -36,7 +39,6 @@ public class Gyroscope{
     String exerciseName;
 
     // rotation around x
-
     public static float getGyroX(){ return gyroSensor.values[0]; }
 
     // rotation around y axis
@@ -116,7 +118,7 @@ public class Gyroscope{
         }
     }
 
-    private static Hashtable<String, Float> getInflectionPoints(ArrayList<Float> xVals, ArrayList<Float> yVals, ArrayList<Float> zVals){
+    /*private static Hashtable<String, Float> getInflectionPoints(ArrayList<Float> xVals, ArrayList<Float> yVals, ArrayList<Float> zVals){
         Hashtable<String, Float> inflections = new Hashtable<String, Float>();
 
         ArrayList<Float> xValsSorted = xVals;
@@ -134,7 +136,7 @@ public class Gyroscope{
         inflections.put("z_max", zValsSorted.get(zValsSorted.size()-1));
 
         return inflections;
-    }
+    }*/
 
 
     public Hashtable<String, Float> getStoredCalibration(){
@@ -148,16 +150,51 @@ public class Gyroscope{
         //TODO: implement with storage
     }
 
-    public void saveCalibration(){
-        /*
-        get the gyroscope values we want
-        write them to sql database
-        */
-        //TODO: get the min and max values for each
-        //TODO: pad them with margin of error
-        //TODO: get the other 2 coordinate variables at that location, pad
-        //TODO:
-        //TODO: want to store range of values, mean of values for 2 calibrations
+    //returns true if calibration save succeeded
+    //false if not
+    public boolean saveCalibration(){
+        try{
+            Float gyroXMOE = 0.1F;
+            Float gyroYMOE = 0.1F;
+            Float gyroZMOE = 0.1F;
+
+            Float rotationXMOE = 0.1F;
+            Float rotationYMOE = 0.1F;
+            Float rotationZMOE = 0.1F;
+
+            Float rotation_x = calibratedRotationVals.get("rotation_x");
+            Float rotation_y = calibratedRotationVals.get("rotation_y");
+            Float rotation_z = calibratedRotationVals.get("rotation_z");
+
+            Float rotation_x_min = rotation_x - rotationXMOE;
+            Float rotation_y_min = rotation_y - rotationXMOE;
+            Float rotation_z_min = rotation_z - rotationZMOE;
+            Float rotation_x_max = rotation_x + rotationXMOE;
+            Float rotation_y_max = rotation_y + rotationYMOE;
+            Float rotation_z_max = rotation_z + rotationZMOE;
+
+            Float gyro_x = calibratedGyroVals.get("gyro_x");
+            Float gyro_y = calibratedGyroVals.get("gyro_y");
+            Float gyro_z = calibratedGyroVals.get("gyro_z");
+
+            Float gyro_x_min = gyro_x - gyroXMOE;
+            Float gyro_y_min = gyro_y - gyroYMOE;
+            Float gyro_z_min = gyro_z - gyroZMOE;
+            Float gyro_x_max = gyro_x + gyroXMOE;
+            Float gyro_y_max = gyro_y + gyroZMOE;
+            Float gyro_z_max = gyro_z + gyroZMOE;
+
+            //STORE
+            //TODO: add storage code for gyro and rotation vals here (Jeicy)...
+            //TODO ...Store the mins and maxes for all gyro and for all rotation
+            //}
+            return true;
+        } catch(Exception e){
+            Log.d("save error", e.toString());
+            return false;
+        }
+
+
     }
 
     // Checks if the person has started switching back directions
@@ -445,8 +482,7 @@ public class Gyroscope{
         }
     }
 
-    // constructor for initialization/calibration
-    //public Gyroscope(SensorEvent gyroEvent, SensorEvent vectorEvent){
+    // constructor for calibration
     public Gyroscope(String eventType){
         this.eventTypeGyro = eventType;
 
@@ -461,6 +497,14 @@ public class Gyroscope{
         //this.gyroVals = new ArrayList<Float>();
     }
 
+    //constructor for *saving* the calibrated values
+    //needed b/c we call inside oncreate method
+    public Gyroscope(Hashtable<String, Float> calibratedGyroVals, Hashtable<String, Float> calibratedRotationVals){
+        this.calibratedGyroVals = calibratedGyroVals;
+        this.calibratedRotationVals = calibratedRotationVals;
+    }
+
+    //constructor for exercise
     public Gyroscope(String eventType, String exerciseName){
         this.eventTypeGyro = eventType;
         this.exerciseName = exerciseName;
