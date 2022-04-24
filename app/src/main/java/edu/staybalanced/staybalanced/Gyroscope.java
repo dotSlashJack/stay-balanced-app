@@ -17,26 +17,52 @@ public class Gyroscope{
 
     //protected Context context;
 
-    private static ArrayList<Float> gyroValsX = new ArrayList<Float>();
-    private static ArrayList<Float> gyroValsY = new ArrayList<Float>();
-    private static ArrayList<Float> gyroValsZ = new ArrayList<Float>();
-
-    private static ArrayList<Float> rotationValsX = new ArrayList<Float>();
-    private static ArrayList<Float> rotationValsY = new ArrayList<Float>();
-    private static ArrayList<Float> rotationValsZ = new ArrayList<Float>();
-
     Hashtable<String, Float> calibratedGyroVals = new Hashtable<String, Float>();
     Hashtable<String, Float> calibratedRotationVals = new Hashtable<String, Float>();
 
-    //private static SensorEvent sensorEvent;
     private static SensorEvent gyroSensor;
     private static SensorEvent rotationSensor;
 
-    private static ArrayList<Float> inflectionPoints; // this is where we'll store the points after loading in the proper calibration
+    private static Hashtable<String, ArrayList<Float>> exerciseGyroVals = new Hashtable<String, ArrayList<Float>>();
+    private static Hashtable<String, ArrayList<Float>> exercisRotationVals = new Hashtable<String, ArrayList<Float>>();
 
-    String eventTypeGyro;
+    String eventType;
+    //String exerciseName;
+    int exerciseID;
 
-    String exerciseName;
+    // constructor for calibration
+    public Gyroscope(String eventType){
+        this.eventType = eventType;
+    }
+
+    //constructor for *saving* the calibrated values
+    //needed b/c we call inside onCreate method
+    public Gyroscope(Hashtable<String, Float> calibratedGyroVals, Hashtable<String, Float> calibratedRotationVals){
+        this.calibratedGyroVals = calibratedGyroVals;
+        this.calibratedRotationVals = calibratedRotationVals;
+    }
+
+    //constructor for exercise
+    public Gyroscope(String eventType, int exerciseID){
+        this.eventType = eventType;
+        this.exerciseID = exerciseID;
+    }
+
+    // constructor for checking exercise after calibration
+    /*public Gyroscope(SensorEvent sensorEvent, String type, int exerciseID){
+        /*
+        Get the type of exercise they're doing
+        process accordingly
+        may want to build methods for each exercise in this class*/
+        //this.inflectionPoints = getInflectionPoints(); //TODO: implement
+        /*if(type=="GYROSCOPE"){
+            this.gyroSensor = sensorEvent;
+        }
+        else if(type=="ROTATION_VECTOR"){
+            this.rotationSensor = sensorEvent;
+        }
+
+    }*/
 
     // rotation around x
     public static float getGyroX(){ return gyroSensor.values[0]; }
@@ -62,7 +88,7 @@ public class Gyroscope{
 
     //see if a sensor's measurement changed enough to warrant logging and checking a new value
     private static boolean changeThreshold(Float val1, Float val2){
-        if(abs(val1 - val2) > 0.05){
+        if(abs(val1 - val2) > 0.01){ //TODO: check this value after several tests
             return true;
         }
         else{
@@ -71,7 +97,7 @@ public class Gyroscope{
     }
 
     //calculate the 3d distance between points
-    private static Float distance3D(Float x1, Float y1, Float z1, Float x2, Float y2, Float z2){
+    /*private static Float distance3D(Float x1, Float y1, Float z1, Float x2, Float y2, Float z2){
         return (float) sqrt(Math.pow((z2-z1),2) + Math.pow((y2-y1),2) + Math.pow((x2-x1),2));
     }
 
@@ -87,10 +113,10 @@ public class Gyroscope{
        } else{
             return false; //TODO: lol there was a reason I added the isDistance variable check but I forgor 💀 why
         }
-    }
+    }*/
 
     // get average of an array list
-    private static Float getAvg(ArrayList<Float> vals){
+    /*private static Float getAvg(ArrayList<Float> vals){
         //TODO: see if there's a more efficient way to find the average
         Float sum = 0.0F;
         int len = vals.size();
@@ -98,7 +124,7 @@ public class Gyroscope{
             sum+=vals.get(i);
         }
         return (float) sum / len;
-    }
+    }/*
 
     // this is really checking the speed of movement
     private static boolean checkGyro(Float gyroX, Float gyroY, Float gyroZ, Float calibrationXAvg, Float calibrationYAvg, Float calibrationZAvg){
@@ -141,7 +167,7 @@ public class Gyroscope{
 
     public Hashtable<String, Float> getStoredCalibration(){
         Hashtable<String, Float> calibrations = new Hashtable<String, Float>();
-        if(exerciseName == "dummy"){
+        if(exerciseID == 0){
             calibrations.put("x_val", 1.0F);
             calibrations.put("y_val", 1.0F);
             calibrations.put("z_val", 1.0F);
@@ -197,17 +223,6 @@ public class Gyroscope{
 
     }
 
-    // Checks if the person has started switching back directions
-    /*private Hashtable<String, Boolean> didSwitchDirections(){
-        Hashtable<String, Boolean> result = new Hashtable<String, Boolean>();
-        //TODO: look at the previous and current values to see if inflection point happened
-        //TODO: see if using gyro data can help with this (change in sign of value)
-        //TODO: see if it's within the range of the point(s) of inflection in calibration
-        result.put("directionSwitch", false);
-        result.put("withinCalibrationSwitchThreshold", false);
-        return result;
-    }*/
-
     //TODO: implement a method where if the two calibrations are too different it warns the user?
 
     public Hashtable<String, Float> returnGyroVals(){
@@ -255,44 +270,11 @@ public class Gyroscope{
 
     public Hashtable<String, Float> returnRotationVals(){
         Hashtable<String, Float> rotations = new Hashtable<String, Float>();
-        /*ArrayList<Float> xVals = new ArrayList<Float>();
-        ArrayList<Float> yVals = new ArrayList<Float>();
-        ArrayList<Float> zVals = new ArrayList<Float>();
-
-        if(existingDict != null){
-            rotations = existingDict;
-            rotationValsX = existingDict.get("rotation_x");
-            rotationValsY = existingDict.get("rotation_y");
-            rotationValsZ = existingDict.get("rotation_z");
-        }*/
 
         //get the rotation vector vals
         Float rotationX = new Float(getRotationX());
         Float rotationY = new Float(getRotationY());
         Float rotationZ = new Float(getRotationZ());
-
-        //see if the values have changed enough to worry about
-        /*if(rotationValsX!=null && rotationValsX.size() >= 1){
-            if(changeThreshold(rotationX, rotationValsX.get(rotationValsX.size()-1)) == true
-                    || changeThreshold(rotationY, rotationValsX.get(rotationValsX.size()-1)) == true
-                    || changeThreshold(rotationZ, rotationValsX.get(rotationValsX.size()-1)) == true
-            ){
-                rotationValsX.add(rotationX);
-                rotationValsY.add(rotationY);
-                rotationValsY.add(rotationZ);
-
-                ArrayList<Float> tmp = new ArrayList<Float>();
-                tmp.add(rotationX);
-                tmp.add(rotationY);
-                tmp.add(rotationZ);
-                Log.d("rotation", String.valueOf(tmp));
-
-            }
-        } else{
-            rotationValsX.add(rotationX);
-            rotationValsY.add(rotationY);
-            rotationValsZ.add(rotationZ);
-        }*/
 
         rotations.put("rotation_x", rotationX);
         rotations.put("rotation_y", rotationY);
@@ -311,7 +293,7 @@ public class Gyroscope{
         //TODO: this may be better done dynamically based on ranges of values from calibration...
         //TODO ...otherwise we probably want all MOE the same and can remove this function
         Hashtable<String, Float> marginsOfError = new Hashtable<String, Float>();
-        if(exerciseName == "dummy"){
+        if(exerciseID == 0){
             marginsOfError.put("moe_x", 0.1F);
             marginsOfError.put("moe_y", 0.1F);
             marginsOfError.put("moe_z", 0.1F);
@@ -323,12 +305,12 @@ public class Gyroscope{
         Float x;
         Float y;
         Float z;
-        if(eventTypeGyro=="GYROSCOPE"){
+        if(eventType=="GYROSCOPE"){
             x = returnGyroVals().get("gyro_x");
             y = returnGyroVals().get("gyro_y");
             z = returnGyroVals().get("gyro_z");
         }
-        else if(eventTypeGyro=="ROTATION_VECTOR"){
+        else if(eventType=="ROTATION_VECTOR"){
             x = returnRotationVals().get("rotation_x");
             y = returnRotationVals().get("rotation_y");
             z = returnRotationVals().get("rotation_z");
@@ -355,169 +337,16 @@ public class Gyroscope{
         } else{
             return true;
         }
-
-        /*Float moeRotationX = 0.1F;
-        Float moeRotationY = 0.1F;
-        Float moeRotationZ = 0.1F;
-        Float moeGyroX = 0.1F;
-        Float moeGyroY= 0.1F;
-        Float moeGyroZ = 0.1F;
-
-        ArrayList<Float> calibration_gyro_x = calibrationDict.get("calibration_gyro_x");
-        ArrayList<Float>  calibration_gyro_y = calibrationDict.get("calibration_gyro_y");
-        ArrayList<Float> calibration_gyro_z = calibrationDict.get("calibration_gyro_z");
-
-        ArrayList<Float> calibration_rotation_x = calibrationDict.get("calibration_rotation_x");
-        ArrayList<Float> calibration_rotation_y = calibrationDict.get("calibration_gyro_y");
-        ArrayList<Float> calibration_rotation_z = calibrationDict.get("calibration_gyro_z");
-
-        ArrayList<Float> gyro_x = rotationDict.get("gyro_x");
-        ArrayList<Float> gyro_y = rotationDict.get("gyro_y");
-        ArrayList<Float> gyro_z = rotationDict.get("gyro_z");
-
-        ArrayList<Float> rotation_x = rotationDict.get("rotation_x");
-        ArrayList<Float> rotation_y = rotationDict.get("rotation_y");
-        ArrayList<Float> rotation_z = rotationDict.get("rotation_z");*/
-
-        /*int xIndex = currX.size() - 1;
-        int yIndex = currY.size() - 1;
-        int zIndex = currZ.size() - 1;
-
-
-        if(currX.get(xIndex) < exerciseX.get(xIndex)+moeX && currX.get(xIndex) > currX.get(xIndex)-moeX){
-            if(currY.get(yIndex) < exerciseY.get(yIndex)+moeY && currY.get(yIndex) > currY.get(yIndex)-moeY){
-                if(currZ.get(zIndex) < exerciseZ.get(zIndex)+moeZ && currZ.get(zIndex) > currZ.get(zIndex)-moeZ){
-                    return true;
-                }else{
-                    return false;
-                }
-            }else{
-                return false;
-            }
-        }else{
-            return false;
-        }*/
     }
 
-    /*private Hashtable<String, ArrayList<Float>> dummyCalibration(){
-        Hashtable<String, ArrayList<Float>> calibrationDict = new Hashtable<String, ArrayList<Float>>();
-        ArrayList<Float> dummyXListGyro = new ArrayList<Float>();
-        ArrayList<Float> dummyYListGyro = new ArrayList<Float>();
-        ArrayList<Float> dummyZListGyro = new ArrayList<Float>();
-
-        ArrayList<Float> dummyXListRotation = new ArrayList<Float>();
-        ArrayList<Float> dummyYListRotation = new ArrayList<Float>();
-        ArrayList<Float> dummyZListRotation = new ArrayList<Float>();
-
-        calibrationDict.put("calibration_gyro_x", dummyXListGyro);
-        calibrationDict.put("calibration_gyro_y", dummyYListGyro);
-        calibrationDict.put("calibration_gyro_z", dummyZListGyro);
-
-        calibrationDict.put("calibration_rotation_x", dummyXListRotation);
-        calibrationDict.put("calibration_rotation_y", dummyYListRotation);
-        calibrationDict.put("calibration_rotation_z", dummyZListRotation);
-
-        return calibrationDict;
-    }*/
-
-    //call this from the main ui view to update everything with the newest sensor data
-    //it returns everything in a dictionary that's needed to check movement
-    //if
-    /*public boolean update(SensorEvent event, String eventType, Float calibrationGyroXAvg, Float calibrationGyroYAvg, Float calibrationGyroZAvg){
-        //TODO: implement inflection points
-        boolean speedOk;
-        Float x;
-        Float y;
-        Float z;
-
-        if(eventType=="GYROSCOPE"){
-            this.gyroSensor = event;
-            x = getGyroX();
-            y = getGyroY();
-            z = getGyroZ();
-            //compares to
-            speedOk = checkGyro(x, y, z, calibrationGyroXAvg, calibrationGyroYAvg, calibrationGyroZAvg);
-        }
-        else if(eventType=="ROTATION_VECTOR"){
-            this.rotationSensor = event;
-            speedOk = true;
-            //compare to
-        } else{
-            //this should never happen but just in case
-            this.rotationSensor = event;
-            speedOk = true;
-
-        }
-        return speedOk;
-        //TODO: update return type to provide:
-        //1) if speed is ok
-        //2) if we think they started a new rep
-        //3) if we are returning a gyroscope or rotation based result
-        //4) if their position/form is too far off
-        //5) the most recent array list(s) or hashmaps with newest data readings
-    }*/
-
-    // constructor for checking exercise after calibration
-    public Gyroscope(SensorEvent sensorEvent, String type, String exerciseName){
-        /*
-        Get the type of exercise they're doing
-        process accordingly
-        may want to build methods for each exercise in this class*/
-        //this.inflectionPoints = getInflectionPoints(); //TODO: implement
-        if(type=="GYROSCOPE"){
-            this.gyroSensor = sensorEvent;
-        }
-        else if(type=="ROTATION_VECTOR"){
-            this.rotationSensor = sensorEvent;
-        }
-
-    }
 
     public void updateEvent(SensorEvent eventIn) {
-        if(eventTypeGyro=="GYROSCOPE"){
+        if(eventType=="GYROSCOPE"){
             this.gyroSensor = eventIn;
         }
-        else if(eventTypeGyro=="ROTATION_VECTOR"){
+        else if(eventType=="ROTATION_VECTOR"){
             this.rotationSensor = eventIn;
         }
-    }
-
-    // constructor for calibration
-    public Gyroscope(String eventType){
-        this.eventTypeGyro = eventType;
-
-//        if(eventType=="GYROSCOPE"){
-//            this.gyroSensor = event;
-//        }
-//        else if(eventType=="ROTATION_VECTOR"){
-//            this.rotationSensor = event;
-//
-//        }
-
-        //this.gyroVals = new ArrayList<Float>();
-    }
-
-    //constructor for *saving* the calibrated values
-    //needed b/c we call inside oncreate method
-    public Gyroscope(Hashtable<String, Float> calibratedGyroVals, Hashtable<String, Float> calibratedRotationVals){
-        this.calibratedGyroVals = calibratedGyroVals;
-        this.calibratedRotationVals = calibratedRotationVals;
-    }
-
-    //constructor for exercise
-    public Gyroscope(String eventType, String exerciseName){
-        this.eventTypeGyro = eventType;
-        this.exerciseName = exerciseName;
-
-//        if(eventType=="GYROSCOPE"){
-//            this.gyroSensor = event;
-//        }
-//        else if(eventType=="ROTATION_VECTOR"){
-//            this.rotationSensor = event;
-//
-//        }
-
-        //this.gyroVals = new ArrayList<Float>();
     }
 
 }
