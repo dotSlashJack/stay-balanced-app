@@ -62,6 +62,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     boolean isExercising;
     int exerciseId;
     boolean exerciseOnTrack;
+    boolean runTimer;
+    int seconds = 0;
 
     Gyroscope rotationObject;
     Gyroscope gyroObject;
@@ -158,6 +160,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         Bundle intentArgs = getIntent().getExtras();
         exerciseId = intentArgs.getInt("EXERCISE_ID");
         Log.d("EXERCISE_DO", String.valueOf(exerciseId));
+
+        runTimer = false;
 
         rotationVals = null;
         gyroVals = null;
@@ -257,6 +261,14 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     ///toast.show();
                 }*/
                 isExercising = !isExercising;
+
+                if(isExercising){
+                    seconds = 0;
+                    runTimer = true;
+                    timer();
+                } else{
+                    runTimer = false;
+                }
             }
         });
         //binding.dummyButton2.setOnTouchListener(mDelayHideTouchListener); //TODO: again here, do we need this implemented?
@@ -360,9 +372,9 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
                 exerciseTrackingList.add(exerciseOnTrack);
                 if(exerciseOnTrack == false){
-                    binding.fullscreenContent.setText("outside gyro range");
+                    //binding.fullscreenContent.setText("outside gyro range");
                 } else if(exerciseOnTrack==true){
-                    binding.fullscreenContent.setText("inside gyro range!");
+                    //binding.fullscreenContent.setText("inside gyro range!");
                 }
 
             }
@@ -378,4 +390,26 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
+    public void timer(){
+        new Thread() {
+            public void run() {
+                while (runTimer) {
+                    try {
+                        runOnUiThread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                seconds++;
+                                binding.fullscreenContent.setText(Integer.toString(seconds));
+                            }
+                        });
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+
 }
