@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -14,9 +15,10 @@ import android.view.ViewGroup;
 
 public class Home extends Fragment {
 
-
     NavController navController;
     View.OnClickListener homeButtonListener;
+    // TextToSpeech demonstration variable
+    //UtilTTS tts;
 
     public Home() {
         // Required empty public constructor
@@ -45,5 +47,25 @@ public class Home extends Fragment {
         };
         view.findViewById(R.id.home_btnStartExercise).setOnClickListener(homeButtonListener);
         view.findViewById(R.id.home_btnAddExercise).setOnClickListener(homeButtonListener);
+
+        // TextToSpeech demonstration variable initialization
+        //tts = new UtilTTS(view.getContext());
+
+        // TextToSpeech and MediaPlayer demonstration: set a click listener for the top half of Home
+        ConstraintLayout top = view.findViewById(R.id.home_top);
+        top.setOnClickListener(topHalf -> {
+            /* TextToSpeech demonstration
+             * The first time a message is sent to tts, it takes a while to process and play it
+            tts.sayNow("Sample TTS Message");
+            tts.sayAfter("3");
+            tts.sayAfter("2");
+            tts.sayAfter("1");
+            tts.sayAfter("Rep done");
+             */
+
+            // MediaPlayer demonstration
+            UtilAudio.play(view.getContext(), UtilAudio.COUNTDOWN);
+            UtilAudio.play(view.getContext(), UtilAudio.DONE);
+        });
     }
 }
