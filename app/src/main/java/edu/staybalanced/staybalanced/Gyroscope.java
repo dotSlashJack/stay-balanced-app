@@ -24,7 +24,7 @@ public class Gyroscope{
     private static SensorEvent rotationSensor;
 
     private static Hashtable<String, ArrayList<Float>> exerciseGyroVals = new Hashtable<String, ArrayList<Float>>();
-    private static Hashtable<String, ArrayList<Float>> exercisRotationVals = new Hashtable<String, ArrayList<Float>>();
+    private static Hashtable<String, ArrayList<Float>> exerciseRotationVals = new Hashtable<String, ArrayList<Float>>();
 
     String eventType;
     //String exerciseName;
@@ -37,9 +37,10 @@ public class Gyroscope{
 
     //constructor for *saving* the calibrated values
     //needed b/c we call inside onCreate method
-    public Gyroscope(Hashtable<String, Float> calibratedGyroVals, Hashtable<String, Float> calibratedRotationVals){
+    public Gyroscope(Hashtable<String, Float> calibratedGyroVals, Hashtable<String, Float> calibratedRotationVals, int exerciseID){
         this.calibratedGyroVals = calibratedGyroVals;
         this.calibratedRotationVals = calibratedRotationVals;
+        this.exerciseID = exerciseID;
     }
 
     //constructor for exercise
@@ -111,7 +112,7 @@ public class Gyroscope{
                return false;
            }
        } else{
-            return false; //TODO: lol there was a reason I added the isDistance variable check but I forgor 💀 why
+            return false; //TODO: lol there was a reason I added the isDistance variable check but I forgot 💀 why
         }
     }*/
 

@@ -61,6 +61,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorEventListener gyroListener;
     private SensorEventListener rotationListener;
 
+    int exerciseID;
     boolean isCalibrating;// = false;
     boolean isExercising;// TODO: link exdrcising to a button
 
@@ -157,7 +158,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         rotationObject = new Gyroscope("ROTATION_VECTOR"); // create gyroscope
         gyroObject = new Gyroscope("GYROSCOPE");
 
-
+        // exerciseID = ExerciseDoArgs.fromBundle()
 
         // Hide the default bar containing the Activity's name
         ActionBar actionBar = getSupportActionBar();
@@ -210,7 +211,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     if(rotationVals!=null && gyroVals!=null){
                         String printVals = "finished calibration, rotation values are: x "+Float.toString(rotationVals.get("rotation_x"))+" y "+Float.toString(rotationVals.get("rotation_y")) + " z "+Float.toString(rotationVals.get("rotation_z")) +"\n" + " gyro vals are: x "+Float.toString(gyroVals.get("gyro_x"))+ " y "+Float.toString(gyroVals.get("gyro_y")) + " z " + Float.toString(gyroVals.get("gyro_z"));
                         binding.fullscreenContent.setText(printVals);
-                        Gyroscope saveGyro = new Gyroscope(gyroVals, rotationVals);
+                        Gyroscope saveGyro = new Gyroscope(gyroVals, rotationVals, exerciseID);
                         boolean didSave = saveGyro.saveCalibration();
                         if(didSave!=true){
                             Toast toast = Toast.makeText(getApplicationContext(), "ERROR: calibration did NOT save correctly. Please try again.", Toast.LENGTH_LONG);

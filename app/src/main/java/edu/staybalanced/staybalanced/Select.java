@@ -47,7 +47,7 @@ public class Select extends Fragment {
 
         // TODO currently at the create step it makes the exercises, pull the exercise data
         // from the database and then add them to the exercises variable (List)
-        // Also add a generic icon for any exercises we don't kno
+        // Also add a generic icon for any exercises we don't know
 
         // get database exercise items
         DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
