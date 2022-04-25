@@ -57,22 +57,24 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorManager sensorManagerRotation;
     private Sensor gyro;
     private Sensor rotationVector;
-    private SensorEvent gyroEvent;
-    private SensorEvent rotationEvent;
-    private SensorEventListener gyroListener;
-    private SensorEventListener rotationListener;
 
-    boolean isCalibrating;// = false;
-    boolean isExercising;// TODO: link exdrcising to a button
+    boolean isCalibrating;
+    boolean isExercising;
+    int exerciseId;
+    boolean exerciseOnTrack;
 
     Gyroscope rotationObject;
     Gyroscope gyroObject;
+    Gyroscope exerciseGyro;
+
     Hashtable<String, Float> rotationVals = new Hashtable<String, Float>();
     Hashtable<String, Float> gyroVals = new Hashtable<String, Float>();
-    boolean gotRotation = false;
-    boolean gotGyro = false;
 
-    int exerciseId;
+    ArrayList<Boolean> exerciseTrackingList = new ArrayList<>();
+
+    //TODO: need to check the implementation of the unregister listeners and see if these are needed
+    private SensorEventListener gyroListener;
+    private SensorEventListener rotationListener;
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
@@ -163,6 +165,9 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         rotationObject = new Gyroscope("ROTATION_VECTOR"); // create gyroscope
         gyroObject = new Gyroscope("GYROSCOPE");
 
+        exerciseGyro = new Gyroscope(exerciseId);
+        //exerciseRotation = new Gyroscope(exerciseId);
+
         // Hide the default bar containing the Activity's name
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) { actionBar.hide(); }
@@ -214,9 +219,9 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     if(rotationVals!=null && gyroVals!=null){
                         String printVals = "finished calibration, rotation values are: x "+Float.toString(rotationVals.get("rotation_x"))+" y "+Float.toString(rotationVals.get("rotation_y")) + " z "+Float.toString(rotationVals.get("rotation_z")) +"\n" + " gyro vals are: x "+Float.toString(gyroVals.get("gyro_x"))+ " y "+Float.toString(gyroVals.get("gyro_y")) + " z " + Float.toString(gyroVals.get("gyro_z"));
                         binding.fullscreenContent.setText(printVals);
-                        // TODO: 3rd argument to Gyroscope() will be ExerciseID
-                        Gyroscope saveGyro = new Gyroscope(gyroVals, rotationVals);
-                        boolean didSave = saveGyro.saveCalibration();
+                        // TODO: 3rd argument to Gyroscope() will be ExerciseID // should be resolved
+                        Gyroscope saveGyro = new Gyroscope(gyroVals, rotationVals, exerciseId);
+                        boolean didSave = saveGyro.saveCalibration(getApplicationContext());
                         if(didSave!=true){
                             Toast toast = Toast.makeText(getApplicationContext(), "ERROR: calibration did NOT save correctly. Please try again.", Toast.LENGTH_LONG);
                             toast.show();
@@ -242,9 +247,19 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             @Override
             public void onClick(View view) {
                 binding.fullscreenContent.setText("Dummy Button 2 Pressed");
+                /*if(exerciseOnTrack==true) {
+                    //Toast toast = Toast.makeText(getApplicationContext(), Boolean.toString(exerciseOnTrack), Toast.LENGTH_SHORT);
+                    //toast.show();
+                    //binding.fullscreenContent.setText("within range");
+                } else if(exerciseOnTrack == false){
+                    //binding.fullscreenContent.setText("outside range");
+                    //Toast toast = Toast.makeText(getApplicationContext(), Boolean.toString(exerciseOnTrack), Toast.LENGTH_SHORT);
+                    ///toast.show();
+                }*/
+                isExercising = !isExercising;
             }
         });
-        binding.dummyButton2.setOnTouchListener(mDelayHideTouchListener);
+        //binding.dummyButton2.setOnTouchListener(mDelayHideTouchListener); //TODO: again here, do we need this implemented?
     }
 
     @Override
@@ -311,7 +326,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             // get rotation vector and sensor
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 // collecting x,y,z data, if null collect current data
-                rotationObject.updateEvent(sensorEvent);
+                rotationObject.updateEvent(sensorEvent, null);
                 // keep null because we only want the last set recorded
                 // TODO set threshold
                 rotationVals = rotationObject.returnRotationVals();
@@ -321,27 +336,38 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             }
 
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                gyroObject.updateEvent(sensorEvent);
+                gyroObject.updateEvent(sensorEvent, null);
                 gyroVals = gyroObject.returnGyroVals();
                 //gyroObject.saveCalibration(gyroVals.get("gyro_x"), gyroVals.get("gyro_y"),gyroVals.get("gyro_z"), "GYROSCOPE");
             }
         } else if(isExercising){
-            boolean exerciseOnTrack;
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+                exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
+                rotationVals = exerciseGyro.returnRotationVals();
+
                 // collecting x,y,z data, if null collect current data
-                rotationObject.updateEvent(sensorEvent);
-                // keep null because we only want the last set recorded
-                // TODO set threshold
-                exerciseOnTrack = rotationObject.exerciseTracker();
+                //exerciseGyro.updateEvent(sensorEvent);
+                exerciseOnTrack = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
                 //TODO: keep track of how many events were true/false to get proportion with good form, maybe add time stamp
+                exerciseTrackingList.add(exerciseOnTrack);
+                if(exerciseOnTrack == false){
+                    //binding.fullscreenContent.setText("outside rotation range");
+                }
             }
 
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                gyroObject.updateEvent(sensorEvent);
-                exerciseOnTrack = gyroObject.exerciseTracker();
+                exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
+                exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
+                exerciseTrackingList.add(exerciseOnTrack);
+                if(exerciseOnTrack == false){
+                    binding.fullscreenContent.setText("outside gyro range");
+                } else if(exerciseOnTrack==true){
+                    binding.fullscreenContent.setText("inside gyro range!");
+                }
+
             }
 
-            //need to create a tracker
+            //TODO: we'll get the number of true events divided by length of list to get %/time in good form
         }
 
 
