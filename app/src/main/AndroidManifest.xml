@@ -14,10 +14,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:label="@string/fullscreen_activity_title"
-            android:theme="@style/Theme.StayBalanced.Fullscreen" />
+            android:theme="@style/Theme.StayBalanced.Fullscreen"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
