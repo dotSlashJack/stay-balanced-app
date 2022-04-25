@@ -48,14 +48,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="5dp"
-                android:text="Dummy Button 1" />
+                android:text="@string/do_calibrate" />
             <Button
                 android:id="@+id/dummy_button2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="5dp"
-                android:text="Dummy Button 2"/>
+                android:text="@string/do_start"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

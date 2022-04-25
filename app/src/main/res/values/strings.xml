@@ -25,6 +25,10 @@
     <string name="add_btn">Add</string>
     <string name="add_icon">Select an Icon</string>
 
+    <!--ExerciseDo Strings-->
+    <string name="do_calibrate">Calibrator</string>
+    <string name="do_start">Start Exercise</string>
+
     <!--Placeholders for Dev Use-->
     <string name="fullscreen_activity_title">CalibrationPlaceholder</string>
 </resources>
