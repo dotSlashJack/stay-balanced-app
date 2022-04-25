@@ -11,6 +11,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -71,6 +72,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     boolean gotRotation = false;
     boolean gotGyro = false;
 
+    int exerciseId;
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
@@ -151,13 +153,15 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle intentArgs = getIntent().getExtras();
+        exerciseId = intentArgs.getInt("EXERCISE_ID");
+        Log.d("EXERCISE_DO", String.valueOf(exerciseId));
+
         rotationVals = null;
         gyroVals = null;
 
         rotationObject = new Gyroscope("ROTATION_VECTOR"); // create gyroscope
         gyroObject = new Gyroscope("GYROSCOPE");
-
-
 
         // Hide the default bar containing the Activity's name
         ActionBar actionBar = getSupportActionBar();
@@ -210,6 +214,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     if(rotationVals!=null && gyroVals!=null){
                         String printVals = "finished calibration, rotation values are: x "+Float.toString(rotationVals.get("rotation_x"))+" y "+Float.toString(rotationVals.get("rotation_y")) + " z "+Float.toString(rotationVals.get("rotation_z")) +"\n" + " gyro vals are: x "+Float.toString(gyroVals.get("gyro_x"))+ " y "+Float.toString(gyroVals.get("gyro_y")) + " z " + Float.toString(gyroVals.get("gyro_z"));
                         binding.fullscreenContent.setText(printVals);
+                        // TODO: 3rd argument to Gyroscope() will be ExerciseID
                         Gyroscope saveGyro = new Gyroscope(gyroVals, rotationVals);
                         boolean didSave = saveGyro.saveCalibration();
                         if(didSave!=true){

@@ -1,5 +1,6 @@
 package edu.staybalanced.staybalanced;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -62,7 +63,7 @@ public class Select extends Fragment {
         }
 
         // put individual exercises into adapter
-        exerciseAdapter = new ExerciseAdapter(individualExercises,view.getContext());
+        exerciseAdapter = new ExerciseAdapter(individualExercises, view.getContext(), "Select");
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(exerciseAdapter);
     }

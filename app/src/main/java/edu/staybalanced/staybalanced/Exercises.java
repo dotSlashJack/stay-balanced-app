@@ -64,7 +64,7 @@ public class Exercises {
 
     // Default calibration values constructor
     public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, int image){
-        new Exercises(id, name, description, sets, reps, secondsPerRep, 0, 0, 0, 0, 0, 0, image);
+        this(id, name, description, sets, reps, secondsPerRep, 0, 0, 0, 0, 0, 0, image);
     }
 
     @NonNull
