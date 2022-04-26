@@ -256,7 +256,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     //toast.show();
                     //binding.fullscreenContent.setText("within range");
                 } else if(exerciseOnTrack == false){
-                    //binding.fullscreenContent.setText("outside range");
+                    binding.fullscreenContent.setText("outside range");
                     //Toast toast = Toast.makeText(getApplicationContext(), Boolean.toString(exerciseOnTrack), Toast.LENGTH_SHORT);
                     ///toast.show();
                 }*/
@@ -265,7 +265,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 if(isExercising){
                     seconds = 0;
                     runTimer = true;
-                    timer();
+                    //timer();
                 } else{
                     runTimer = false;
                 }
@@ -355,15 +355,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         } else if(isExercising){
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
-                rotationVals = exerciseGyro.returnRotationVals();
-
-                // collecting x,y,z data, if null collect current data
-                //exerciseGyro.updateEvent(sensorEvent);
                 exerciseOnTrack = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
-                //TODO: keep track of how many events were true/false to get proportion with good form, maybe add time stamp
                 exerciseTrackingList.add(exerciseOnTrack);
                 if(exerciseOnTrack == false){
-                    //binding.fullscreenContent.setText("outside rotation range");
+                    binding.fullscreenContent.setText("outside rotation range");
+                } else if(exerciseOnTrack==true){
+                    binding.fullscreenContent.setText("inside rotation range!");
                 }
             }
 
@@ -372,9 +369,9 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
                 exerciseTrackingList.add(exerciseOnTrack);
                 if(exerciseOnTrack == false){
-                    //binding.fullscreenContent.setText("outside gyro range");
+                    binding.fullscreenContent.setText("outside gyro range");
                 } else if(exerciseOnTrack==true){
-                    //binding.fullscreenContent.setText("inside gyro range!");
+                    binding.fullscreenContent.setText("inside gyro range!");
                 }
 
             }

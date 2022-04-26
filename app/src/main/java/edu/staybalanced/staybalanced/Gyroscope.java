@@ -65,15 +65,16 @@ public class Gyroscope{
         //this.eventType = null;
 
         DatabaseHelper loadCalibrationHelper = new DatabaseHelper(context);
-        //TODO: implement with storage and getCalibration() method
-        calibrationGyroX = 0.001F;
-        calibrationGyroY = 0.001F;
-        calibrationGyroZ = 0.001F;
+        Exercises current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseID);
+        // from the current_exercise you can get any calibration you need
+        calibrationGyroX = (float) current_exercise.getGyroX();
+        calibrationGyroY = (float) current_exercise.getGyroY();
+        calibrationGyroZ = (float) current_exercise.getGyroZ();
 
-        calibrationRotationX = -0.00116F;
-        calibrationRotationY = -0.00547F;
-        calibrationRotationZ = -0.352F;
-
+        calibrationRotationX = (float) current_exercise.getRotationX();
+        //Log.i("rotationVals", calibratedRotationVals.toString());
+        calibrationRotationZ = (float) current_exercise.getRotationY();
+        calibrationRotationZ = (float) current_exercise.getRotationZ();
 
         marginsOfErrorGyro = getMOE("GYROSCOPE");
         marginsOfErrorRotation = getMOE("ROTATION_VECTOR");
@@ -114,118 +115,53 @@ public class Gyroscope{
     //calculate the 3d distance between points
     /*private static Float distance3D(Float x1, Float y1, Float z1, Float x2, Float y2, Float z2){
         return (float) sqrt(Math.pow((z2-z1),2) + Math.pow((y2-y1),2) + Math.pow((x2-x1),2));
-    }
-
-    private static boolean checkRotation(Float xCalibration, Float yCalibration, Float zCalibration, Float xValue, Float yValue, Float zValue, boolean isDistance){
-        Float moe = 0.1F; //TODO: get this dynamically vs hard coding it
-        if(isDistance){
-           Float dist = distance3D(xCalibration, yCalibration, zCalibration, xValue, yValue, zValue);
-           if(dist <= moe){
-               return true;
-           } else{
-               return false;
-           }
-       } else{
-            return false; //TODO: lol there was a reason I added the isDistance variable check but I forgor 💀 why
-        }
     }*/
-
-    // get average of an array list
-    /*private static Float getAvg(ArrayList<Float> vals){
-        //TODO: see if there's a more efficient way to find the average
-        Float sum = 0.0F;
-        int len = vals.size();
-        for(int i = 0; i<len; i++){
-            sum+=vals.get(i);
-        }
-        return (float) sum / len;
-    }/*
-
-    // this is really checking the speed of movement
-    private static boolean checkGyro(Float gyroX, Float gyroY, Float gyroZ, Float calibrationXAvg, Float calibrationYAvg, Float calibrationZAvg){
-        Float moeX = 1.0F;
-        Float moeY = 1.0F;
-        Float moeZ = 1.0F; //TODO: get these margins of error dynamically
-
-        // returns true only if all values are within reasonable range
-        if(gyroX > calibrationXAvg+moeX || gyroX < calibrationXAvg-moeX){
-            return false;
-        } else if (gyroY > calibrationYAvg+moeY || gyroY < calibrationYAvg-moeY){
-            return false;
-        } else if (gyroZ > calibrationZAvg+moeZ || gyroZ < calibrationZAvg - moeZ){
-            return false;
-        } else{
-            return true;
-        }
-    }*/
-
-
-    public Hashtable<String, Float> getStoredCalibration(){
-        Hashtable<String, Float> calibrations = new Hashtable<String, Float>();
-        if(exerciseID == 0){
-            calibrations.put("x_val", 1.0F);
-            calibrations.put("y_val", 1.0F);
-            calibrations.put("z_val", 1.0F);
-        }
-        return calibrations;
-        //TODO: implement with storage
-    }
 
     //returns true if calibration save succeeded
     //false if not
     public boolean saveCalibration(Context context){
-        //try{
-            Float gyroXMOE = 0.1F;
+        try{
+            /*Float gyroXMOE = 0.1F;
             Float gyroYMOE = 0.1F;
             Float gyroZMOE = 0.1F;
 
             Float rotationXMOE = 0.1F;
             Float rotationYMOE = 0.1F;
-            Float rotationZMOE = 0.1F;
+            Float rotationZMOE = 0.1F;*/
 
             Float rotation_x = calibratedRotationVals.get("rotation_x");
             Float rotation_y = calibratedRotationVals.get("rotation_y");
             Float rotation_z = calibratedRotationVals.get("rotation_z");
 
-            Float rotation_x_min = rotation_x - rotationXMOE;
+            /*Float rotation_x_min = rotation_x - rotationXMOE;
             Float rotation_y_min = rotation_y - rotationXMOE;
             Float rotation_z_min = rotation_z - rotationZMOE;
             Float rotation_x_max = rotation_x + rotationXMOE;
             Float rotation_y_max = rotation_y + rotationYMOE;
-            Float rotation_z_max = rotation_z + rotationZMOE;
+            Float rotation_z_max = rotation_z + rotationZMOE;*/
 
             Float gyro_x = calibratedGyroVals.get("gyro_x");
             Float gyro_y = calibratedGyroVals.get("gyro_y");
             Float gyro_z = calibratedGyroVals.get("gyro_z");
 
-            Float gyro_x_min = gyro_x - gyroXMOE;
+            /*Float gyro_x_min = gyro_x - gyroXMOE;
             Float gyro_y_min = gyro_y - gyroYMOE;
             Float gyro_z_min = gyro_z - gyroZMOE;
             Float gyro_x_max = gyro_x + gyroXMOE;
             Float gyro_y_max = gyro_y + gyroZMOE;
-            Float gyro_z_max = gyro_z + gyroZMOE;
-
-
-            //STORE
-            //TODO: add storage code for gyro and rotation vals here (Jeicy)...
-            //TODO ...Store the mins and maxes for all gyro and for all rotation
+            Float gyro_z_max = gyro_z + gyroZMOE;*/
 
             //TODO: we may want to make this save the min and max gyro vals instead of jsut the value itself
             DatabaseHelper calibrationSaver = new DatabaseHelper(context);
             calibrationSaver.setExerciseCalibration(exerciseID, gyro_x, gyro_y, gyro_z, rotation_x, rotation_y, rotation_z);
 
             return true;
-        //} catch(Exception e){
+        } catch(Exception e){
             //Log.d("save error", e.toString());
-        //    return false;
-        //}
+            return false;
+        }
 
 
-    }
-
-    public boolean saveExercise(){
-        //TODO: implement with Jeicy
-        return true;
     }
 
     //TODO: implement a method where if the two calibrations are too different it warns the user?
