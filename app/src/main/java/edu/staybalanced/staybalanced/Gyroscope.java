@@ -2,6 +2,7 @@ package edu.staybalanced.staybalanced;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
+import static java.util.Objects.isNull;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -71,10 +72,26 @@ public class Gyroscope{
         calibrationGyroY = (float) current_exercise.getGyroY();
         calibrationGyroZ = (float) current_exercise.getGyroZ();
 
-        calibrationRotationX = (float) current_exercise.getRotationX();
-        //Log.i("rotationVals", calibratedRotationVals.toString());
-        calibrationRotationZ = (float) current_exercise.getRotationY();
-        calibrationRotationZ = (float) current_exercise.getRotationZ();
+        if (isNull((float) current_exercise.getRotationX())) {
+            calibrationRotationX = 0f;
+        } else {
+            calibrationRotationX = (float) current_exercise.getRotationX();
+        }
+        Log.i("rotationXVals", calibrationRotationX.toString());
+        if (isNull((float) current_exercise.getRotationY())) {
+            calibrationRotationY = 0f;
+        } else {
+            calibrationRotationY = (float) current_exercise.getRotationY();
+        }
+        Log.i("rotationYVals", calibrationRotationY.toString());
+        if (isNull((float) current_exercise.getRotationZ())) {
+            calibrationRotationZ = 0f;
+        } else {
+            calibrationRotationZ = (float) current_exercise.getRotationZ();
+        }
+        Log.i("rotationZVals", calibrationRotationZ.toString());
+
+        Log.i("rotationVals", calibratedRotationVals.toString());
 
         marginsOfErrorGyro = getMOE("GYROSCOPE");
         marginsOfErrorRotation = getMOE("ROTATION_VECTOR");
