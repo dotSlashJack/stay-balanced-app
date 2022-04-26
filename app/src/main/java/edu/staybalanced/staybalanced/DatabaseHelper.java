@@ -221,26 +221,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Exercises getExerciseInfo(int exerciseID){
-        String getExercise = "SELECT * FROM " + EXERCISES_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " = " + exerciseID;
+        String getExercise = "SELECT * FROM " + EXERCISES_TABLE + " WHERE " + COLUMN_EXERCISE_ID + " =? " ;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(getExercise, null);
+        Cursor cursor = db.rawQuery(getExercise,new String[] {String.valueOf(exerciseID)});
+        Exercises current_exercise = null;
+        // if the cursor contains at least one item
+        if (cursor.moveToFirst()) {
+            // loop through result set
+            do {
+                int ex_id = cursor.getInt(0);
+                String ex_name = cursor.getString(1);
+                String ex_desc = cursor.getString(2);
+                int ex_sets = cursor.getInt(3);
+                int ex_reps = cursor.getInt(4);
+                int ex_secs_per_rep = cursor.getInt(5);
+                double ex_gyro_x = cursor.getDouble(6);
+                double ex_gyro_y = cursor.getDouble(7);
+                double ex_gyro_z = cursor.getDouble(8);
+                double ex_rotation_x = cursor.getDouble(9);
+                double ex_rotation_y = cursor.getDouble(10);
+                double ex_rotation_z = cursor.getDouble(11);
+                int ex_image = cursor.getInt(12);
+                current_exercise = new Exercises(ex_id, ex_name, ex_desc, ex_sets, ex_reps, ex_secs_per_rep, ex_gyro_x, ex_gyro_y, ex_gyro_z, ex_rotation_x, ex_rotation_y, ex_rotation_z, ex_image);
 
-        cursor.moveToFirst();
-        int ex_id = cursor.getInt(0);
-        String ex_name = cursor.getString(1);
-        String ex_desc = cursor.getString(2);
-        int ex_sets = cursor.getInt(3);
-        int ex_reps = cursor.getInt(4);
-        int ex_secs_per_rep = cursor.getInt(5);
-        double ex_gyro_x = cursor.getDouble(6);
-        double ex_gyro_y = cursor.getDouble(7);
-        double ex_gyro_z = cursor.getDouble(8);
-        double ex_rotation_x = cursor.getDouble(9);
-        double ex_rotation_y = cursor.getDouble(10);
-        double ex_rotation_z = cursor.getDouble(11);
-        int ex_image = cursor.getInt(12);
+            } while (cursor.moveToNext());
 
-        Exercises current_exercise = new Exercises(ex_id, ex_name, ex_desc, ex_sets, ex_reps, ex_secs_per_rep, ex_gyro_x, ex_gyro_y, ex_gyro_z, ex_rotation_x, ex_rotation_y, ex_rotation_z, ex_image);
+        }
 
         cursor.close();
         db.close();
