@@ -30,7 +30,11 @@ public class UtilAudio {
 
     // This method is used to play the audio files referenced by the constants defined above
     public static void play(Context context, int audio) {
-        // Check if the user has turned on Silent Mode in Settings.java before playing audio
+        /* Check if the user has turned on Silent Mode in Settings.java before playing audio
+         *
+         * If no "silent" preference is found (which should never happen as long as settings.xml is
+         * coded correctly) then the default is to assume that Silent Mode is off (its value is false).
+         */
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (sharedPreferences.getBoolean("silent", false)) { return; }
 
