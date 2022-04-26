@@ -256,9 +256,9 @@ public class Gyroscope{
             marginsOfError.put("moe_y", 0.1F);
             marginsOfError.put("moe_z", 0.1F);
         } else if(eventType=="ROTATION_VECTOR"){
-            marginsOfError.put("moe_x", 0.01F);
-            marginsOfError.put("moe_y", 0.01F);
-            marginsOfError.put("moe_z", 0.01F);
+            marginsOfError.put("moe_x", 0.05F);
+            marginsOfError.put("moe_y", 0.05F);
+            marginsOfError.put("moe_z", 0.05F);
         }
         return marginsOfError;
     }
@@ -283,6 +283,8 @@ public class Gyroscope{
         //TODO: it is probably worth testing and comparing to the 3d distance between points, at least for rotation
         //TODO: probably worth implementing a speed check vs margin of error here (could compare to hard coded value or mean +/- from calibration
         if(eventType=="ROTATION_VECTOR"){
+            Log.i("calibrationRotY", Float.toString(calibrationRotationY));
+            Log.i("rotationY", Float.toString(y));
             if(x > calibrationRotationX + marginsOfErrorRotation.get("moe_x") ||
                     x < calibrationRotationX - marginsOfErrorRotation.get("moe_x") ||
                     y > calibrationRotationY + marginsOfErrorRotation.get("moe_y") ||

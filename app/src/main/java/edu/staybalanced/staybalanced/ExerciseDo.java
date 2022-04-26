@@ -368,11 +368,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
                 exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
                 exerciseTrackingList.add(exerciseOnTrack);
-                if(exerciseOnTrack == false){
+                /*if(exerciseOnTrack == false){
                     binding.fullscreenContent.setText("outside gyro range");
                 } else if(exerciseOnTrack==true){
                     binding.fullscreenContent.setText("inside gyro range!");
-                }
+                }*/
 
             }
 
