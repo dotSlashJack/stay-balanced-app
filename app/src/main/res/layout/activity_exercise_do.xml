@@ -39,23 +39,39 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/TutorialButton">
 
             <Button
                 android:id="@+id/dummy_button1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
                 android:text="@string/do_calibrate" />
+
             <Button
                 android:id="@+id/dummy_button2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="5dp"
-                android:text="@string/do_start"/>
+                android:layout_weight="1"
+                android:text="@string/do_start" />
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/TutorialButton"
+            app:fabSize="normal"
+            android:layout_width="62dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="597dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toTopOf="@+id/fullscreen_content_controls"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/baseline_question_mark_black_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
