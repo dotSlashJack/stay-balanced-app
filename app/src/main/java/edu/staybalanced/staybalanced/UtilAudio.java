@@ -1,7 +1,10 @@
 package edu.staybalanced.staybalanced;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+
+import androidx.preference.PreferenceManager;
 
 /**
  * A utility class that offers the ability to play audio resource files using Android's MediaPlayer
@@ -27,6 +30,10 @@ public class UtilAudio {
 
     // This method is used to play the audio files referenced by the constants defined above
     public static void play(Context context, int audio) {
+        // Check if the user has turned on Silent Mode in Settings.java before playing audio
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPreferences.getBoolean("silent", false)) { return; }
+
         // Load the audio file
         MediaPlayer mediaPlayer = MediaPlayer.create(context, audio);
 
