@@ -169,7 +169,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         rotationObject = new Gyroscope("ROTATION_VECTOR"); // create gyroscope
         gyroObject = new Gyroscope("GYROSCOPE");
 
-        exerciseGyro = new Gyroscope(exerciseId);
+        exerciseGyro = new Gyroscope(exerciseId, getApplicationContext());
         //exerciseRotation = new Gyroscope(exerciseId);
 
         // Hide the default bar containing the Activity's name

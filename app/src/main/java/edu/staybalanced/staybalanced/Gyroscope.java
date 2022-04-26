@@ -59,11 +59,12 @@ public class Gyroscope{
     }
 
     //constructor for exercise
-    public Gyroscope(int exerciseID){
+    public Gyroscope(int exerciseID, Context context){
         //this.eventType = eventType;
         this.exerciseID = exerciseID;
         //this.eventType = null;
 
+        DatabaseHelper loadCalibrationHelper = new DatabaseHelper(context);
         //TODO: implement with storage and getCalibration() method
         calibrationGyroX = 0.001F;
         calibrationGyroY = 0.001F;
@@ -173,7 +174,7 @@ public class Gyroscope{
     //returns true if calibration save succeeded
     //false if not
     public boolean saveCalibration(Context context){
-        try{
+        //try{
             Float gyroXMOE = 0.1F;
             Float gyroYMOE = 0.1F;
             Float gyroZMOE = 0.1F;
@@ -210,14 +211,14 @@ public class Gyroscope{
             //TODO ...Store the mins and maxes for all gyro and for all rotation
 
             //TODO: we may want to make this save the min and max gyro vals instead of jsut the value itself
-            //DatabaseHelper calibrationSaver = new DatabaseHelper(context.getApplicationContext());
-            //calibrationSaver.setExerciseCalibration(exerciseID, (double) gyro_x, (double) gyro_y, (double) gyro_z, (double) rotation_x, (double) rotation_y, (double)  rotation_z);
+            DatabaseHelper calibrationSaver = new DatabaseHelper(context);
+            calibrationSaver.setExerciseCalibration(exerciseID, gyro_x, gyro_y, gyro_z, rotation_x, rotation_y, rotation_z);
 
             return true;
-        } catch(Exception e){
-            Log.d("save error", e.toString());
-            return false;
-        }
+        //} catch(Exception e){
+            //Log.d("save error", e.toString());
+        //    return false;
+        //}
 
 
     }
@@ -310,7 +311,6 @@ public class Gyroscope{
     }
 
     public boolean exerciseTracker(String eventType){
-        Log.d("event logged", Float.toString(marginsOfErrorRotation.get("moe_x")));
         Float x;
         Float y;
         Float z;
