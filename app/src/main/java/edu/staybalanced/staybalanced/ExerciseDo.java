@@ -83,6 +83,10 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     Hashtable<String, Float> gyroVals = new Hashtable<String, Float>();
 
     ArrayList<Boolean> exerciseTrackingList = new ArrayList<>();
+    int secondsToRun;
+    DatabaseHelper loadCalibrationHelper;
+    Exercises current_exercise;
+
 
     //TODO: need to check the implementation of the unregister listeners and see if these are needed
     private SensorEventListener gyroListener;
@@ -207,6 +211,10 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             finish();
         }
 
+        loadCalibrationHelper = new DatabaseHelper(getApplicationContext());
+        current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
+        secondsToRun = current_exercise.getSecondsPerRep();
+
         mVisible = true;
         unhiddenContent = binding.fullscreenContent;
         controlsContainer = binding.fullscreenContentControls;
@@ -246,6 +254,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                         }else if(didSave){
                             Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_LONG);
                             toast.show();
+                            current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
                         }
                         exerciseGyro = new Gyroscope(exerciseId, getApplicationContext());
                         binding.dummyButton2.setEnabled(true);
@@ -272,42 +281,17 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 binding.fullscreenContent.setText("Dummy Button 2 Pressed");
 
                 isExercising = !isExercising;
-                if(isExercising){
+                if (isExercising && current_exercise.getRotationX() == 0 && current_exercise.getRotationY() == 0 && current_exercise.getRotationZ() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please Calibrate, before starting excercise", Toast.LENGTH_LONG).show();
+                    isExercising = false;
+                    binding.dummyButton2.setEnabled(false);
+                }
+                else if(isExercising){
                     binding.dummyButton1.setEnabled(false);
                     binding.dummyButton2.setText("Stop exercise");
                     seconds = 0;
                     runTimer = true;
                     timer();
-                } else{
-                    binding.dummyButton1.setEnabled(true);
-                    if(exerciseTrackingList!=null && exerciseTrackingList.size() > 0){
-                        int count = 0;
-                        for (Boolean b : exerciseTrackingList) {
-                            if (b) count++;
-                        }
-                        double count_dbl = (double) count;
-                        double nEvents = (double) exerciseTrackingList.size();
-
-                        double seconds_dbl = (double) seconds;
-                        int seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
-                        binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
-                        try{
-                            DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                            ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), seconds_in_pos);
-                            //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
-                            exerciseSaver.addExerciseHistory(current_exercise_history);
-
-                            Toast toast = Toast.makeText(getApplicationContext(), "Exercise complete!.", Toast.LENGTH_SHORT);
-                            toast.show();
-                        } catch(Exception e){
-                            Toast toast = Toast.makeText(getApplicationContext(), "Error saving your exercise, it may not show up in history.", Toast.LENGTH_LONG);
-                            toast.show();
-                        }
-
-                    }
-                    //binding.fullscreenContent.setText(String.valueOf(exerciseTrackingList));
-                    runTimer = false;
-                    exerciseTrackingList = new ArrayList<Boolean>();
                 }
             }
         });
@@ -489,6 +473,39 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 //gyroObject.saveCalibration(gyroVals.get("gyro_x"), gyroVals.get("gyro_y"),gyroVals.get("gyro_z"), "GYROSCOPE");
             }
         } else if(isExercising){
+            if (seconds >= secondsToRun) {
+                isExercising = false;
+                binding.dummyButton1.setEnabled(true);
+                if(exerciseTrackingList!=null && exerciseTrackingList.size() > 0){
+                    int count = 0;
+                    for (Boolean b : exerciseTrackingList) {
+                        if (b) count++;
+                    }
+                    double count_dbl = (double) count;
+                    double nEvents = (double) exerciseTrackingList.size();
+
+                    double seconds_dbl = (double) seconds;
+                    int seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
+                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
+                    try{
+                        DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
+                        ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), seconds_in_pos);
+                        //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
+                        exerciseSaver.addExerciseHistory(current_exercise_history);
+
+                        Toast toast = Toast.makeText(getApplicationContext(), "Exercise complete!.", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } catch(Exception e){
+                        Toast toast = Toast.makeText(getApplicationContext(), "Error saving your exercise, it may not show up in history.", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+
+                }
+                //binding.fullscreenContent.setText(String.valueOf(exerciseTrackingList));
+                runTimer = false;
+                exerciseTrackingList = new ArrayList<Boolean>();
+            }
+
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
                 exerciseOnTrack = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
@@ -527,7 +544,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 while (runTimer) {
                     try {
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
                                 seconds++;
