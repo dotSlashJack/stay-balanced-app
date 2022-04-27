@@ -281,8 +281,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                         binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
                         try{
                             DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                            //TODO: dynamically get the id int?
-                            ExerciseHistory current_exercise_history = new ExerciseHistory(0, exerciseId, seconds, seconds_in_pos);
+                            ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, seconds, seconds_in_pos);
                             //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
                             exerciseSaver.addExerciseHistory(current_exercise_history);
 
@@ -352,17 +351,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     protected void onPause() {
         super.onPause();
         sensorManagerGyro.unregisterListener(gyroListener);
-        sensorManagerRotation.unregisterListener(rotationListener);
-        //TODO: make sure we do the same for the rotation sensor
-    }
-
-    private boolean changeThreshold(Float val1, Float val2) {
-        if(abs(val1 - val2) > 0.01){ //TODO: check this value after several tests
-            return true;
-        }
-        else{
-            return false;
-        }
+        sensorManagerRotation.unregisterListener(rotationListener)
     }
 
     @Override
@@ -377,12 +366,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 // collecting x,y,z data, if null collect current data
                 rotationObject.updateEvent(sensorEvent, null);
-                // keep null because we only want the last set recorded
-                // TODO set threshold
+
                 rotationVals = rotationObject.returnRotationVals();
-                //t.setText("rot");
-                //TODO: call storage method
-                //gotRotation = true;
             }
 
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
@@ -413,8 +398,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 }*/
             }
             //binding.fullscreenContent.setText(String.valueOf(exerciseTrackingList));
-
-            //TODO: we'll get the number of true events divided by length of list to get %/time in good form
         }
 
 
