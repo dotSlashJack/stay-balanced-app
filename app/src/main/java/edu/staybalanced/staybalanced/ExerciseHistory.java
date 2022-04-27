@@ -9,11 +9,11 @@ public class ExerciseHistory {
     // ExerciseHistory { historyId: Numerical , exercisesId: Numerical,  epochSeconds: Numerical, secondsInPosition: Numerical }
     private int id;
     private int exerciseId;
-    private int epochSeconds;
+    private long epochSeconds;
     private int secondsInPosition;
 
     // Default constructors
-    public ExerciseHistory(int id, int exerciseId, int epochSeconds, int secondsInPosition) {
+    public ExerciseHistory(int id, int exerciseId, long epochSeconds, int secondsInPosition) {
         this.id = id;
         this.exerciseId = exerciseId;
         this.epochSeconds = epochSeconds;
@@ -45,10 +45,10 @@ public class ExerciseHistory {
     public void setExerciseId(int exerciseId) {
         this.exerciseId = exerciseId;
     }
-    public int getEpochSeconds() {
+    public long getEpochSeconds() {
         return epochSeconds;
     }
-    public void setEpochSeconds(int epochSeconds) {
+    public void setEpochSeconds(long epochSeconds) {
         this.epochSeconds = epochSeconds;
     }
     public int getSecondsInPosition() {

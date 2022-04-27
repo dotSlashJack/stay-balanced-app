@@ -26,6 +26,7 @@ import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -292,7 +293,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                         binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
                         try{
                             DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                            ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, seconds, seconds_in_pos);
+                            ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), seconds_in_pos);
                             //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
                             exerciseSaver.addExerciseHistory(current_exercise_history);
 
