@@ -4,9 +4,11 @@ import static java.lang.Math.abs;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,6 +20,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -82,6 +89,10 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
     // Create a Handler to post delayed updates to the UI Thread from the Runnables defined below
     private final Handler mHideHandler = new Handler();
+
+    FloatingActionButton tutorialButton;
+    private static int seq_counter;
+
 
     public boolean changeCalibration(){
         isCalibrating = !isCalibrating;
@@ -300,6 +311,107 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             }
         });
         //binding.dummyButton2.setOnTouchListener(mDelayHideTouchListener); //TODO: again here, do we need this implemented?
+
+        tutorialButton = findViewById(R.id.TutorialButton);
+
+        tutorialButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s1 = "Welcome to the Activity Tutorial!\n In order to start, please get in to " +
+                        "position and then tap calibrate!";
+                String s2 = "Once you are in position, tap calibrate again to complete calibration";
+                String s3 = "Calibration Completed!\n Tap the start excercise button to start timer" +
+                        "and begin the excercise!";
+
+                /* The code below runs the animation for the tutorial and manages what occurs
+                while the user progresses to the tutorial. The progression relies on the
+                seq_counter variable
+                 */
+
+                new TapTargetSequence(ExerciseDo.this)
+                        .targets(
+                                TapTarget.forView(binding.dummyButton1,"Tutorial Part 1", s1)
+                                        .outerCircleColor(android.R.color.holo_orange_dark)      // Specify a color for the outer circle
+                                        .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
+                                        .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                        .titleTextSize(28)                  // Specify the size (in sp) of the title text
+                                        .titleTextColor(R.color.white)      // Specify the color of the title text
+                                        .descriptionTextSize(24)            // Specify the size (in sp) of the description text
+                                        .descriptionTextColor(R.color.white)  // Specify the color of the description text
+                                        .textColor(R.color.white)            // Specify a color for both the title and description text
+                                        .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
+                                        .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
+                                        .drawShadow(true)                   // Whether to draw a drop shadow or not
+                                        .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
+                                        .tintTarget(true)                   // Whether to tint the target view's color
+                                        .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
+                                        .targetRadius(60),
+                                TapTarget.forView(binding.dummyButton1,"Tutorial Part 2",s2)
+                                        .outerCircleColor(android.R.color.holo_orange_dark)      // Specify a color for the outer circle
+                                        .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
+                                        .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                        .titleTextSize(28)                  // Specify the size (in sp) of the title text
+                                        .titleTextColor(R.color.white)      // Specify the color of the title text
+                                        .descriptionTextSize(24)            // Specify the size (in sp) of the description text
+                                        .descriptionTextColor(R.color.orange)  // Specify the color of the description text
+                                        .textColor(R.color.white)            // Specify a color for both the title and description text
+                                        .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
+                                        .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
+                                        .drawShadow(true)                   // Whether to draw a drop shadow or not
+                                        .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
+                                        .tintTarget(true)                   // Whether to tint the target view's color
+                                        .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
+                                        .targetRadius(60),
+                        TapTarget.forView(binding.dummyButton2,"Tutorial Final Part",s3)
+                                .outerCircleColor(android.R.color.holo_orange_dark)      // Specify a color for the outer circle
+                                .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
+                                .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                .titleTextSize(28)                  // Specify the size (in sp) of the title text
+                                .titleTextColor(R.color.white)      // Specify the color of the title text
+                                .descriptionTextSize(24)            // Specify the size (in sp) of the description text
+                                .descriptionTextColor(R.color.orange)  // Specify the color of the description text
+                                .textColor(R.color.white)            // Specify a color for both the title and description text
+                                .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
+                                .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
+                                .drawShadow(true)                   // Whether to draw a drop shadow or not
+                                .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
+                                .tintTarget(true)                   // Whether to tint the target view's color
+                                .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
+                                .targetRadius(60))
+                        .listener(new TapTargetSequence.Listener() {
+                            @Override
+                            public void onSequenceFinish() {
+                                // This will run at the end of the sequence
+                                // it resets the sequence counter
+                                // and begins the excercise
+                                ExerciseDo.seq_counter = 0;
+                                binding.dummyButton2.performClick();
+                            }
+
+                            @Override
+                            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                                // This method determines the action that will occur
+                                // during the tutorial sequence based on the
+                                // seq_counter var
+                                if (ExerciseDo.seq_counter == 0) {
+                                    binding.dummyButton1.performClick();
+                                }
+                                else if (ExerciseDo.seq_counter == 1) {
+                                    binding.dummyButton1.performClick();
+                                }
+                                ExerciseDo.seq_counter += 1;
+
+
+                            }
+
+                            @Override
+                            public void onSequenceCanceled(TapTarget lastTarget) {
+                                // resets the counter when the sequence is cancelled at any point
+                                ExerciseDo.seq_counter = 0;
+                            }
+                        }).start();
+            }
+        });
     }
 
     @Override

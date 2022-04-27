@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/drawable/baseline_question_mark_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/layout/activity_exercise_do.xml" value="0.3625" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/layout/exercise_row.xml" value="0.3625" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/layout/fragment_add_exercise.xml" value="0.3625" />
+        <entry key="..\:/Users/RJ/AndroidStudioProjects/stay-balanced-app/app/src/main/res/layout/fragment_history.xml" value="0.3625" />
         <entry key="..\:/Users/james/OneDrive/Documents/NEU_2022S_CS5520-02/GroupProject/Project/app/src/main/res/drawable/menu_settings.xml" value="0.22" />
         <entry key="..\:/Users/james/OneDrive/Documents/NEU_2022S_CS5520-02/GroupProject/Project/app/src/main/res/drawable/search_icon_2.xml" value="0.2305" />
         <entry key="..\:/Users/james/OneDrive/Documents/NEU_2022S_CS5520-02/GroupProject/Project/app/src/main/res/layout/activity_calibration_placeholder.xml" value="0.4" />
