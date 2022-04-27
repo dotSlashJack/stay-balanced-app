@@ -9,6 +9,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -192,7 +194,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ExerciseItem current_exercise_item = new ExerciseItem(ex_id, ex_name, image);
                 all_exercise_items.add(current_exercise_item);
             } while (cursor.moveToNext());
-
         }
 
         cursor.close();
@@ -274,6 +275,61 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.update(EXERCISES_TABLE, cv, COLUMN_EXERCISE_ID + " = " + exercise_id, null);
         db.close();
+    }
+
+    public ArrayList<Integer> getHistoryDate(int exerciseID){
+        String getExerciseHistory = "SELECT " + COLUMN_HISTORY_EPOCH_SECONDS + " FROM " + HISTORY_TABLE + " WHERE " + COLUMN_HISTORY_EXERCISE_ID + " = " + exerciseID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(getExerciseHistory, null);
+
+        ArrayList<Integer> times = new ArrayList<>();
+        if(cursor.moveToFirst()) {
+            do {
+                int hist = cursor.getInt(0);
+                times.add(hist);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return times;
+    }
+
+    public ArrayList<Integer> getHistoryTime(int exerciseID){
+        String getExerciseHistory = "SELECT " + COLUMN_HISTORY_SECONDS_IN_POSITION + " FROM " + HISTORY_TABLE + " WHERE " + COLUMN_HISTORY_EXERCISE_ID + " = " + exerciseID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(getExerciseHistory, null);
+
+        ArrayList<Integer> times = new ArrayList<>();
+        if(cursor.moveToFirst()) {
+            do {
+                int hist = cursor.getInt(0);
+                times.add(hist);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return times;
+    }
+
+    public ArrayList<Entry> getHistoryBarEntryData(int exerciseID) {
+        ArrayList<Entry> yLabel = new ArrayList<>();
+        try {
+            ArrayList<Integer> times = getHistoryTime(exerciseID);
+            ArrayList<Integer> dates = getHistoryDate(exerciseID);
+
+            for (int i = 0; i < times.size(); i++) {
+                yLabel.add(new Entry(dates.get(i), times.get(i)));
+            }
+            return yLabel;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        yLabel.add(new Entry(0, 0));
+        return null;
     }
 
     // Not sure if functions are needed, delete exercise

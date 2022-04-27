@@ -1,5 +1,6 @@
 package edu.staybalanced.staybalanced;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,9 +10,9 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     Context context;
     ArrayList<ExerciseItem> allExercises;
     String host;
+
 
     // TODO: Add to this Constructor, a View.OnClickListener parameter.
     // History and Select need different things to happen when a card in this RecyclerView is clicked
@@ -108,7 +110,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             cardExerciseId = itemView.findViewById(R.id.txt_exercise_id);
             // Depending upon the host Fragment, set a specific onClickListener for each RecyclerView
             // item
-            if (host == "Select") {
+            if (host.equals("Select")) {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -119,19 +121,24 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         view.getContext().startActivity(startExercise);
                     }
                 });
-            } else if (host == "History") {
+            } else if (host.equals("History")) {
+
                 itemView.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("ResourceType")
                     @Override
                     public void onClick(View view) {
                         TextView idView = view.findViewById(R.id.txt_exercise_id);
                         int exerciseId = Integer.parseInt(idView.getText().toString());
-                        // TODO: Using exerciseId, access database and draw history graph
-                        ImageView graph = view.getRootView().findViewById(R.id.hist_graph);
-                        graph.setImageResource(R.drawable.menu_home);
+
+                        Intent intent = new Intent("clicked_exercise_id");
+                        intent.putExtra("EXERCISE_ID", exerciseId);
+                        LocalBroadcastManager.getInstance(view.getContext()).sendBroadcast(intent);
+
+                        // textViewHistory.setText(exerciseId);
                     }
                 });
             }
         }
-
     }
+
 }
