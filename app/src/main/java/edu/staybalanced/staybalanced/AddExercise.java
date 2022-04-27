@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +36,7 @@ public class AddExercise extends Fragment {
     RecyclerView.Adapter recyclerAdapter;
     ImageView icon;
     TextView iconName;
+    NavController navController;
 
     public AddExercise() {
         // Required empty public constructor
@@ -50,6 +53,7 @@ public class AddExercise extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        navController = Navigation.findNavController(view);
         name = view.findViewById(R.id.add_name);
         desc = view.findViewById(R.id.add_desc);
         reps = view.findViewById(R.id.add_reps);
@@ -87,8 +91,10 @@ public class AddExercise extends Fragment {
                         // temporarily setting default image
                         // TODO: If this.iconName!=Null, store iconName; else store default icon name
                         R.drawable.eicon_b_curl
+
                 );
                 Toast.makeText(view.getContext(), "New exercise " + name.getText().toString() + " created", Toast.LENGTH_SHORT).show();
+                navController.navigate(NavGraph00Directions.toSelect());
             }
             catch (Exception e) {
                 Toast.makeText(view.getContext(), "Error adding exercise", Toast.LENGTH_SHORT).show();
@@ -97,6 +103,7 @@ public class AddExercise extends Fragment {
             boolean success = databaseHelper.addExercise(new_exercise);
 
             Toast.makeText(view.getContext(), "Success = " + success, Toast.LENGTH_SHORT).show();
+
         });
     }
 
