@@ -294,6 +294,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 String s2 = "Once you are in position, tap calibrate again to complete calibration";
                 String s3 = "Calibration Completed!\n Tap the start excercise button to start timer" +
                         "and begin the excercise!";
+
+                /* The code below runs the animation for the tutorial and manages what occurs
+                while the user progresses to the tutorial. The progression relies on the
+                seq_counter variable
+                 */
+
                 new TapTargetSequence(ExerciseDo.this)
                         .targets(
                                 TapTarget.forView(binding.dummyButton1,"Tutorial Part 1", s1)
@@ -347,12 +353,18 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                         .listener(new TapTargetSequence.Listener() {
                             @Override
                             public void onSequenceFinish() {
+                                // This will run at the end of the sequence
+                                // it resets the sequence counter
+                                // and begins the excercise
                                 ExerciseDo.seq_counter = 0;
                                 binding.dummyButton2.performClick();
                             }
 
                             @Override
                             public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                                // This method determines the action that will occur
+                                // during the tutorial sequence based on the
+                                // seq_counter var
                                 if (ExerciseDo.seq_counter == 0) {
                                     binding.dummyButton1.performClick();
                                 }
@@ -366,7 +378,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
                             @Override
                             public void onSequenceCanceled(TapTarget lastTarget) {
-
+                                // resets the counter when the sequence is cancelled at any point
+                                ExerciseDo.seq_counter = 0;
                             }
                         }).start();
             }
