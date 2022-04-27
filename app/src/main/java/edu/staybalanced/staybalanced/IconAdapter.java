@@ -48,7 +48,7 @@ public class IconAdapter  extends RecyclerView.Adapter<IconAdapter.IconViewHolde
             selectedIcon.setVisibility(View.VISIBLE);
             IconItem iconItem = itemList.get(holder.getAdapterPosition());
             selectedIcon.setImageResource(iconItem.getImgId());
-            iconName.setText(iconItem.getName());
+            iconName.setText(String.valueOf(iconItem.getImgId()));
         });
     }
 

@@ -79,18 +79,22 @@ public class AddExercise extends Fragment {
 
         Button add = view.findViewById(R.id.add_button);
         add.setOnClickListener(addButton -> {
-            // TODO: Confirm if keeping Toasts
             Exercises new_exercise;
+            int iconId;
             try {
+                if (iconName.getText() == null) {
+                    iconId = R.drawable.eicon_b_curl;
+                } else {
+                    iconId = Integer.parseInt(iconName.getText().toString());
+                }
+
                 new_exercise = new Exercises(-1,
                         name.getText().toString(),
                         desc.getText().toString(),
                         Integer.parseInt(sets.getText().toString()),
                         Integer.parseInt(reps.getText().toString()),
                         Integer.parseInt(secs.getText().toString()),
-                        // temporarily setting default image
-                        // TODO: If this.iconName!=Null, store iconName; else store default icon name
-                        R.drawable.eicon_b_curl
+                        iconId
 
                 );
                 Toast.makeText(view.getContext(), "New exercise " + name.getText().toString() + " created", Toast.LENGTH_SHORT).show();

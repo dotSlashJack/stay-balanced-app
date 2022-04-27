@@ -13,6 +13,7 @@ public class ExerciseItem {
         this.image = imageIn;
     }
 
+    // This is the id of the excercise
     public int getId() {
         return id;
     }
@@ -21,6 +22,7 @@ public class ExerciseItem {
         return name;
     }
 
+    // This is the id value corresponding to the image memory location
     public int getImage() {
         return image;
     }
