@@ -4,6 +4,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+
+        // Needed for graph
+        maven{url"https://jitpack.io"}
     }
 }
 rootProject.name = "Stay Balanced"

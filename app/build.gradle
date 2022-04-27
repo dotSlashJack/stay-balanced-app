@@ -53,4 +53,7 @@ dependencies {
 
     // For the Settings Fragment
     implementation 'androidx.preference:preference:1.1.1'
+
+    // For history graphs implementation
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
