@@ -521,11 +521,14 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
                 exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
                 exerciseTrackingList.add(exerciseOnTrack);
-                /*if(exerciseOnTrack == false){
-                    binding.fullscreenContent.setText("outside gyro range");
+
+                if(exerciseOnTrack == false){
+                    mHideHandler.removeCallbacks(runnableHide);
+                    mHideHandler.postDelayed(runnableHide, delayMillis);
+                    UtilAudio.play(getApplicationContext(), UtilAudio.OFF_POSITION);
                 } else if(exerciseOnTrack==true){
                     binding.fullscreenContent.setText("inside gyro range!");
-                }*/
+                }
             }
             //binding.fullscreenContent.setText(String.valueOf(exerciseTrackingList));
         }
@@ -547,6 +550,13 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             @Override
                             public void run() {
                                 seconds++;
+                                if (secondsToRun - seconds == 5) {
+                                    mHideHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        UtilAudio.play(getApplicationContext(), UtilAudio.FIVE_LEFT);
+                                    }
+                                });}
                                 //binding.fullscreenContent.setText("Time in exercise:\n"+String.valueOf(seconds)+" seconds");
                             }
                         });
