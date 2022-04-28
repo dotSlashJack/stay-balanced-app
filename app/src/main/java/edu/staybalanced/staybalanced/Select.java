@@ -46,10 +46,6 @@ public class Select extends Fragment {
         // initialize recyclerview
         recyclerView = view.findViewById(R.id.recycler_view);
 
-        // TODO currently at the create step it makes the exercises, pull the exercise data
-        // from the database and then add them to the exercises variable (List)
-        // Also add a generic icon for any exercises we don't kno
-
         // get database exercise items
         DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
         individualExercises = databaseHelper.getAllExerciseItems();

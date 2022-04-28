@@ -27,9 +27,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     ArrayList<ExerciseItem> allExercises;
     String host;
 
-
-    // TODO: Add to this Constructor, a View.OnClickListener parameter.
     // History and Select need different things to happen when a card in this RecyclerView is clicked
+    // This is accomplished by assigning an appropriate ClickListener based on the value of hostFragment
+    // in ExerciseRowHolder's constructor
     public ExerciseAdapter(ArrayList<ExerciseItem> exerciseDataIn, Context contextIn, String hostFragment){
         this.context = contextIn;
         this.exerciseData = exerciseDataIn;

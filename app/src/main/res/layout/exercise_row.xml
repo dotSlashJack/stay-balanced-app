@@ -45,7 +45,6 @@
             android:textColor="@color/black"
             android:layout_gravity="center"/>
 
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

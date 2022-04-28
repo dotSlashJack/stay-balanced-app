@@ -40,8 +40,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
-//TODO PRELOAD DATA FOR HISTORY CHARTS
-// increase the time for excercises
+//TODO: PRELOAD EXAMPLE DATA FOR HISTORY CHARTS FOR TAs
+// increase the time for exercises
 
 public class History extends Fragment {
     RecyclerView recyclerView;
@@ -105,7 +105,6 @@ public class History extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(exerciseAdapter);
 
-        // TODO: Search bar interaction not optimal.  Opening and closing is clunky.
         FloatingActionButton searchButton = view.findViewById(R.id.hist_fab);
         searchButton.setOnClickListener(fab -> {
             if (menuItem.isActionViewExpanded()) {
