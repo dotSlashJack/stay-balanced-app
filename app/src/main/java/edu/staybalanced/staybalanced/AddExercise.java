@@ -108,7 +108,7 @@ public class AddExercise extends Fragment {
             }
             boolean success = databaseHelper.addExercise(new_exercise);
 
-            Toast.makeText(view.getContext(), "Success = " + success, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(view.getContext(), "Success = " + success, Toast.LENGTH_SHORT).show();
 
         });
     }
