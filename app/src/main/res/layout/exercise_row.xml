@@ -47,4 +47,14 @@
         android:ems="10"
         android:inputType="number" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="315dp"
+        android:layout_marginTop="45dp"
+        android:fontFamily="casual"
+        android:textColor="@color/black"
+        android:text="Seconds" />
+
 </androidx.cardview.widget.CardView>

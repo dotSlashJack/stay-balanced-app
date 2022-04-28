@@ -51,6 +51,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         holder.cardExerciseName.setText(exerciseData.get(position).getName());
         holder.cardExerciseImage.setImageResource(exerciseData.get(position).getImage());
         holder.cardExerciseId.setText(String.valueOf(exerciseData.get(position).getId()));
+        holder.secondPerSetView.setText(String.valueOf(exerciseData.get(position).getSecondsToExcercise()));
     }
 
     @Override

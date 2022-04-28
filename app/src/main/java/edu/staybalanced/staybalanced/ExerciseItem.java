@@ -43,4 +43,6 @@ public class ExerciseItem {
     public int getImage() {
         return image;
     }
+
+    public int getSecondsToExcercise() {return secondsToExcercise;}
 }
