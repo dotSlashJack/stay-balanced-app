@@ -46,19 +46,15 @@ public class Select extends Fragment {
         // initialize recyclerview
         recyclerView = view.findViewById(R.id.recycler_view);
 
-        // TODO currently at the create step it makes the exercises, pull the exercise data
-        // from the database and then add them to the exercises variable (List)
-        // Also add a generic icon for any exercises we don't kno
-
         // get database exercise items
         DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
         individualExercises = databaseHelper.getAllExerciseItems();
 
         //adding default exercises if db is empty
         if (individualExercises.isEmpty()) {
-            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", "Squat with back to the wall", 1, 1, 1, R.drawable.eicon_squat));
-            databaseHelper.addExercise(new Exercises(-1, "Plank", "Holding body straight off the ground", 1, 1, 1, R.drawable.eicon_plank));
-            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", "Hold dumbbell in position", 1, 1, 1, R.drawable.eicon_b_curl));
+            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", 30, R.drawable.eicon_squat));
+            databaseHelper.addExercise(new Exercises(-1, "Plank", 30, R.drawable.eicon_plank));
+            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", 30, R.drawable.eicon_b_curl));
             individualExercises = databaseHelper.getAllExerciseItems();
         }
 

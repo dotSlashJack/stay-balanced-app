@@ -26,11 +26,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO Disable reps and sets
-
 public class AddExercise extends Fragment {
     AutoCompleteTextView name;
-    EditText desc, reps, sets, secs;
+    EditText secs;
+    NavController navController;
     // Icon RecyclerView Class Variables
     List<IconItem> itemList = new ArrayList<>();
     RecyclerView recyclerView;
@@ -38,7 +37,6 @@ public class AddExercise extends Fragment {
     RecyclerView.Adapter recyclerAdapter;
     ImageView icon;
     TextView iconName;
-    NavController navController;
 
     public AddExercise() {
         // Required empty public constructor
@@ -55,12 +53,9 @@ public class AddExercise extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(view);
         name = view.findViewById(R.id.add_name);
-        desc = view.findViewById(R.id.add_desc);
-        reps = view.findViewById(R.id.add_reps);
-        sets = view.findViewById(R.id.add_sets);
         secs = view.findViewById(R.id.add_secs);
+        navController = Navigation.findNavController(view);
 
         // Set autocomplete example exercise names
         DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
@@ -92,24 +87,19 @@ public class AddExercise extends Fragment {
 
                 new_exercise = new Exercises(-1,
                         name.getText().toString(),
-                        desc.getText().toString(),
-                        Integer.parseInt(sets.getText().toString()),
-                        Integer.parseInt(reps.getText().toString()),
                         Integer.parseInt(secs.getText().toString()),
                         iconId
-
                 );
                 Toast.makeText(view.getContext(), "New exercise " + name.getText().toString() + " created", Toast.LENGTH_SHORT).show();
                 navController.navigate(NavGraph00Directions.toSelect());
             }
             catch (Exception e) {
                 Toast.makeText(view.getContext(), "Error adding exercise", Toast.LENGTH_SHORT).show();
-                new_exercise = new Exercises(-1, "error", "error while adding exercise", 0, 0, 0, 0);
+                new_exercise = new Exercises(-1, "error", 0, 0);
             }
             boolean success = databaseHelper.addExercise(new_exercise);
 
             //Toast.makeText(view.getContext(), "Success = " + success, Toast.LENGTH_SHORT).show();
-
         });
     }
 

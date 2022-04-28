@@ -40,8 +40,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
-//TODO PRELOAD DATA FOR HISTORY CHARTS
-// increase the time for excercises
+//TODO: PRELOAD EXAMPLE DATA FOR HISTORY CHARTS FOR TAs
+// increase the time for exercises
 
 public class History extends Fragment {
     RecyclerView recyclerView;
@@ -93,9 +93,9 @@ public class History extends Fragment {
 
         //adding default exercises if db is empty
         if (exercises.isEmpty()) {
-            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", "Squat with back to the wall", 1, 1, 1, R.drawable.eicon_squat));
-            databaseHelper.addExercise(new Exercises(-1, "Plank", "Holding body straight off the ground", 1, 1,1, R.drawable.eicon_plank));
-            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", "Hold dumbbell in position", 1, 1, 1, R.drawable.eicon_b_curl));
+            databaseHelper.addExercise(new Exercises(-1, "Wall Squat", 30, R.drawable.eicon_squat));
+            databaseHelper.addExercise(new Exercises(-1, "Plank", 30, R.drawable.eicon_plank));
+            databaseHelper.addExercise(new Exercises(-1, "Bicep Curl Hold", 30, R.drawable.eicon_b_curl));
             fillHistory(databaseHelper, 1);
             fillHistory(databaseHelper, 2);
             exercises = databaseHelper.getAllExerciseItems();
@@ -105,7 +105,6 @@ public class History extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(exerciseAdapter);
 
-        // TODO: Search bar interaction not optimal.  Opening and closing is clunky.
         FloatingActionButton searchButton = view.findViewById(R.id.hist_fab);
         searchButton.setOnClickListener(fab -> {
             if (menuItem.isActionViewExpanded()) {

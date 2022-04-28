@@ -11,7 +11,7 @@
         android:id="@+id/recycler_view_top_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Excercises"
+        android:text="Exercises"
         android:textColor="@color/black"
         android:textSize="25dp"
         app:layout_constraintLeft_toLeftOf="parent"
