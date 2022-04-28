@@ -278,6 +278,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateSeconds(int exercise_id, int newSeconds) {
+        Exercises current_exercise = getExerciseInfo(exercise_id);
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (current_exercise.getSecondsPerRep() == newSeconds) return;
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_EXERCISE_NAME, current_exercise.getName());
+        cv.put(COLUMN_EXERCISE_DESCRIPTION, current_exercise.getDescription());
+        cv.put(COLUMN_EXERCISE_SETS, current_exercise.getSets());
+        cv.put(COLUMN_EXERCISE_REPS, current_exercise.getReps());
+        cv.put(COLUMN_SECONDS_PER_REP, newSeconds);
+        cv.put(COLUMN_GYRO_X, current_exercise.getGyroX());
+        cv.put(COLUMN_GYRO_Y, current_exercise.getGyroY());
+        cv.put(COLUMN_GYRO_Z, current_exercise.getGyroZ());
+        cv.put(COLUMN_ROTATION_X, current_exercise.getRotationX());
+        cv.put(COLUMN_ROTATION_Y, current_exercise.getRotationY());
+        cv.put(COLUMN_ROTATION_Z, current_exercise.getRotationZ());
+        cv.put(COLUMN_IMAGE, current_exercise.getImage());
+
+        db.update(EXERCISES_TABLE, cv, COLUMN_EXERCISE_ID + " = " + exercise_id, null);
+        db.close();
+    }
+
     public ArrayList<Integer> getHistoryDate(int exerciseID){
         String getExerciseHistory = "SELECT " + COLUMN_HISTORY_EPOCH_SECONDS + " FROM " + HISTORY_TABLE + " WHERE " + COLUMN_HISTORY_EXERCISE_ID + " = " + exerciseID;
         SQLiteDatabase db = this.getReadableDatabase();
