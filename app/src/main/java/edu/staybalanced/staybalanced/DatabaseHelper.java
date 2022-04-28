@@ -180,7 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<ExerciseItem> all_exercise_items = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String getAllExerciseItemsQuery = "SELECT " + COLUMN_EXERCISE_ID + " , " + COLUMN_EXERCISE_NAME + " , " + COLUMN_IMAGE + " FROM " + EXERCISES_TABLE;
+        String getAllExerciseItemsQuery = "SELECT " + COLUMN_EXERCISE_ID + " , " + COLUMN_EXERCISE_NAME + " , " + COLUMN_IMAGE + " , " + COLUMN_SECONDS_PER_REP + " FROM " + EXERCISES_TABLE;
         Cursor cursor = db.rawQuery(getAllExerciseItemsQuery, null);
 
         // if the cursor contains at least one item
@@ -191,7 +191,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int ex_id = cursor.getInt(0);
                 String ex_name = cursor.getString(1);
                 int image = cursor.getInt(2);
-                ExerciseItem current_exercise_item = new ExerciseItem(ex_id, ex_name, image);
+                int secondsPerSet = cursor.getInt(3);
+                ExerciseItem current_exercise_item = new ExerciseItem(ex_id, ex_name, image, secondsPerSet);
                 all_exercise_items.add(current_exercise_item);
             } while (cursor.moveToNext());
         }

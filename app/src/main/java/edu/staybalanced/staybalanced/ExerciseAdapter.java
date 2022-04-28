@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -101,13 +102,15 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     class ExerciseRowHolder extends RecyclerView.ViewHolder {
         TextView cardExerciseName, cardExerciseId;
         ImageView cardExerciseImage;
+        EditText secondPerSetView;
 
         public ExerciseRowHolder(@NonNull View itemView) {
             super(itemView);
-
+            //TODO THIS IS WHERE Info is added
             cardExerciseName = itemView.findViewById(R.id.txt_exercise_name);
             cardExerciseImage = itemView.findViewById(R.id.image_exercise);
             cardExerciseId = itemView.findViewById(R.id.txt_exercise_id);
+            secondPerSetView = itemView.findViewById(R.id.editTextNumber2);
             // Depending upon the host Fragment, set a specific onClickListener for each RecyclerView
             // item
             if (host.equals("Select")) {
@@ -116,6 +119,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     public void onClick(View view) {
                         TextView idView = view.findViewById(R.id.txt_exercise_id);
                         int exerciseId = Integer.parseInt(idView.getText().toString());
+                        DatabaseHelper update = new DatabaseHelper(context.getApplicationContext());
+                        int userSeconds = Integer.parseInt(secondPerSetView.getText().toString());
+                        update.updateSeconds(exerciseId, userSeconds);
                         Intent startExercise = new Intent (view.getContext(), ExerciseDo.class);
                         startExercise.putExtra("EXERCISE_ID", exerciseId);
                         view.getContext().startActivity(startExercise);
