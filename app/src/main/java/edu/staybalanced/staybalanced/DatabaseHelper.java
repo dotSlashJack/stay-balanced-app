@@ -269,9 +269,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (current_exercise.getSecondsPerRep() == newSeconds) return;
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_EXERCISE_NAME, current_exercise.getName());
-        cv.put(COLUMN_EXERCISE_DESCRIPTION, current_exercise.getDescription());
-        cv.put(COLUMN_EXERCISE_SETS, current_exercise.getSets());
-        cv.put(COLUMN_EXERCISE_REPS, current_exercise.getReps());
         cv.put(COLUMN_SECONDS_PER_REP, newSeconds);
         cv.put(COLUMN_GYRO_X, current_exercise.getGyroX());
         cv.put(COLUMN_GYRO_Y, current_exercise.getGyroY());
