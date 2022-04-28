@@ -90,6 +90,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     MediaPlayer mediaPlayer;
     int currentlyPlaying;
     long previousWarning;
+    long previousColorChange;
     boolean inPosition = true;
 
 
@@ -235,6 +236,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         });
         currentlyPlaying = -1;
         previousWarning = Instant.now().getEpochSecond();
+        previousColorChange = Instant.now().getEpochSecond();
 
         // Set up the user interaction to manually show or hide the system UI.
         unhiddenContent.setOnClickListener(new View.OnClickListener() {
@@ -270,8 +272,10 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             Toast toast = Toast.makeText(getApplicationContext(), "ERROR: calibration did NOT save correctly. Please try again.", Toast.LENGTH_LONG);
                             toast.show();
                         }else if(didSave){
-                            Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_SHORT);
-                            toast.show();
+                            binding.fullscreenContent.setText("Calibrated, you can begin your exercise now :)");
+                            //Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_SHORT);
+                            //toast.show();
+
                             current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
                         }
                         exerciseGyro = new Gyroscope(exerciseId, getApplicationContext());
@@ -305,7 +309,10 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     binding.dummyButton2.setText("Stop exercise");
                     seconds = 0;
                     runTimer = true;
+                    binding.fullscreenContent.setText("Good job, keep going!");
+                    binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.spearmint));
                     timer();
+
                 }
                 else if (isExercising == false) {
                     if(seconds >= 7){
@@ -492,6 +499,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        boolean exerciseOnTrackGyro = true;
+        boolean exerciseOnTrackRotation = true;
         //TextView t = findViewById(R.id.fullscreen_content);
         // if the user is calibrations
         if (isCalibrating) {
@@ -539,39 +548,39 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
-                exerciseOnTrack = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
-                exerciseTrackingList.add(exerciseOnTrack);
-                if(exerciseOnTrack == false){
-                    binding.fullscreenContent.setText("Fix your form");
-                    binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.brown));
-                } else if(exerciseOnTrack==true){
-                    binding.fullscreenContent.setText("Good job, keep going!");
-                    binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.spearmint));;
-                }
+                exerciseOnTrackRotation = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
+                exerciseTrackingList.add(exerciseOnTrackRotation);
+            } else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
+                exerciseOnTrackGyro = exerciseGyro.exerciseTracker("GYROSCOPE");
+                exerciseTrackingList.add(exerciseOnTrackGyro);
             }
 
-            else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
-                exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
-                exerciseTrackingList.add(exerciseOnTrack);
+            if((exerciseOnTrackGyro && exerciseOnTrackRotation) && Instant.now().getEpochSecond() - previousColorChange > 0.5){
+                binding.fullscreenContent.setText("Good job, keep going!" );
+                binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.spearmint));
+                previousColorChange = Instant.now().getEpochSecond();
+            } else if((exerciseOnTrackGyro!=true || exerciseOnTrackRotation!=true) && Instant.now().getEpochSecond() - previousColorChange > 0.5){
+                binding.fullscreenContent.setText("Adjust your position");
+                binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.brown));
+                previousColorChange = Instant.now().getEpochSecond();
+            }
 
-                if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
-                    inPosition = false;
-                    if (currentlyPlaying != UtilAudio.OFF_POSITION) {
-                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
-                        currentlyPlaying = UtilAudio.OFF_POSITION;
-                        previousWarning = Instant.now().getEpochSecond();
-                    }
-
-                } else if(exerciseOnTrack == true && inPosition == false && Instant.now().getEpochSecond() - previousWarning > 3){
-                    if (currentlyPlaying != UtilAudio.IN_POSITION) {
-                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
-                        currentlyPlaying = UtilAudio.IN_POSITION;
-                        previousWarning = Instant.now().getEpochSecond();
-                    }
-                    inPosition = true;
-                    binding.fullscreenContent.setText("inside gyro range!");
+            if((exerciseOnTrackGyro == false || exerciseOnTrackRotation==false) && Instant.now().getEpochSecond() - previousWarning > 3){
+                inPosition = false;
+                if (currentlyPlaying != UtilAudio.OFF_POSITION) {
+                    mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
+                    currentlyPlaying = UtilAudio.OFF_POSITION;
+                    previousWarning = Instant.now().getEpochSecond();
                 }
+
+            } else if((exerciseOnTrackGyro == true && exerciseOnTrackRotation==true) && inPosition == false && Instant.now().getEpochSecond() - previousWarning > 3){
+                if (currentlyPlaying != UtilAudio.IN_POSITION) {
+                    mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
+                    currentlyPlaying = UtilAudio.IN_POSITION;
+                    previousWarning = Instant.now().getEpochSecond();
+                }
+                inPosition = true;
             }
         }
 
