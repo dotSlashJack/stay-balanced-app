@@ -29,7 +29,7 @@ public class UtilAudio {
 
 
     // This method is used to play the audio files referenced by the constants defined above
-    public static void play(Context context, int audio) {
+    public static MediaPlayer playNow(Context context, MediaPlayer mediaPlayer, int audio) {
         /**
          *  Check if the user has turned on Silent Mode in Settings.java before playing audio
          *
@@ -37,20 +37,50 @@ public class UtilAudio {
          * coded correctly) then the default is to assume that Silent Mode is off (its value is false).
          */
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (sharedPreferences.getBoolean("silent", false)) { return; }
+        if (sharedPreferences.getBoolean("silent", false)) { return mediaPlayer; }
 
         // Load the audio file
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, audio);
+        MediaPlayer newFile = MediaPlayer.create(context, audio);
 
-        // Set a listener that releases the MediaPlayer from memory once the audio is done playing
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.release();
-            }
-        });
+        // If the MediaPlayer is already playing, cancel playback
+        mediaPlayer.release();
 
         // Play the audio
-        mediaPlayer.start();
+        newFile.start();
+
+        return newFile;
+    }
+
+    public static MediaPlayer playLater(Context context, MediaPlayer mediaPlayer, int audio) {
+        /**
+         *  Check if the user has turned on Silent Mode in Settings.java before playing audio
+         *
+         * If no "silent" preference is found (which should never happen as long as settings.xml is
+         * coded correctly) then the default is to assume that Silent Mode is off (its value is false).
+         */
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPreferences.getBoolean("silent", false)) { return mediaPlayer; }
+
+        // Load the next audio clip
+        MediaPlayer nextFile = MediaPlayer.create(context, audio);
+
+        // If the MediaPlayer is already playing, cancel playback if now == true
+        // else enqueue the next audio file
+        if (mediaPlayer.isPlaying()) {
+            // Set a listener that releases the MediaPlayer from memory once the audio is done playing
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mediaPlayer.release();
+                }
+            });
+            mediaPlayer.setNextMediaPlayer(nextFile);
+        } else {
+            mediaPlayer.release();
+            nextFile.start();
+        }
+
+        // Play the audio
+        return nextFile;
     }
 }

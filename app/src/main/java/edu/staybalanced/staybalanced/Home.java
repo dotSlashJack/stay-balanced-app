@@ -1,5 +1,6 @@
 package edu.staybalanced.staybalanced;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ public class Home extends Fragment {
     View.OnClickListener homeButtonListener;
     // TextToSpeech demonstration variable
     //UtilTTS tts;
+    // MediaPlayer demonstration variable.  This should always
+    MediaPlayer mediaPlayer = new MediaPlayer();
 
     public Home() {
         // Required empty public constructor
@@ -64,8 +67,20 @@ public class Home extends Fragment {
              */
 
             // MediaPlayer demonstration
-            UtilAudio.play(view.getContext(), UtilAudio.COUNTDOWN);
-            UtilAudio.play(view.getContext(), UtilAudio.DONE);
+            mediaPlayer = UtilAudio.playNow(view.getContext(), mediaPlayer, UtilAudio.COUNTDOWN);
+            mediaPlayer = UtilAudio.playLater(view.getContext(), mediaPlayer, UtilAudio.DONE);
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Set a listener that releases the MediaPlayer from memory once the audio is done playing
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.release();
+            }
         });
     }
 }
