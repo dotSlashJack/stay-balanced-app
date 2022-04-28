@@ -278,7 +278,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 String s1 = "Welcome to the Activity Tutorial!\n In order to start, please get in to " +
                         "position and then tap calibrate!";
                 String s2 = "Once you are in position, tap calibrate again to complete calibration";
-                String s3 = "Calibration Completed!\n Tap the start excercise button to start timer" +
+                String s3 = "Calibration Completed!\n Tap the start excercise button to start timer " +
                         "and begin the excercise!";
 
                 /* The code below runs the animation for the tutorial and manages what occurs
