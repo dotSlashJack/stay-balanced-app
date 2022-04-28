@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     android:theme="@style/ThemeOverlay.StayBalanced.FullscreenContainer"
-    tools:context=".ExerciseDo">
+    tools:context=".ExerciseDo"
+    android:orientation="vertical">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -40,13 +41,15 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/TutorialButton">
+            app:layout_constraintTop_toBottomOf="@+id/TutorialButton"
+            app:layout_constraintVertical_bias="0.987">
 
             <Button
                 android:id="@+id/dummy_button1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
                 android:text="@string/do_calibrate" />
@@ -54,7 +57,7 @@
             <Button
                 android:id="@+id/dummy_button2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:text="@string/do_start" />
@@ -62,16 +65,16 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/TutorialButton"
-            app:fabSize="normal"
             android:layout_width="62dp"
             android:layout_height="62dp"
-            android:layout_marginTop="26dp"
-            android:layout_marginEnd="31dp"
-            android:layout_marginBottom="597dp"
             android:clickable="true"
-            app:layout_constraintBottom_toTopOf="@+id/fullscreen_content_controls"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerInside"
+            app:backgroundTint="@color/orange"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/baseline_question_mark_black_24dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/baseline_question_mark_black_24dp" />
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

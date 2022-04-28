@@ -13,6 +13,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -86,6 +87,10 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     int secondsToRun;
     DatabaseHelper loadCalibrationHelper;
     Exercises current_exercise;
+    MediaPlayer mediaPlayer;
+    int currentlyPlaying;
+    long previousWarning;
+    boolean inPosition = true;
 
 
     //TODO: need to check the implementation of the unregister listeners and see if these are needed
@@ -218,6 +223,18 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         mVisible = true;
         unhiddenContent = binding.fullscreenContent;
         controlsContainer = binding.fullscreenContentControls;
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            // Resets currentlyPlaying var after audio completion
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                currentlyPlaying = -1;
+
+            }
+        });
+        currentlyPlaying = -1;
+        previousWarning = Instant.now().getEpochSecond();
 
         // Set up the user interaction to manually show or hide the system UI.
         unhiddenContent.setOnClickListener(new View.OnClickListener() {
@@ -522,15 +539,24 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
                 exerciseTrackingList.add(exerciseOnTrack);
 
-                if(exerciseOnTrack == false){
-                    mHideHandler.removeCallbacks(runnableHide);
-                    mHideHandler.postDelayed(runnableHide, delayMillis);
-                    UtilAudio.play(getApplicationContext(), UtilAudio.OFF_POSITION);
-                } else if(exerciseOnTrack==true){
+                if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
+                    inPosition = false;
+                    if (currentlyPlaying != UtilAudio.OFF_POSITION) {
+                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
+                        currentlyPlaying = UtilAudio.OFF_POSITION;
+                        previousWarning = Instant.now().getEpochSecond();
+                    }
+
+                } else if(exerciseOnTrack == true && inPosition == false && Instant.now().getEpochSecond() - previousWarning > 3){
+                    if (currentlyPlaying != UtilAudio.IN_POSITION) {
+                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
+                        currentlyPlaying = UtilAudio.IN_POSITION;
+                        previousWarning = Instant.now().getEpochSecond();
+                    }
+                    inPosition = true;
                     binding.fullscreenContent.setText("inside gyro range!");
                 }
             }
-            //binding.fullscreenContent.setText(String.valueOf(exerciseTrackingList));
         }
 
 
@@ -550,13 +576,17 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             @Override
                             public void run() {
                                 seconds++;
-                                if (secondsToRun - seconds == 5) {
-                                    mHideHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        UtilAudio.play(getApplicationContext(), UtilAudio.FIVE_LEFT);
-                                    }
-                                });}
+                                if (secondsToRun - seconds == 7) {
+                                    mediaPlayer = UtilAudio.playNow(getApplicationContext(),mediaPlayer,UtilAudio.FIVE_LEFT);
+                                }
+
+                                else if (secondsToRun - seconds == 5) {
+                                    mediaPlayer = UtilAudio.playNow(getApplicationContext(),mediaPlayer,UtilAudio.COUNTDOWN);
+                                }
+                                else if (secondsToRun == seconds) {
+                                    mediaPlayer = UtilAudio.playLater(getApplicationContext(),mediaPlayer,UtilAudio.DONE);
+                                    binding.dummyButton2.setText("START EXCERCISE");
+                                }
                                 //binding.fullscreenContent.setText("Time in exercise:\n"+String.valueOf(seconds)+" seconds");
                             }
                         });
