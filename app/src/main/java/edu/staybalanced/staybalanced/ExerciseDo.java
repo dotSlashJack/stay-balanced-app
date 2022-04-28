@@ -33,26 +33,17 @@ import java.util.Hashtable;
 
 import edu.staybalanced.staybalanced.databinding.ActivityExerciseDoBinding;
 
-/**
- * An example full-screen activity that shows and hides the Activity's controls UI
- * with user interaction.
- *
- * TODO: Instance saving not implemented.  Screen's state will be reset on orientation change.
- */
+//An full-screen activity that shows and hides the Activity's controls UI with user interaction.
 @SuppressWarnings("Convert2Lambda")
 public class ExerciseDo extends AppCompatActivity implements SensorEventListener{
 
-    // Determines whether or not the controls should be auto-hidden after {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-    private static final boolean AUTO_HIDE = true;
-    // If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after user control interaction before hiding the controls.
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     /* Some older devices need a small delay between UI widget updates and a change of the status
      * and navigation bar.
      *
      * Changed this from Android Studio's default 300 to 0 because it made the device feel
      * unresponsive.
      */
-    private static final int UI_ANIMATION_DELAY = 0; //300;
+    private static final int UI_ANIMATION_DELAY = 0;
 
     // Layout binding that allows us to reference Views without findViewById()
     private ActivityExerciseDoBinding binding;
@@ -109,32 +100,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         return isCalibrating;
     }
 
-    /**
-     * An unused Runnable.  This was used to hide the Android System's Notification bar (top of the
-     * screen) and the Android System Navigation controls (bottom of the screen, Back|Home|History)
-     *
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
-            if (Build.VERSION.SDK_INT >= 30) {
-                mContentView.getWindowInsetsController().hide(WindowInsets.Type.navigationBars());
-            } else {
-                // Note that some of these constants are new as of API 16 (Jelly Bean)
-                // and API 19 (KitKat). It is safe to use them, as they are inlined
-                // at compile-time and do nothing on earlier devices.
-                mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-            }
-        }
-    };
-     */
-
     // An operation for a new Thread that will run after UI_ANIMATION_DELAY milliseconds, showing the
     // Activity's controls
     private final Runnable runnableShow = new Runnable() {
@@ -150,29 +115,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         @Override
         public void run() {
             hide();
-        }
-    };
-
-    /* Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     *
-     * view.performClick() will call any onClickListeners that have been defined for the tapped View
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (AUTO_HIDE) { delayedHide(AUTO_HIDE_DELAY_MILLIS); }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    view.performClick();
-                    break;
-                default:
-                    break;
-            }
-            return false;
         }
     };
 
@@ -207,7 +149,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         gyro = sensorManagerGyro.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         rotationVector = sensorManagerRotation.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
-        //TODO: this seems to work to catch at least a lack of gyroscope, but we may want to test this a bit more
+        // Check if the device has a working gyroscope
+        // TODO: gracefully degrade functionality if no gyro
         if(gyro == null){
             Toast.makeText(this,"error in gyro", Toast.LENGTH_LONG).show();
             finish();
@@ -291,7 +234,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
             }
         });
-        //binding.dummyButton1.setOnTouchListener(mDelayHideTouchListener); //TODO: if this needs to be working, then figure out a way to prevent it from resetting the boolean
+
         binding.dummyButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -326,7 +269,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 }
             }
         });
-        //binding.dummyButton2.setOnTouchListener(mDelayHideTouchListener); //TODO: again here, do we need this implemented?
 
         tutorialButton = findViewById(R.id.TutorialButton);
 
@@ -572,15 +514,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 }
             }
         }
-
-
-
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
+    public void onAccuracyChanged(Sensor sensor, int i) {}
 
-    }
     public void timer(){
         new Thread() {
             public void run() {
@@ -612,5 +550,4 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             }
         }.start();
     }
-
 }
