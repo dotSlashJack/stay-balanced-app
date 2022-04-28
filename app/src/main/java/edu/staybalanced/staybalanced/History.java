@@ -40,6 +40,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
+//TODO PRELOAD DATA FOR HISTORY CHARTS
+// increase the time for excercises
+
 public class History extends Fragment {
     RecyclerView recyclerView;
     ArrayList<ExerciseItem> exercises;

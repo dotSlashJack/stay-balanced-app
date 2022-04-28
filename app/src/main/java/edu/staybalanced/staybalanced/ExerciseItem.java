@@ -1,5 +1,7 @@
 package edu.staybalanced.staybalanced;
 
+//TODO maybe show seconds
+
 public class ExerciseItem {
     // Do not delete current attributes
     String name;

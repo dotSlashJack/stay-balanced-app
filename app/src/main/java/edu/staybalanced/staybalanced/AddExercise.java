@@ -26,6 +26,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO Disable reps and sets
+
 public class AddExercise extends Fragment {
     AutoCompleteTextView name;
     EditText desc, reps, sets, secs;

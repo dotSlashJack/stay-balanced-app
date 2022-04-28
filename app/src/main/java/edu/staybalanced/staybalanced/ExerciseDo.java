@@ -310,6 +310,20 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     runTimer = true;
                     timer();
                 }
+                else if (isExercising == false) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    //TODO stop excercise early, stops audio
+                    // reset button to say start excercise
+                    // log seconds they did excercise
+                    // Display results excercise to screen
+                   /* DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
+                    ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), seconds_in_pos);
+                    //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
+                    exerciseSaver.addExerciseHistory(current_exercise_history);*/
+
+
+                }
             }
         });
         //binding.dummyButton2.setOnTouchListener(mDelayHideTouchListener); //TODO: again here, do we need this implemented?
@@ -576,14 +590,14 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             @Override
                             public void run() {
                                 seconds++;
-                                if (secondsToRun - seconds == 7) {
+                                if (secondsToRun - seconds == 7 && isExercising == true) {
                                     mediaPlayer = UtilAudio.playNow(getApplicationContext(),mediaPlayer,UtilAudio.FIVE_LEFT);
                                 }
 
-                                else if (secondsToRun - seconds == 5) {
+                                else if (secondsToRun - seconds == 5 && isExercising == true) {
                                     mediaPlayer = UtilAudio.playNow(getApplicationContext(),mediaPlayer,UtilAudio.COUNTDOWN);
                                 }
-                                else if (secondsToRun == seconds) {
+                                else if (secondsToRun == seconds && isExercising == true) {
                                     mediaPlayer = UtilAudio.playLater(getApplicationContext(),mediaPlayer,UtilAudio.DONE);
                                     binding.dummyButton2.setText("START EXCERCISE");
                                 }
