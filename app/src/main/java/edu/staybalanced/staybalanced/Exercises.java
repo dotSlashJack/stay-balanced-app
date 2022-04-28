@@ -8,9 +8,6 @@ public class Exercises {
     // Exercises { id: Numerical, name: String, description: String, sets: Numerical, reps: Numerical, secondsPerRep: Numerical, gyroX: Numerical, gyroY: Numerical, gyroZ: Numerical }
     private int id;
     private String name;
-    private String description;
-    private int sets;
-    private int reps;
     private int secondsPerRep;
     private double gyroX;
     private double gyroY;
@@ -21,12 +18,9 @@ public class Exercises {
     private int image;
 
     // Full constructor
-    public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image) {
+    public Exercises(int id, String name, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image) {
         this.id = id;
         this.name = name;
-        this.description = description;
-        this.sets = sets;
-        this.reps = reps;
         this.secondsPerRep = secondsPerRep;
         this.gyroX = gyroX;
         this.gyroY = gyroY;
@@ -38,8 +32,8 @@ public class Exercises {
     }
 
     // Default calibration values constructor
-    public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, int image){
-        this(id, name, description, sets, reps, secondsPerRep, 0, 0, 0, 0, 0, 0, image);
+    public Exercises(int id, String name, int secondsPerRep, int image){
+        this(id, name, secondsPerRep, 0, 0, 0, 0, 0, 0, image);
     }
 
     @NonNull
@@ -48,9 +42,6 @@ public class Exercises {
         return "Exercises{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", sets=" + sets +
-                ", reps=" + reps +
                 ", secondsPerRep=" + secondsPerRep +
                 ", gyroX=" + gyroX +
                 ", gyroY=" + gyroY +
@@ -74,24 +65,6 @@ public class Exercises {
     }
     public void setName(String name) {
         this.name = name;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public int getSets() {
-        return sets;
-    }
-    public void setSets(int sets) {
-        this.sets = sets;
-    }
-    public int getReps() {
-        return reps;
-    }
-    public void setReps(int reps) {
-        this.reps = reps;
     }
     public int getSecondsPerRep() {
         return secondsPerRep;

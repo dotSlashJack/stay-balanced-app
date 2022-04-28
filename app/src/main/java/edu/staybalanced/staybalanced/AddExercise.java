@@ -85,22 +85,17 @@ public class AddExercise extends Fragment {
                     iconId = Integer.parseInt(iconName.getText().toString());
                 }
 
-                // TODO: Update this database interaction to reflect removal of description, sets, and reps
                 new_exercise = new Exercises(-1,
                         name.getText().toString(),
-                        desc.getText().toString(),
-                        Integer.parseInt(sets.getText().toString()),
-                        Integer.parseInt(reps.getText().toString()),
                         Integer.parseInt(secs.getText().toString()),
                         iconId
-
                 );
                 Toast.makeText(view.getContext(), "New exercise " + name.getText().toString() + " created", Toast.LENGTH_SHORT).show();
                 navController.navigate(NavGraph00Directions.toSelect());
             }
             catch (Exception e) {
                 Toast.makeText(view.getContext(), "Error adding exercise", Toast.LENGTH_SHORT).show();
-                new_exercise = new Exercises(-1, "error", "error while adding exercise", 0, 0, 0, 0);
+                new_exercise = new Exercises(-1, "error", 0, 0);
             }
             boolean success = databaseHelper.addExercise(new_exercise);
 
