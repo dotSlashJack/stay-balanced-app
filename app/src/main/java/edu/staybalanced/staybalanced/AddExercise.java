@@ -26,11 +26,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO Disable reps and sets
-
 public class AddExercise extends Fragment {
     AutoCompleteTextView name;
-    EditText desc, reps, sets, secs;
+    EditText secs;
+    NavController navController;
     // Icon RecyclerView Class Variables
     List<IconItem> itemList = new ArrayList<>();
     RecyclerView recyclerView;
@@ -38,7 +37,6 @@ public class AddExercise extends Fragment {
     RecyclerView.Adapter recyclerAdapter;
     ImageView icon;
     TextView iconName;
-    NavController navController;
 
     public AddExercise() {
         // Required empty public constructor
@@ -55,12 +53,9 @@ public class AddExercise extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        navController = Navigation.findNavController(view);
         name = view.findViewById(R.id.add_name);
-        desc = view.findViewById(R.id.add_desc);
-        reps = view.findViewById(R.id.add_reps);
-        sets = view.findViewById(R.id.add_sets);
         secs = view.findViewById(R.id.add_secs);
+        navController = Navigation.findNavController(view);
 
         // Set autocomplete example exercise names
         DatabaseHelper databaseHelper = new DatabaseHelper(view.getContext());
@@ -90,6 +85,7 @@ public class AddExercise extends Fragment {
                     iconId = Integer.parseInt(iconName.getText().toString());
                 }
 
+                // TODO: Update this database interaction to reflect removal of description, sets, and reps
                 new_exercise = new Exercises(-1,
                         name.getText().toString(),
                         desc.getText().toString(),
@@ -109,7 +105,6 @@ public class AddExercise extends Fragment {
             boolean success = databaseHelper.addExercise(new_exercise);
 
             Toast.makeText(view.getContext(), "Success = " + success, Toast.LENGTH_SHORT).show();
-
         });
     }
 
