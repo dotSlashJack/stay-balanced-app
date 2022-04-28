@@ -171,7 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<ExerciseItem> all_exercise_items = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String getAllExerciseItemsQuery = "SELECT " + COLUMN_EXERCISE_ID + " , " + COLUMN_EXERCISE_NAME + " , " + COLUMN_IMAGE + " FROM " + EXERCISES_TABLE;
+        String getAllExerciseItemsQuery = "SELECT " + COLUMN_EXERCISE_ID + " , " + COLUMN_EXERCISE_NAME + " , " + COLUMN_IMAGE + " , " + COLUMN_SECONDS_PER_REP + " FROM " + EXERCISES_TABLE;
         Cursor cursor = db.rawQuery(getAllExerciseItemsQuery, null);
 
         // if the cursor contains at least one item
@@ -182,7 +182,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int ex_id = cursor.getInt(0);
                 String ex_name = cursor.getString(1);
                 int image = cursor.getInt(2);
-                ExerciseItem current_exercise_item = new ExerciseItem(ex_id, ex_name, image);
+                int secondsPerSet = cursor.getInt(3);
+                ExerciseItem current_exercise_item = new ExerciseItem(ex_id, ex_name, image, secondsPerSet);
                 all_exercise_items.add(current_exercise_item);
             } while (cursor.moveToNext());
         }
@@ -256,6 +257,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_ROTATION_X, rotation_x);
         cv.put(COLUMN_ROTATION_Y, rotation_y);
         cv.put(COLUMN_ROTATION_Z, rotation_z);
+        cv.put(COLUMN_IMAGE, current_exercise.getImage());
+
+        db.update(EXERCISES_TABLE, cv, COLUMN_EXERCISE_ID + " = " + exercise_id, null);
+        db.close();
+    }
+
+    public void updateSeconds(int exercise_id, int newSeconds) {
+        Exercises current_exercise = getExerciseInfo(exercise_id);
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (current_exercise.getSecondsPerRep() == newSeconds) return;
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_EXERCISE_NAME, current_exercise.getName());
+        cv.put(COLUMN_EXERCISE_DESCRIPTION, current_exercise.getDescription());
+        cv.put(COLUMN_EXERCISE_SETS, current_exercise.getSets());
+        cv.put(COLUMN_EXERCISE_REPS, current_exercise.getReps());
+        cv.put(COLUMN_SECONDS_PER_REP, newSeconds);
+        cv.put(COLUMN_GYRO_X, current_exercise.getGyroX());
+        cv.put(COLUMN_GYRO_Y, current_exercise.getGyroY());
+        cv.put(COLUMN_GYRO_Z, current_exercise.getGyroZ());
+        cv.put(COLUMN_ROTATION_X, current_exercise.getRotationX());
+        cv.put(COLUMN_ROTATION_Y, current_exercise.getRotationY());
+        cv.put(COLUMN_ROTATION_Z, current_exercise.getRotationZ());
         cv.put(COLUMN_IMAGE, current_exercise.getImage());
 
         db.update(EXERCISES_TABLE, cv, COLUMN_EXERCISE_ID + " = " + exercise_id, null);
