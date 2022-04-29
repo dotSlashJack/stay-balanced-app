@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:text="Calibrate and do your exercise"
+        android:text="Calibrate and begin exercising!"
         android:textColor="@color/white"
         android:textSize="50sp"
         android:textStyle="bold" />
