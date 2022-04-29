@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:text="Dummy Content"
+        android:text="Calibrate and do your exercise"
         android:textColor="@color/white"
         android:textSize="50sp"
         android:textStyle="bold" />
