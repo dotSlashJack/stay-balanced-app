@@ -4,10 +4,7 @@ import static java.lang.Math.abs;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.app.PendingIntent;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,14 +14,11 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.Instant;
@@ -81,7 +75,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     MediaPlayer mediaPlayer;
     int currentlyPlaying;
     long previousWarning;
-    boolean inPosition = true;
+    boolean inPositionGyro = true;
+    boolean inPositionRot= true;
 
 
     //TODO: need to check the implementation of the unregister listeners and see if these are needed
@@ -448,17 +443,28 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         } else if(isExercising){
             if (seconds >= secondsToRun) {
                 isExercising = false;
+                int count = 0;
+                for (Boolean b : exerciseTrackingList) {
+                    if (b) count++;
+                }
+                binding.fullscreenContent.setText("Excercise Complete");
+                double count_dbl = (double) count;
+                double nEvents = (double) exerciseTrackingList.size();
                 binding.dummyButton1.setEnabled(true);
+                double seconds_dbl = (double) seconds;
+                int seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
+                binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
+
                 if(exerciseTrackingList!=null && exerciseTrackingList.size() > 0){
-                    int count = 0;
+                    count = 0;
                     for (Boolean b : exerciseTrackingList) {
                         if (b) count++;
                     }
-                    double count_dbl = (double) count;
-                    double nEvents = (double) exerciseTrackingList.size();
+                    count_dbl = (double) count;
+                    nEvents = (double) exerciseTrackingList.size();
 
-                    double seconds_dbl = (double) seconds;
-                    int seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
+                    seconds_dbl = (double) seconds;
+                    seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
                     binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
                     try{
                         DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
@@ -483,36 +489,52 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
                 exerciseOnTrack = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
                 exerciseTrackingList.add(exerciseOnTrack);
-                if(exerciseOnTrack == false){
-                    binding.fullscreenContent.setText("outside rotation range");
-                } else if(exerciseOnTrack==true){
-                    binding.fullscreenContent.setText("inside rotation range!");
-                }
-            }
-
-            else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-                exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
-                exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
-                exerciseTrackingList.add(exerciseOnTrack);
-
                 if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
-                    inPosition = false;
+                    inPositionRot = false;
+                    binding.fullscreenContent.setText("outside gyro range!");
                     if (currentlyPlaying != UtilAudio.OFF_POSITION) {
                         mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
                         currentlyPlaying = UtilAudio.OFF_POSITION;
                         previousWarning = Instant.now().getEpochSecond();
                     }
 
-                } else if(exerciseOnTrack == true && inPosition == false && Instant.now().getEpochSecond() - previousWarning > 3){
+                } else if(exerciseOnTrack == true && Instant.now().getEpochSecond() - previousWarning > 3) {
+                    inPositionRot = true;
+                    binding.fullscreenContent.setText("inside gyro range!");
                     if (currentlyPlaying != UtilAudio.IN_POSITION) {
                         mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
                         currentlyPlaying = UtilAudio.IN_POSITION;
                         previousWarning = Instant.now().getEpochSecond();
                     }
-                    inPosition = true;
-                    binding.fullscreenContent.setText("inside gyro range!");
                 }
             }
+
+//            else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+//                exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
+//                exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
+//                exerciseTrackingList.add(exerciseOnTrack);
+//
+//                if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
+//                    inPositionGyro = true;
+//                    binding.fullscreenContent.setText("outside gyro range!");
+//                    if (currentlyPlaying != UtilAudio.OFF_POSITION) {
+//                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
+//                        currentlyPlaying = UtilAudio.OFF_POSITION;
+//                        previousWarning = Instant.now().getEpochSecond();
+//                    }
+//
+//                } else if(exerciseOnTrack == true && Instant.now().getEpochSecond() - previousWarning > 3){
+//                    inPositionGyro = true;
+//                    binding.fullscreenContent.setText("inside gyro range!");
+//                    if (currentlyPlaying != UtilAudio.IN_POSITION) {
+//                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
+//                        currentlyPlaying = UtilAudio.IN_POSITION;
+//                        previousWarning = Instant.now().getEpochSecond();
+//                    }
+//                    //inPosition = true;
+//                    // binding.fullscreenContent.setText("inside gyro range!");
+//                }
+//            }
         }
     }
 

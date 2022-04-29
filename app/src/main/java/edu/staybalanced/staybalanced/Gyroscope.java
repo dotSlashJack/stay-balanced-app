@@ -177,9 +177,9 @@ public class Gyroscope{
             marginsOfError.put("moe_y", 0.2F);
             marginsOfError.put("moe_z", 0.2F);
         } else if(eventType=="ROTATION_VECTOR"){
-            marginsOfError.put("moe_x", 0.02F);
-            marginsOfError.put("moe_y", 0.02F);
-            marginsOfError.put("moe_z", 0.02F);
+            marginsOfError.put("moe_x", 0.1F);
+            marginsOfError.put("moe_y", 0.1F);
+            marginsOfError.put("moe_z", 0.1F);
         }
         return marginsOfError;
     }
