@@ -264,7 +264,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
                 }
             }
-        });
+        }); //
 
         tutorialButton = findViewById(R.id.TutorialButton);
 
