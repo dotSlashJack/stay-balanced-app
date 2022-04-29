@@ -199,16 +199,17 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     if(rotationVals!=null && gyroVals!=null){
                         binding.dummyButton1.setText("Calibrator");
                         binding.dummyButton2.setEnabled(true);
-                        String printVals = "finished calibration, rotation values are: x "+Float.toString(rotationVals.get("rotation_x"))+" y "+Float.toString(rotationVals.get("rotation_y")) + " z "+Float.toString(rotationVals.get("rotation_z")) +"\n" + " gyro vals are: x "+Float.toString(gyroVals.get("gyro_x"))+ " y "+Float.toString(gyroVals.get("gyro_y")) + " z " + Float.toString(gyroVals.get("gyro_z"));
-                        binding.fullscreenContent.setText(printVals);
                         Gyroscope saveGyro = new Gyroscope(gyroVals, rotationVals, exerciseId);
                         boolean didSave = saveGyro.saveCalibration(getApplicationContext());
                         if(didSave!=true){
                             Toast toast = Toast.makeText(getApplicationContext(), "ERROR: calibration did NOT save correctly. Please try again.", Toast.LENGTH_LONG);
                             toast.show();
                         }else if(didSave){
-                            Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_LONG);
-                            toast.show();
+                            //String printVals = "finished calibration, rotation values are: x "+Float.toString(rotationVals.get("rotation_x"))+" y "+Float.toString(rotationVals.get("rotation_y")) + " z "+Float.toString(rotationVals.get("rotation_z")) +"\n" + " gyro vals are: x "+Float.toString(gyroVals.get("gyro_x"))+ " y "+Float.toString(gyroVals.get("gyro_y")) + " z " + Float.toString(gyroVals.get("gyro_z"));
+                            String printVals = "Calibration Complete, Press Excercise button to begin";
+                            binding.fullscreenContent.setText(printVals);
+                           // Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_LONG);
+                            //toast.show();
                             current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
                         }
                         exerciseGyro = new Gyroscope(exerciseId, getApplicationContext());
@@ -491,7 +492,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseTrackingList.add(exerciseOnTrack);
                 if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
                     inPositionRot = false;
-                    binding.fullscreenContent.setText("outside gyro range!");
+                    binding.fullscreenContent.setText("Fix your form!");
                     if (currentlyPlaying != UtilAudio.OFF_POSITION) {
                         mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
                         currentlyPlaying = UtilAudio.OFF_POSITION;
@@ -500,7 +501,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
                 } else if(exerciseOnTrack == true && Instant.now().getEpochSecond() - previousWarning > 3) {
                     inPositionRot = true;
-                    binding.fullscreenContent.setText("inside gyro range!");
+                    binding.fullscreenContent.setText("You're doing great!");
                     if (currentlyPlaying != UtilAudio.IN_POSITION) {
                         mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
                         currentlyPlaying = UtilAudio.IN_POSITION;
