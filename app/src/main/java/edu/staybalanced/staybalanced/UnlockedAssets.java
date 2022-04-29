@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 @SuppressWarnings("unused")
 public class UnlockedAssets {
 
-    // UnlockedAssets { assetId: Numerical, resourceFilename: String, unlocked: Boolean }
-    private int id;
-    private String resourceFilename;
+    // UnlockedAssets { image: Numerical, description: String, unlocked: Boolean }
+    private int image;
+    private String description;
     private Boolean unlocked;
 
-    public UnlockedAssets(int id, String resourceFilename, Boolean unlocked) {
-        this.id = id;
-        this.resourceFilename = resourceFilename;
+    public UnlockedAssets(int image, String description, Boolean unlocked) {
+        this.image = image;
+        this.description = description;
         this.unlocked = unlocked;
     }
     public UnlockedAssets() {
@@ -23,24 +23,22 @@ public class UnlockedAssets {
     @Override
     public String toString() {
         return "UnlockedAssets{" +
-                "id=" + id +
-                ", resourceFilename='" + resourceFilename + '\'' +
+                "id=" + image +
+                ", resourceFilename='" + description + '\'' +
                 ", unlocked=" + unlocked +
                 '}';
     }
 
-    public int getId() {
-        return id;
+    public int getImage() {
+        return image;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setImage(int image) {
+        this.image = image;
     }
-    public String getResourceFilename() {
-        return resourceFilename;
+    public String getDescription() {
+        return description;
     }
-    public void setResourceFilename(String resourceFilename) {
-        this.resourceFilename = resourceFilename;
-    }
+    public void setDescription(String description) { this.description = description; }
     public Boolean getUnlocked() {
         return unlocked;
     }

@@ -37,8 +37,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Unlocked Assets table with columns in order
     private static final String UNLOCKED_ASSETS_TABLE = "ASSETS_TABLE";
-    public static final String COLUMN_ASSET_ID = "ASSET_ID";
-    public static final String COLUMN_ASSET_FILENAME = "ASSET_FILENAME";
+    public static final String COLUMN_ASSET_IMAGE = "ASSET_IMAGE";
+    public static final String COLUMN_ASSET_DESCRIPTION = "ASSET_DESCRIPTION";
     public static final String COLUMN_ASSET_UNLOCKED = "ASSET_UNLOCKED";
 
     public DatabaseHelper(@Nullable Context context) {
@@ -72,8 +72,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createExerciseHistoryTable);
 
         String createUnlockedAssetsTable = "CREATE TABLE " + UNLOCKED_ASSETS_TABLE + " (" +
-                COLUMN_ASSET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_ASSET_FILENAME + " TEXT, " +
+                COLUMN_ASSET_IMAGE + " INTEGER PRIMARY KEY, " +
+                COLUMN_ASSET_DESCRIPTION + " TEXT, " +
                 COLUMN_ASSET_UNLOCKED + " INT ) ";
 
         db.execSQL(createUnlockedAssetsTable);
@@ -115,6 +115,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // inserts content value to table and gets result if insert is successful
         long insert_result = db.insert(EXERCISES_TABLE, null, cv);
 
+        // unlocks reward for first correctly added exercise (ignoring first 3 defaults)
+        if (!(getAssetUnlockedStatus(R.drawable.reward_free)) && getAllExerciseItems().size() > 3) {
+            updateAssetUnlocked(R.drawable.reward_free);
+        }
         // closes connection to database
         db.close();
         return (insert_result != -1);
@@ -125,16 +129,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // gets connection to database
         SQLiteDatabase db = this.getWritableDatabase();
-
+        int exercise_hist_id = new_exercise_history.getExerciseId();
         // creates row content values and adds in each row's content
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_HISTORY_EXERCISE_ID, new_exercise_history.getExerciseId());
+        cv.put(COLUMN_HISTORY_EXERCISE_ID, exercise_hist_id);
         cv.put(COLUMN_HISTORY_EPOCH_SECONDS, new_exercise_history.getEpochSeconds());
         cv.put(COLUMN_HISTORY_SECONDS_IN_POSITION, new_exercise_history.getSecondsInPosition());
 
         Log.d("sql app", "adding data " + new_exercise_history + " to " + HISTORY_TABLE);
 
         long insert_result = db.insert(HISTORY_TABLE, null, cv);
+
+        // unlocks asset related to squats
+        if (exercise_hist_id == 1 && !(getAssetUnlockedStatus(R.drawable.reward_legs))) {
+            updateAssetUnlocked(R.drawable.reward_legs);
+        }
+
+        // unlock assets related to planks
+        if (exercise_hist_id == 2) {
+            // reward on first plank over 15 seconds in position
+            if (!(getAssetUnlockedStatus(R.drawable.reward_plank)) && new_exercise_history.getSecondsInPosition() > 15) {
+                updateAssetUnlocked(R.drawable.reward_plank);
+            }
+            // reward on first plank over 45 seconds in position
+            if (!(getAssetUnlockedStatus(R.drawable.reward_plank_2)) && new_exercise_history.getSecondsInPosition() > 45) {
+               updateAssetUnlocked(R.drawable.reward_plank_2);
+            }
+        }
+
+        // unlocks assets related to curls
+        if (exercise_hist_id == 3 && !(getAssetUnlockedStatus(R.drawable.reward_curl))) {
+            updateAssetUnlocked(R.drawable.reward_curl);
+        }
 
         // closes connection to database
         db.close();
@@ -149,7 +175,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // creates row content values and adds in each row's content
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_ASSET_FILENAME, new_asset.getResourceFilename());
+        cv.put(COLUMN_ASSET_IMAGE, new_asset.getImage());
+        cv.put(COLUMN_ASSET_DESCRIPTION, new_asset.getDescription());
         cv.put(COLUMN_ASSET_UNLOCKED, new_asset.getUnlocked());
 
         Log.d("sql app", "adding data " + new_asset + " to " + UNLOCKED_ASSETS_TABLE);
@@ -192,6 +219,59 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return all_exercise_items;
+    }
+
+    public ArrayList<UnlockedAssets> getAllAssets(){
+        ArrayList<UnlockedAssets> all_unlock_items = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String getAllUnlocksQuery = "SELECT * FROM " + UNLOCKED_ASSETS_TABLE;
+        Cursor cursor = db.rawQuery(getAllUnlocksQuery, null);
+
+        // if the cursor contains at least one item
+        if (cursor.moveToFirst()) {
+            // loop through result set
+            do {
+                // get value of exercise at current cursor
+                int image = cursor.getInt(0);
+                String desc = cursor.getString(1);
+                boolean unlocked = cursor.getInt(2) == 1;
+                UnlockedAssets current_unlock_item = new UnlockedAssets(image, desc, unlocked);
+                all_unlock_items.add(current_unlock_item);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return all_unlock_items;
+    }
+
+    public boolean getAssetUnlockedStatus(int image){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String getUnlocksQuery = "SELECT " + COLUMN_ASSET_UNLOCKED + " FROM " + UNLOCKED_ASSETS_TABLE + " WHERE " + COLUMN_ASSET_IMAGE + " = " + image;
+        Cursor cursor = db.rawQuery(getUnlocksQuery, null);
+
+        boolean is_unlocked = true;
+        // if the cursor contains at least one item
+        if (cursor.moveToFirst()) {
+            is_unlocked = cursor.getInt(0) == 1;
+        }
+
+        cursor.close();
+        db.close();
+
+        return is_unlocked;
+    }
+
+    public void updateAssetUnlocked(int image) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String updateQuery = "UPDATE " + UNLOCKED_ASSETS_TABLE + " SET " + COLUMN_ASSET_UNLOCKED +  " = 1 WHERE " + COLUMN_ASSET_IMAGE + " = " + image;
+        db.execSQL(updateQuery);
+
+        db.close();
     }
 
     public ArrayList<String> getAllExerciseNames(){
@@ -301,6 +381,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return times;
     }
 
+
     public ArrayList<Integer> getHistoryTime(int exerciseID){
         String getExerciseHistory = "SELECT " + COLUMN_HISTORY_SECONDS_IN_POSITION + " FROM " + HISTORY_TABLE + " WHERE " + COLUMN_HISTORY_EXERCISE_ID + " = " + exerciseID;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -335,5 +416,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         yLabel.add(new Entry(0, 0));
         return null;
+    }
+
+    public int getHistoryCount(){
+
+        ArrayList<ExerciseHistory> history_all_exercises = new ArrayList<>();
+
+        String getAllExercisesHistoryQuery = "SELECT COUNT(*) FROM " + HISTORY_TABLE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(getAllExercisesHistoryQuery, null);
+        int history_count = 0;
+        // if the cursor contains at least one item
+        if (cursor.moveToFirst()) {
+            history_count = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+
+        return history_count;
     }
 }

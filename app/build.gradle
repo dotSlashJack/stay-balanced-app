@@ -53,9 +53,13 @@ dependencies {
 
     // For the Settings Fragment
     implementation 'androidx.preference:preference:1.1.1'
+
     // For tutorial
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.0'
 
     // For history graphs implementation
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // For awards side scroller
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 }

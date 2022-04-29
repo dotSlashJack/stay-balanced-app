@@ -123,8 +123,9 @@ public class History extends Fragment {
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
         chart.setVisibility(View.INVISIBLE);
-//        chart.setOnChartGestureListener(view.getContext());
-//        chart.setOnChartValueSelectedListener(view.getContext());
+        chart.getAxisLeft().setMaxWidth(7);
+        // chart.setVisibleXRangeMaximum(7);
+        chart.moveViewToX(10);
 
         // Create a receiver for broadcast coming from exercise item click that draws the graph
         LocalBroadcastManager.getInstance(this.getContext()).registerReceiver(receiver,
