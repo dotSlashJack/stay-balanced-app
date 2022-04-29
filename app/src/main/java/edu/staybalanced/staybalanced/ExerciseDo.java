@@ -73,6 +73,9 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     Gyroscope gyroObject;
     Gyroscope exerciseGyro;
 
+    boolean exerciseOnTrackRotation;
+    boolean exerciseOnTrackGyro;
+
     Hashtable<String, Float> rotationVals = new Hashtable<String, Float>();
     Hashtable<String, Float> gyroVals = new Hashtable<String, Float>();
 
@@ -144,6 +147,9 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
         isExercising = false;
         runTimer = false;
+
+        exerciseOnTrackRotation = true;
+        exerciseOnTrackGyro = true;
 
         rotationVals = null;
         gyroVals = null;
@@ -457,8 +463,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        boolean exerciseOnTrackRotation = true;
-        boolean exerciseOnTrackGyro = true;
         //TextView t = findViewById(R.id.fullscreen_content);
         // if the user is calibrations
         if (isCalibrating) {
@@ -507,13 +511,15 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseOnTrackGyro = exerciseGyro.exerciseTracker("GYROSCOPE");
                 exerciseTrackingList.add(exerciseOnTrackGyro);
             }
+            Log.d("gyro: ", Boolean.toString(exerciseOnTrackGyro));
+            Log.d("rot: ", Boolean.toString(exerciseOnTrackRotation));
 
             if((exerciseOnTrackGyro && exerciseOnTrackRotation) && (Instant.now().getEpochSecond() - previousColorChange > 0.5) ){
                 binding.fullscreenContent.setText("Good job, keep going!" );
                 binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.spearmint));
                 previousColorChange = Instant.now().getEpochSecond();
             }// else if((exerciseOnTrackGyro!=true || exerciseOnTrackRotation!=true) && Instant.now().getEpochSecond() - previousColorChange > 0.5){
-            else if(exerciseOnTrackRotation!=true && ( Instant.now().getEpochSecond() - previousColorChange > 0.5 )){
+            else if((!exerciseOnTrackRotation || !exerciseOnTrackGyro) && ( Instant.now().getEpochSecond() - previousColorChange > 0.5 )){
                 binding.fullscreenContent.setText("Adjust your position");
                 binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.brown));
                 previousColorChange = Instant.now().getEpochSecond();
@@ -560,7 +566,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                                 }
                                 else if (secondsToRun == seconds && isExercising == true) {
                                     mediaPlayer = UtilAudio.playLater(getApplicationContext(),mediaPlayer,UtilAudio.DONE);
-                                    binding.dummyButton2.setText("START EXCERCISE");
+                                    binding.dummyButton2.setText("START EXERCISE");
                                 }
                                 //binding.fullscreenContent.setText("Time in exercise:\n"+String.valueOf(seconds)+" seconds");
                             }
