@@ -60,6 +60,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private Sensor gyro;
     private Sensor rotationVector;
 
+    long previousColorChange;
+
     boolean isCalibrating;
     boolean isExercising;
     int exerciseId;
@@ -70,6 +72,9 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     Gyroscope rotationObject;
     Gyroscope gyroObject;
     Gyroscope exerciseGyro;
+
+    boolean exerciseOnTrackRotation;
+    boolean exerciseOnTrackGyro;
 
     Hashtable<String, Float> rotationVals = new Hashtable<String, Float>();
     Hashtable<String, Float> gyroVals = new Hashtable<String, Float>();
@@ -119,15 +124,33 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         }
     };
 
+    private int secondsInPos(){
+        int count = 0;
+        for (Boolean b : exerciseTrackingList) {
+            if (b) count++;
+        }
+        Log.d("count", Integer.toString(count));
+        double count_dbl = (double) count;
+        double nEvents = (double) exerciseTrackingList.size();
+
+        double seconds_dbl = (double) seconds;
+        int seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
+
+        return seconds_in_pos;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle intentArgs = getIntent().getExtras();
         exerciseId = intentArgs.getInt("EXERCISE_ID");
-        Log.d("EXERCISE_DO", String.valueOf(exerciseId));
 
+        isExercising = false;
         runTimer = false;
+
+        exerciseOnTrackRotation = true;
+        exerciseOnTrackGyro = true;
 
         rotationVals = null;
         gyroVals = null;
@@ -162,7 +185,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
         loadCalibrationHelper = new DatabaseHelper(getApplicationContext());
         current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
-        secondsToRun = current_exercise.getSecondsPerRep();
+        secondsToRun = 20;//current_exercise.getSecondsPerRep(); //TODO: we need to get this from the database, but the database messes it up atm
 
         mVisible = true;
         unhiddenContent = binding.fullscreenContent;
@@ -189,7 +212,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             }
         });
 
-        isCalibrating = false;
+        //isCalibrating = false;
         boolean didSave = false;
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
@@ -197,9 +220,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         binding.dummyButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //binding.fullscreenContent.setText("Dummy Button 1 Pressed");
-                //binding.fullscreenContent.setText(Boolean.toString(isCalibrating));
 
                 isCalibrating = !isCalibrating;
                 if(!isCalibrating){
@@ -215,17 +235,15 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             Toast toast = Toast.makeText(getApplicationContext(), "ERROR: calibration did NOT save correctly. Please try again.", Toast.LENGTH_LONG);
                             toast.show();
                         }else if(didSave){
-                            binding.fullscreenContent.setText("Calibrated, you can begin your exercise now :)");
-                            //Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_SHORT);
-                            //toast.show();
-
                             current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
+                            binding.fullscreenContent.setText("Successfully calibrated, you can now begin exercising");
                         }
                         exerciseGyro = new Gyroscope(exerciseId, getApplicationContext());
                         binding.dummyButton2.setEnabled(true);
                     }
                     else{
-                        binding.fullscreenContent.setText("Exercise not calibrated, please calibrate before exercising!");
+                        binding.fullscreenContent.setText("Something went wrong, please try calibrating again");
+                        binding.dummyButton1.setText("CALIBRATOR");
                     }
                 } else{
                     binding.dummyButton1.setText("Stop Calibrating");
@@ -239,20 +257,24 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             @Override
             public void onClick(View view) {
                 //binding.fullscreenContent.setText("Dummy Button 2 Pressed");
-
                 isExercising = !isExercising;
+                Log.d("EXERCISE_DO", "Clicked exercise");
+                Log.d("EXERCISE_DO", Boolean.toString(isExercising));
+                //Log.d("EXERCISE_DO", Boolean.toString(isCalibrating));
                 if (isExercising && current_exercise.getRotationX() == 0 && current_exercise.getRotationY() == 0 && current_exercise.getRotationZ() == 0) {
                     //Toast.makeText(getApplicationContext(), "Please Calibrate, before starting excercise", Toast.LENGTH_SHORT).show();
                     binding.fullscreenContent.setText("Exercise not calibrated, please calibrate before exercising!");
                     isExercising = false;
                     binding.dummyButton2.setEnabled(false);
+
                 }
                 else if(isExercising){
+                    Log.d("EXERCISE_DO", "we are running");
                     binding.dummyButton1.setEnabled(false);
                     binding.dummyButton2.setText("Stop exercise");
                     seconds = 0;
                     runTimer = true;
-                    binding.fullscreenContent.setText("Good job, keep going!");
+                    binding.fullscreenContent.setText("Good job, keep going :)");
                     binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.spearmint));
                     timer();
 
@@ -264,17 +286,18 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     } else{
                         currentlyPlaying = -1;
                     }
-
-                    binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
+                    /*binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
                     binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(timeInPos())+ " seconds in good form");
                     binding.dummyButton2.setText("Start exercise");
                     binding.dummyButton1.setEnabled(true);
 
+                    exerciseTrackingList = new ArrayList<Boolean>();*/
+                    binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
+                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(secondsInPos())+ " seconds in good form");
+                    binding.dummyButton2.setText("Start exercise");
+                    binding.dummyButton1.setEnabled(true);
                     exerciseTrackingList = new ArrayList<Boolean>();
-                    //TODO stop excercise early, stops audio
-                    // reset button to say start excercise
-                    // log seconds they did excercise
-                    // Display results excercise to screen
+                  
                    /* DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
                     ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), seconds_in_pos);
                     //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
@@ -446,9 +469,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         //TextView t = findViewById(R.id.fullscreen_content);
         // if the user is calibrations
         if (isCalibrating) {
-            /*if(gotRotation && gotGyro){
-                isCalibrating = false;
-            }*/
             // get rotation vector and sensor
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 // collecting x,y,z data, if null collect current data
@@ -468,10 +488,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 binding.dummyButton1.setEnabled(true);
                 binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
                 if(exerciseTrackingList!=null && exerciseTrackingList.size() > 0){
-                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(timeInPos())+ " seconds in good form");
+                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(secondsInPos())+ " seconds in good form");
                     try{
                         DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                        ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), timeInPos());
+                        ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), secondsInPos());
+                        
                         //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
                         exerciseSaver.addExerciseHistory(current_exercise_history);
                         binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
@@ -481,13 +502,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                         Toast toast = Toast.makeText(getApplicationContext(), "Error saving your exercise, it may not show up in history.", Toast.LENGTH_LONG);
                         toast.show();
                     }
-
                 }
                 //binding.fullscreenContent.setText(String.valueOf(exerciseTrackingList));
                 runTimer = false;
                 exerciseTrackingList = new ArrayList<Boolean>();
             }
-
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
                 exerciseOnTrackRotation = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
@@ -498,7 +517,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 exerciseTrackingList.add(exerciseOnTrackGyro);
             }
 
-            if((exerciseOnTrackGyro && exerciseOnTrackRotation) && Instant.now().getEpochSecond() - previousColorChange > 0.5){
+            /*if((exerciseOnTrackGyro && exerciseOnTrackRotation) && Instant.now().getEpochSecond() - previousColorChange > 0.5){
                 binding.fullscreenContent.setText("Good job, keep going!" );
                 binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.spearmint));
                 previousColorChange = Instant.now().getEpochSecond();
@@ -515,7 +534,28 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     currentlyPlaying = UtilAudio.OFF_POSITION;
                     previousWarning = Instant.now().getEpochSecond();
                 }
+              */
+            //Log.d("gyro: ", Boolean.toString(exerciseOnTrackGyro));
+            //og.d("rot: ", Boolean.toString(exerciseOnTrackRotation));
 
+            if((exerciseOnTrackGyro && exerciseOnTrackRotation) && (Instant.now().getEpochSecond() - previousColorChange > 0.5) ){
+                binding.fullscreenContent.setText("Good job, keep going!" );
+                binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.spearmint));
+                previousColorChange = Instant.now().getEpochSecond();
+            }// else if((exerciseOnTrackGyro!=true || exerciseOnTrackRotation!=true) && Instant.now().getEpochSecond() - previousColorChange > 0.5){
+            else if((!exerciseOnTrackRotation || !exerciseOnTrackGyro) && ( Instant.now().getEpochSecond() - previousColorChange > 0.5 )){
+                binding.fullscreenContent.setText("Adjust your position");
+                binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.brown));
+                previousColorChange = Instant.now().getEpochSecond();
+            }
+
+            if((exerciseOnTrackGyro == false || exerciseOnTrackRotation==false) && ( (Instant.now().getEpochSecond() - previousWarning) > 3 )){
+                inPosition = false;
+                if (currentlyPlaying != UtilAudio.OFF_POSITION) {
+                    mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
+                    currentlyPlaying = UtilAudio.OFF_POSITION;
+                    previousWarning = Instant.now().getEpochSecond();
+                }
             } else if((exerciseOnTrackGyro == true && exerciseOnTrackRotation==true) && inPosition == false && Instant.now().getEpochSecond() - previousWarning > 3){
                 if (currentlyPlaying != UtilAudio.IN_POSITION) {
                     mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
@@ -555,6 +595,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             @Override
                             public void run() {
                                 seconds++;
+                                Log.d("seconds", Integer.toString(seconds));
                                 if (secondsToRun - seconds == 7 && isExercising == true) {
                                     mediaPlayer = UtilAudio.playNow(getApplicationContext(),mediaPlayer,UtilAudio.FIVE_LEFT);
                                 }
@@ -564,9 +605,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                                 }
                                 else if (secondsToRun == seconds && isExercising == true) {
                                     mediaPlayer = UtilAudio.playLater(getApplicationContext(),mediaPlayer,UtilAudio.DONE);
-                                    binding.dummyButton2.setText("START EXCERCISE");
-                                    binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
-                                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(timeInPos())+ " seconds in good form");
+                                    
+                                    //binding.dummyButton2.setText("START EXCERCISE");
+                                    //binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
+                                    //binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(timeInPos())+ " seconds in good form");
+                                    binding.dummyButton2.setText("START EXERCISE");
                                 }
                                 //binding.fullscreenContent.setText("Time in exercise:\n"+String.valueOf(seconds)+" seconds");
                             }

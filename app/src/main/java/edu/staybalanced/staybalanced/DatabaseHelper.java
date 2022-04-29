@@ -89,7 +89,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // adds new record to exercises table
     public boolean addExercise (Exercises new_exercise) {
-
         // checks if passed exercise is has missing field
         if (new_exercise.getName().equals("error")) return false;
 
