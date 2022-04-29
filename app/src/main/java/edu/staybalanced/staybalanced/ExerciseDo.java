@@ -86,7 +86,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     MediaPlayer mediaPlayer;
     int currentlyPlaying;
     long previousWarning;
-    long previousColorChange;
+    //long previousColorChange;
     boolean inPosition = true;
 
 
@@ -186,6 +186,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         loadCalibrationHelper = new DatabaseHelper(getApplicationContext());
         current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
         secondsToRun = 20;//current_exercise.getSecondsPerRep(); //TODO: we need to get this from the database, but the database messes it up atm
+        //secondsToRun = current_exercise.getSecondsPerRep();
 
         mVisible = true;
         unhiddenContent = binding.fullscreenContent;
