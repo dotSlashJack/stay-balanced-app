@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,21 +29,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-
-//TODO: PRELOAD EXAMPLE DATA FOR HISTORY CHARTS FOR TAs
-// increase the time for exercises
+import java.util.List;
+import java.util.Locale;
 
 public class History extends Fragment {
     RecyclerView recyclerView;
@@ -119,13 +129,15 @@ public class History extends Fragment {
 
         // Line chart settings
         this.chart = view.findViewById(R.id.linechart);
+        chart.setTouchEnabled(true);
+        chart.setPinchZoom(true);
         chart.getDescription().setEnabled(false);
-        chart.setDragEnabled(true);
-        chart.setScaleEnabled(true);
+        XAxis xAxis = chart.getXAxis();
+        YAxis leftAxis = chart.getAxisLeft();
+        XAxis.XAxisPosition position = XAxis.XAxisPosition.BOTTOM;
+        xAxis.setPosition(position);
+
         chart.setVisibility(View.INVISIBLE);
-        chart.getAxisLeft().setMaxWidth(7);
-        // chart.setVisibleXRangeMaximum(7);
-        chart.moveViewToX(10);
 
         // Create a receiver for broadcast coming from exercise item click that draws the graph
         LocalBroadcastManager.getInstance(this.getContext()).registerReceiver(receiver,
@@ -148,18 +160,23 @@ public class History extends Fragment {
                         chart.setVisibility(View.INVISIBLE);
 
                     } else {
+                        // get filler data
                         LineDataSet timeInPositionDataSet = new LineDataSet(yLabel, "Time in position");
+                        ArrayList<Long> dates_selected_exercise = databaseHelper.getHistoryDate(graph_exercise_id);
+                        Exercises curr_exercise = databaseHelper.getExerciseInfo(graph_exercise_id);
 
-                        XAxis xAxis = chart.getXAxis();
-                        xAxis.setValueFormatter(new DateAxisValueFormatter());
+                        // set formatted X and Y values
+                        xAxis.setValueFormatter(new DateAxisValueFormatter(dates_selected_exercise));
                         ArrayList<ILineDataSet> dataSet = new ArrayList<>();
                         dataSet.add(timeInPositionDataSet);
-
+                        timeInPositionDataSet.setColor(getResources().getColor(R.color.orange));
+                        // timeInPositionDataSet.setColors(ColorTemplate.createColors(new int[] {R.color.spearmint, R.color.brown, R.color.orange}));
+                        timeInPositionDataSet.setLineWidth(4f);
+                        timeInPositionDataSet.setValueTextSize(12f);
                         LineData chart_data = new LineData(dataSet);
                         chart.setVisibility(View.VISIBLE);
                         chart.setData(chart_data);
                         chart.invalidate();
-                        Exercises curr_exercise = databaseHelper.getExerciseInfo(graph_exercise_id);
                         txt_history.setText(curr_exercise.getName());
                         image_history.setVisibility(View.INVISIBLE);
                     }
@@ -170,10 +187,16 @@ public class History extends Fragment {
     }
 
     public static class DateAxisValueFormatter extends IndexAxisValueFormatter {
+        private ArrayList<Long> dates_in;
+        DateAxisValueFormatter(ArrayList<Long> dates) {
+            this.dates_in = dates;
+        }
         @Override
         public String getFormattedValue(float value) {
-            Date itemDate = new Date((long) value);
-            @SuppressLint("SimpleDateFormat") String itemDateStr = new SimpleDateFormat("MM/dd hh:mm").format(itemDate);
+            int current_index = (int) value;
+            long current_date = dates_in.get(current_index);
+            Date itemDate = new Date(current_date);
+            @SuppressLint("SimpleDateFormat") String itemDateStr = new SimpleDateFormat("MM/dd").format(itemDate);
             return itemDateStr;
         }
     }
@@ -209,9 +232,10 @@ public class History extends Fragment {
 
 
     public void fillHistory(DatabaseHelper databaseHelper, int exerciseId) {
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, 1650596336, exerciseId + 10));
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, 1650682736, exerciseId + 20));
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, 1650769136, exerciseId + 30));
+        // generate random data from today, yesterday, and the day before all under 30 secs in position
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() - 2 * 24 * 60 * 59 * 1000, (int)(Math.random() * ((29 - 5) + 1)) + 5));
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000, (int)(Math.random() * ((29 - 5) + 1)) + 5));
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() , (int)(Math.random() * ((29 - 5) + 1)) + 5));
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {

@@ -162,6 +162,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             updateAssetUnlocked(R.drawable.reward_curl);
         }
 
+        // if inserted correcty unlock corresponding assets
+        if (insert_result == 1) {
+            // unlocks asset related to squats -- unlocks after default history values input
+            if (exercise_hist_id == 1 && !(getAssetUnlockedStatus(R.drawable.reward_legs))) {
+                updateAssetUnlocked(R.drawable.reward_legs);
+            }
+
+            // unlock assets related to planks
+            if (exercise_hist_id == 2) {
+                // reward on first plank over 15 seconds in position
+                if (!(getAssetUnlockedStatus(R.drawable.reward_plank)) && new_exercise_history.getSecondsInPosition() > 15) {
+                    updateAssetUnlocked(R.drawable.reward_plank);
+                }
+                // reward on first plank over 59 seconds in position
+                if (!(getAssetUnlockedStatus(R.drawable.reward_plank_2)) && new_exercise_history.getSecondsInPosition() > 59) {
+                    updateAssetUnlocked(R.drawable.reward_plank_2);
+                }
+            }
+
+            // unlocks assets related to curls
+            if (exercise_hist_id == 3 && !(getAssetUnlockedStatus(R.drawable.reward_curl))) {
+                updateAssetUnlocked(R.drawable.reward_curl);
+            }
+        }
+
         // closes connection to database
         db.close();
         return (insert_result == 1);
@@ -362,23 +387,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<Integer> getHistoryDate(int exerciseID){
+    public ArrayList<Long> getHistoryDate(int exerciseID){
         String getExerciseHistory = "SELECT " + COLUMN_HISTORY_EPOCH_SECONDS + " FROM " + HISTORY_TABLE + " WHERE " + COLUMN_HISTORY_EXERCISE_ID + " = " + exerciseID;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(getExerciseHistory, null);
 
-        ArrayList<Integer> times = new ArrayList<>();
+        ArrayList<Long> dates = new ArrayList<>();
         if(cursor.moveToFirst()) {
             do {
-                int hist = cursor.getInt(0);
-                times.add(hist);
+                long hist = cursor.getLong(0);
+                dates.add(hist);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         db.close();
 
-        return times;
+        return dates;
     }
 
 
@@ -405,10 +430,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Entry> yLabel = new ArrayList<>();
         try {
             ArrayList<Integer> times = getHistoryTime(exerciseID);
-            ArrayList<Integer> dates = getHistoryDate(exerciseID);
 
             for (int i = 0; i < times.size(); i++) {
-                yLabel.add(new Entry(dates.get(i), times.get(i)));
+                yLabel.add(new Entry(i, times.get(i)));
             }
             return yLabel;
         } catch (Exception e) {
