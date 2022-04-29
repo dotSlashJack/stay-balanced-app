@@ -117,14 +117,18 @@ public class History extends Fragment {
         txt_history.setText("Click on an Exercise below to see your progress");
         image_history = view.findViewById(R.id.image_history);
 
+        fillHistory(databaseHelper, 1);
+        fillHistory(databaseHelper, 1);
+        fillHistory(databaseHelper, 1);
+
         // Line chart settings
         this.chart = view.findViewById(R.id.linechart);
         chart.getDescription().setEnabled(false);
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
         chart.setVisibility(View.INVISIBLE);
-//        chart.setOnChartGestureListener(view.getContext());
-//        chart.setOnChartValueSelectedListener(view.getContext());
+        chart.setVisibleXRangeMaximum(7);
+        chart.moveViewToX(10);
 
         // Create a receiver for broadcast coming from exercise item click that draws the graph
         LocalBroadcastManager.getInstance(this.getContext()).registerReceiver(receiver,
@@ -208,9 +212,9 @@ public class History extends Fragment {
 
 
     public void fillHistory(DatabaseHelper databaseHelper, int exerciseId) {
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, 1650596336, exerciseId + 10));
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, 1650682736, exerciseId + 20));
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, 1650769136, exerciseId + 30));
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), exerciseId + 10));
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), exerciseId + 11));
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() - 24 * 3600 * 1000, exerciseId + 12));
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
