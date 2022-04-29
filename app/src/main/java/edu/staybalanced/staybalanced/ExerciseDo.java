@@ -220,9 +220,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             @Override
             public void onClick(View view) {
 
-                //binding.fullscreenContent.setText("Dummy Button 1 Pressed");
-                //binding.fullscreenContent.setText(Boolean.toString(isCalibrating));
-
                 isCalibrating = !isCalibrating;
                 if(!isCalibrating){
                     if(rotationVals!=null && gyroVals!=null){
