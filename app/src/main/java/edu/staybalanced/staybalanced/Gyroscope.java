@@ -173,13 +173,13 @@ public class Gyroscope{
     private Hashtable <String, Float> getMOE(String eventType){
         Hashtable<String, Float> marginsOfError = new Hashtable<String, Float>();
         if(eventType == "GYROSCOPE"){
-            marginsOfError.put("moe_x", 0.7F);
-            marginsOfError.put("moe_y", 0.7F);
-            marginsOfError.put("moe_z", 0.7F);
+            marginsOfError.put("moe_x", 0.3F);
+            marginsOfError.put("moe_y", 0.3F);
+            marginsOfError.put("moe_z", 0.3F);
         } else if(eventType=="ROTATION_VECTOR"){
-            marginsOfError.put("moe_x", 0.85F);
-            marginsOfError.put("moe_y", 0.85F);
-            marginsOfError.put("moe_z", 0.85F);
+            marginsOfError.put("moe_x", 0.3F);
+            marginsOfError.put("moe_y", 0.3F);
+            marginsOfError.put("moe_z", 0.3F);
         }
         return marginsOfError;
     }

@@ -170,6 +170,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         // BEGIN JACK'S GYROSCOPE CODE
         sensorManagerGyro = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManagerRotation = (SensorManager) getSystemService(SENSOR_SERVICE);
+
         gyro = sensorManagerGyro.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         rotationVector = sensorManagerRotation.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
@@ -178,14 +179,19 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         if(gyro == null){
             Toast.makeText(this,"error in gyro", Toast.LENGTH_LONG).show();
             finish();
-        } else if(rotationVector == null){
+        } else{
+            sensorManagerRotation.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
+        }
+        if(rotationVector == null){
             Toast.makeText(this,"error in rotation sensor", Toast.LENGTH_LONG).show();
             finish();
+        } else{
+            sensorManagerRotation.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_GAME);
         }
 
         loadCalibrationHelper = new DatabaseHelper(getApplicationContext());
         current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
-        secondsToRun = 20;//current_exercise.getSecondsPerRep(); //TODO: we need to get this from the database, but the database messes it up atm
+        secondsToRun = 40;//current_exercise.getSecondsPerRep(); //TODO: we need to get this from the database, but the database messes it up atm
         //secondsToRun = current_exercise.getSecondsPerRep();
 
         mVisible = true;
@@ -452,15 +458,17 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     protected void onResume() {
         super.onResume();
         //sensorManager.registerListener(gyroListener, gyro, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManagerGyro.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManagerRotation.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManagerGyro.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
+        sensorManagerRotation.registerListener(this, rotationVector, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManagerGyro.unregisterListener(gyroListener);
-        sensorManagerRotation.unregisterListener(rotationListener);
+        //sensorManagerGyro.unregisterListener(gyroListener);
+        //sensorManagerRotation.unregisterListener(rotationListener);
+        sensorManagerRotation.unregisterListener(this);
+        sensorManagerRotation.unregisterListener(this);
     }
 
     @Override
@@ -562,8 +570,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
                     currentlyPlaying = UtilAudio.IN_POSITION;
                     previousWarning = Instant.now().getEpochSecond();
+                    inPosition = true;
                 }
-                inPosition = true;
             }
         }
     }
