@@ -1,36 +1,31 @@
 package edu.staybalanced.staybalanced;
 
-//TODO maybe show seconds
-
-import androidx.annotation.Nullable;
-
 public class ExerciseItem {
     // Do not delete current attributes
     String name;
     // image number refers to memory
     int image;
     int id;
-    int secondsToExcercise;
+    int secondsToExercise;
 
     public ExerciseItem(int idIn, String nameIn, int imageIn){
         this.id = idIn;
         this.name = nameIn;
         this.image = imageIn;
-        this.secondsToExcercise = 30;
+        this.secondsToExercise = 30;
     }
 
-    public ExerciseItem(int idIn, String nameIn, int imageIn, int secondsToExcerciseIn) {
+    public ExerciseItem(int idIn, String nameIn, int imageIn, int secondsToExerciseIn) {
         this.id = idIn;
         this.name = nameIn;
         this.image = imageIn;
-        if (secondsToExcerciseIn == 0) {
-            secondsToExcerciseIn = 30;
+        if (secondsToExerciseIn == 0) {
+            secondsToExerciseIn = 30;
         }
-        this.secondsToExcercise = secondsToExcerciseIn;
-
+        this.secondsToExercise = secondsToExerciseIn;
     }
 
-    // This is the id of the excercise
+    // This is the id of the exercise
     public int getId() {
         return id;
     }
@@ -44,5 +39,5 @@ public class ExerciseItem {
         return image;
     }
 
-    public int getSecondsToExcercise() {return secondsToExcercise;}
+    public int getSecondsToExercise() {return secondsToExercise;}
 }

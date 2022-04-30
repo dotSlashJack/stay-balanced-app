@@ -206,7 +206,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             toast.show();
                         }else if(didSave){
                             //String printVals = "finished calibration, rotation values are: x "+Float.toString(rotationVals.get("rotation_x"))+" y "+Float.toString(rotationVals.get("rotation_y")) + " z "+Float.toString(rotationVals.get("rotation_z")) +"\n" + " gyro vals are: x "+Float.toString(gyroVals.get("gyro_x"))+ " y "+Float.toString(gyroVals.get("gyro_y")) + " z " + Float.toString(gyroVals.get("gyro_z"));
-                            String printVals = "Calibration Complete, Press Excercise button to begin";
+                            String printVals = "Calibration Complete, Press Exercise button to begin";
                             binding.fullscreenContent.setText(printVals);
                            // Toast toast = Toast.makeText(getApplicationContext(), "Calibration successfully saved!.", Toast.LENGTH_LONG);
                             //toast.show();
@@ -238,7 +238,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
                 isExercising = !isExercising;
                 if (isExercising && current_exercise.getRotationX() == 0 && current_exercise.getRotationY() == 0 && current_exercise.getRotationZ() == 0) {
-                    Toast.makeText(getApplicationContext(), "Please Calibrate, before starting excercise", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please Calibrate, before starting exercise", Toast.LENGTH_LONG).show();
                     isExercising = false;
                     binding.dummyButton2.setEnabled(false);
                 }
@@ -252,12 +252,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 else if (isExercising == false) {
                     mediaPlayer.stop();
                     mediaPlayer.release();
-                    //TODO stop excercise early, stops audio
-                    // reset button to say start excercise
-                    // log seconds they did excercise
-                    // Display results excercise to screen
+                    //TODO stop exercise early, stops audio
+                    // reset button to say start exercise
+                    // log seconds they did exercise
+                    // Display results exercise to screen
                    /* DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                    ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), seconds_in_pos);
+                    ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), seconds_in_pos);
                     //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
                     exerciseSaver.addExerciseHistory(current_exercise_history);*/
 
@@ -274,8 +274,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 String s1 = "Welcome to the Activity Tutorial!\n In order to start, please get in to " +
                         "position and then tap calibrate!";
                 String s2 = "Once you are in position, tap calibrate again to complete calibration";
-                String s3 = "Calibration Completed!\n Tap the start excercise button to start timer " +
-                        "and begin the excercise!";
+                String s3 = "Calibration Completed!\n Tap the start exercise button to start timer " +
+                        "and begin the exercise!";
 
                 /* The code below runs the animation for the tutorial and manages what occurs
                 while the user progresses to the tutorial. The progression relies on the
@@ -337,7 +337,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                             public void onSequenceFinish() {
                                 // This will run at the end of the sequence
                                 // it resets the sequence counter
-                                // and begins the excercise
+                                // and begins the exercise
                                 ExerciseDo.seq_counter = 0;
                                 binding.dummyButton2.performClick();
                             }
@@ -448,7 +448,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 for (Boolean b : exerciseTrackingList) {
                     if (b) count++;
                 }
-                binding.fullscreenContent.setText("Excercise Complete");
+                binding.fullscreenContent.setText("Exercise Complete");
                 double count_dbl = (double) count;
                 double nEvents = (double) exerciseTrackingList.size();
                 binding.dummyButton1.setEnabled(true);
@@ -469,7 +469,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
                     try{
                         DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                        ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, Instant.now().getEpochSecond(), seconds_in_pos);
+                        ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), seconds_in_pos);
                         //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
                         exerciseSaver.addExerciseHistory(current_exercise_history);
 
@@ -560,7 +560,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                                 }
                                 else if (secondsToRun == seconds && isExercising == true) {
                                     mediaPlayer = UtilAudio.playLater(getApplicationContext(),mediaPlayer,UtilAudio.DONE);
-                                    binding.dummyButton2.setText("START EXCERCISE");
+                                    binding.dummyButton2.setText("START EXERCISE");
                                 }
                                 //binding.fullscreenContent.setText("Time in exercise:\n"+String.valueOf(seconds)+" seconds");
                             }

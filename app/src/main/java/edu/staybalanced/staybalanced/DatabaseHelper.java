@@ -162,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             updateAssetUnlocked(R.drawable.reward_curl);
         }
 
-        // if inserted correcty unlock corresponding assets
+        // if inserted correctly unlock corresponding assets
         if (insert_result == 1) {
             // unlocks asset related to squats -- unlocks after default history values input
             if (exercise_hist_id == 1 && !(getAssetUnlockedStatus(R.drawable.reward_legs))) {
@@ -443,9 +443,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public int getHistoryCount(){
-
-        ArrayList<ExerciseHistory> history_all_exercises = new ArrayList<>();
-
         String getAllExercisesHistoryQuery = "SELECT COUNT(*) FROM " + HISTORY_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(getAllExercisesHistoryQuery, null);

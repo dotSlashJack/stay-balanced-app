@@ -5,8 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,29 +27,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class History extends Fragment {
     RecyclerView recyclerView;
@@ -133,19 +119,18 @@ public class History extends Fragment {
         chart.setPinchZoom(true);
         chart.getDescription().setEnabled(false);
         XAxis xAxis = chart.getXAxis();
-        YAxis leftAxis = chart.getAxisLeft();
         XAxis.XAxisPosition position = XAxis.XAxisPosition.BOTTOM;
         xAxis.setPosition(position);
 
         chart.setVisibility(View.INVISIBLE);
 
         // Create a receiver for broadcast coming from exercise item click that draws the graph
-        LocalBroadcastManager.getInstance(this.getContext()).registerReceiver(receiver,
+        LocalBroadcastManager.getInstance(view.getContext()).registerReceiver(receiver,
                 new IntentFilter("clicked_exercise_id"));
 
         listener_graph_exercise_id = new MutableLiveData<>();
 
-        listener_graph_exercise_id.setValue(0); //Initilize with a value
+        listener_graph_exercise_id.setValue(0); // Initialize with a value
 
         listener_graph_exercise_id.observe(this.getViewLifecycleOwner(),new Observer<Integer>() {
             @Override
@@ -170,10 +155,11 @@ public class History extends Fragment {
                         ArrayList<ILineDataSet> dataSet = new ArrayList<>();
                         dataSet.add(timeInPositionDataSet);
                         timeInPositionDataSet.setColor(getResources().getColor(R.color.orange));
-                        // timeInPositionDataSet.setColors(ColorTemplate.createColors(new int[] {R.color.spearmint, R.color.brown, R.color.orange}));
                         timeInPositionDataSet.setLineWidth(4f);
                         timeInPositionDataSet.setValueTextSize(12f);
                         LineData chart_data = new LineData(dataSet);
+
+                        // put the data in the chart set it to visible and update it
                         chart.setVisibility(View.VISIBLE);
                         chart.setData(chart_data);
                         chart.invalidate();
@@ -233,8 +219,8 @@ public class History extends Fragment {
 
     public void fillHistory(DatabaseHelper databaseHelper, int exerciseId) {
         // generate random data from today, yesterday, and the day before all under 30 secs in position
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() - 2 * 24 * 60 * 59 * 1000, (int)(Math.random() * ((29 - 5) + 1)) + 5));
-        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000, (int)(Math.random() * ((29 - 5) + 1)) + 5));
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() - 24 * 60 * 60 * 1000 * 2, (int)(Math.random() * ((29 - 5) + 1)) + 5));
+        databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() - 24 * 60 * 60 * 1000, (int)(Math.random() * ((29 - 5) + 1)) + 5));
         databaseHelper.addExerciseHistory(new ExerciseHistory(-1, exerciseId, System.currentTimeMillis() , (int)(Math.random() * ((29 - 5) + 1)) + 5));
     }
 
