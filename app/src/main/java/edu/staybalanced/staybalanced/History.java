@@ -1,5 +1,7 @@
 package edu.staybalanced.staybalanced;
 
+import static java.util.Objects.isNull;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,6 +39,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class History extends Fragment {
@@ -52,6 +55,11 @@ public class History extends Fragment {
     View thisView;
     LineChart chart;
     DatabaseHelper databaseHelper;
+    LineDataSet timeInPositionDataSet;
+    ArrayList<Long> dates_selected_exercise;
+    LineDataSet lineData;
+    ArrayList<ILineDataSet> dataSet;
+    LineData chart_data;
 
     public History() {
         // Required empty public constructor
@@ -146,23 +154,25 @@ public class History extends Fragment {
 
                     } else {
                         // get filler data
-                        LineDataSet timeInPositionDataSet = new LineDataSet(yLabel, "Time in position");
-                        ArrayList<Long> dates_selected_exercise = databaseHelper.getHistoryDate(graph_exercise_id);
+                        timeInPositionDataSet = new LineDataSet(yLabel, "Time in position");
+                        dates_selected_exercise = databaseHelper.getHistoryDate(graph_exercise_id);
                         Exercises curr_exercise = databaseHelper.getExerciseInfo(graph_exercise_id);
 
-                        // set formatted X and Y values
                         xAxis.setValueFormatter(new DateAxisValueFormatter(dates_selected_exercise));
-                        ArrayList<ILineDataSet> dataSet = new ArrayList<>();
+                        dataSet = new ArrayList<>();
                         dataSet.add(timeInPositionDataSet);
+
                         timeInPositionDataSet.setColor(getResources().getColor(R.color.orange));
                         timeInPositionDataSet.setLineWidth(4f);
                         timeInPositionDataSet.setValueTextSize(12f);
-                        LineData chart_data = new LineData(dataSet);
+
+                        chart_data = new LineData(dataSet);
 
                         // put the data in the chart set it to visible and update it
                         chart.setVisibility(View.VISIBLE);
                         chart.setData(chart_data);
                         chart.invalidate();
+
                         txt_history.setText(curr_exercise.getName());
                         image_history.setVisibility(View.INVISIBLE);
                     }
@@ -179,11 +189,15 @@ public class History extends Fragment {
         }
         @Override
         public String getFormattedValue(float value) {
-            int current_index = (int) value;
-            long current_date = dates_in.get(current_index);
-            Date itemDate = new Date(current_date);
-            @SuppressLint("SimpleDateFormat") String itemDateStr = new SimpleDateFormat("MM/dd").format(itemDate);
-            return itemDateStr;
+            try {
+                int current_index = (int) value;
+                long current_date = dates_in.get(current_index);
+                Date itemDate = new Date(current_date);
+                @SuppressLint("SimpleDateFormat") String itemDateStr = new SimpleDateFormat("MM/dd").format(itemDate);
+                return itemDateStr;
+            } catch (Exception e) {
+                return "";
+            }
         }
     }
 
