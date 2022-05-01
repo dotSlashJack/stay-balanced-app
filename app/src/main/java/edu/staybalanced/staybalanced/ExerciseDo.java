@@ -157,6 +157,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         loadCalibrationHelper = new DatabaseHelper(getApplicationContext());
         current_exercise = loadCalibrationHelper.getExerciseInfo(exerciseId);
         secondsToRun = current_exercise.getSecondsPerRep();
+        Log.d("seconds to run", Integer.toString(secondsToRun));
 
         mVisible = true;
         unhiddenContent = binding.fullscreenContent;
@@ -234,8 +235,8 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         binding.dummyButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.fullscreenContent.setText("Dummy Button 2 Pressed");
-
+                //binding.fullscreenContent.setText("Dummy Button 2 Pressed");
+                binding.fullscreenContent.setText("Let's go");
                 isExercising = !isExercising;
                 if (isExercising && current_exercise.getRotationX() == 0 && current_exercise.getRotationY() == 0 && current_exercise.getRotationZ() == 0) {
                     Toast.makeText(getApplicationContext(), "Please Calibrate, before starting exercise", Toast.LENGTH_LONG).show();
@@ -250,17 +251,16 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     timer();
                 }
                 else if (isExercising == false) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    //TODO stop exercise early, stops audio
-                    // reset button to say start exercise
-                    // log seconds they did exercise
-                    // Display results exercise to screen
-                   /* DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                    ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), seconds_in_pos);
-                    //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
-                    exerciseSaver.addExerciseHistory(current_exercise_history);*/
-
+                    if(seconds >= 7){
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                    } else{
+                        currentlyPlaying = -1;
+                    }
+                    binding.fullscreenContent.setBackgroundColor(getResources().getColor(R.color.black));
+                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(secondsInPos())+ " seconds in good form");
+                    binding.dummyButton2.setText("Start exercise");
+                    binding.dummyButton1.setEnabled(true);
 
                 }
             }
@@ -444,32 +444,15 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         } else if(isExercising){
             if (seconds >= secondsToRun) {
                 isExercising = false;
-                int count = 0;
-                for (Boolean b : exerciseTrackingList) {
-                    if (b) count++;
-                }
-                binding.fullscreenContent.setText("Exercise Complete");
-                double count_dbl = (double) count;
-                double nEvents = (double) exerciseTrackingList.size();
+                //binding.fullscreenContent.setText("Exercise Complete");
                 binding.dummyButton1.setEnabled(true);
-                double seconds_dbl = (double) seconds;
-                int seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
-                binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
+                binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(secondsInPos())+ " seconds in good form");
 
                 if(exerciseTrackingList!=null && exerciseTrackingList.size() > 0){
-                    count = 0;
-                    for (Boolean b : exerciseTrackingList) {
-                        if (b) count++;
-                    }
-                    count_dbl = (double) count;
-                    nEvents = (double) exerciseTrackingList.size();
-
-                    seconds_dbl = (double) seconds;
-                    seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
-                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(seconds_in_pos)+ " seconds in good form");
+                    binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(secondsInPos())+ " seconds in good form");
                     try{
                         DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
-                        ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), seconds_in_pos);
+                        ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), secondsInPos());
                         //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
                         exerciseSaver.addExerciseHistory(current_exercise_history);
 
@@ -537,6 +520,20 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 //                }
 //            }
         }
+    }
+    private int secondsInPos(){
+        int count = 0;
+        for (Boolean b : exerciseTrackingList) {
+            if (b) count++;
+        }
+        Log.d("count", Integer.toString(count));
+        double count_dbl = (double) count;
+        double nEvents = (double) exerciseTrackingList.size();
+
+        double seconds_dbl = (double) seconds;
+        int seconds_in_pos = (int) (seconds_dbl * (count_dbl / nEvents));
+
+        return seconds_in_pos;
     }
 
     @Override

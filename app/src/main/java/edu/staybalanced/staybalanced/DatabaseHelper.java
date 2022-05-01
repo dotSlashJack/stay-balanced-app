@@ -42,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ASSET_UNLOCKED = "ASSET_UNLOCKED";
 
     public DatabaseHelper(@Nullable Context context) {
-        super(context, "stay_balanced.db", null, 2);
+        super(context, "stay_balanced.db", null, 3);
     }
 
     // When we first try to access the database create appropriate tables if they don't exist
