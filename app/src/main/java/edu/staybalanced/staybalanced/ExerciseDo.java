@@ -378,7 +378,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         /* Trigger the initial hide() shortly after the activity has been created to briefly hint to
          * the user that UI controls are available.
          */
-        delayedHide(1000);
+        delayedHide(4000);
     }
 
     // Schedules a call to hide() in delay milliseconds, canceling any previously scheduled calls.
