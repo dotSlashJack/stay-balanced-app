@@ -78,8 +78,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     boolean inPositionGyro = true;
     boolean inPositionRot= true;
 
-
-    //TODO: need to check the implementation of the unregister listeners and see if these are needed
     private SensorEventListener gyroListener;
     private SensorEventListener rotationListener;
 
@@ -144,13 +142,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         gyro = sensorManagerGyro.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         rotationVector = sensorManagerRotation.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
-        // Check if the device has a working gyroscope
-        // TODO: gracefully degrade functionality if no gyro
         if(gyro == null){
-            Toast.makeText(this,"error in gyro", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"error in gyroscope, please be sure you have a phone with that capability", Toast.LENGTH_LONG).show();
             finish();
         } else if(rotationVector == null){
-            Toast.makeText(this,"error in rotation sensor", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"error in rotation sensor, please make sure your phone has that capability", Toast.LENGTH_LONG).show();
             finish();
         }
 
@@ -596,7 +592,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                                     mediaPlayer = UtilAudio.playLater(getApplicationContext(),mediaPlayer,UtilAudio.DONE);
                                     binding.dummyButton2.setText("START EXERCISE");
                                 }
-                                //binding.fullscreenContent.setText("Time in exercise:\n"+String.valueOf(seconds)+" seconds");
                             }
                         });
                         Thread.sleep(1000);

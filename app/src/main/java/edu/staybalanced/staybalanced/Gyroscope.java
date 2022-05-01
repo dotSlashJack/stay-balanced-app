@@ -198,11 +198,9 @@ public class Gyroscope{
             y = returnRotationVals().get("rotation_y");
             z = returnRotationVals().get("rotation_z");
         } else{
-            return false; //TODO: may want better error catching here
+            return false;
         }
 
-        //TODO: it is probably worth testing and comparing to the 3d distance between points, at least for rotation
-        //TODO: probably worth implementing a speed check vs margin of error here (could compare to hard coded value or mean +/- from calibration
         if(eventType=="ROTATION_VECTOR"){
             if(x > calibrationRotationX + marginsOfErrorRotation.get("moe_x") ||
                     x < calibrationRotationX - marginsOfErrorRotation.get("moe_x") ||
