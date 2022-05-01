@@ -239,6 +239,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 isExercising = !isExercising;
                 if (isExercising && current_exercise.getRotationX() == 0 && current_exercise.getRotationY() == 0 && current_exercise.getRotationZ() == 0) {
                     Toast.makeText(getApplicationContext(), "Please Calibrate, before starting exercise", Toast.LENGTH_LONG).show();
+                    binding.fullscreenContent.setText("Please calibrate before exercising");
                     isExercising = false;
                     binding.dummyButton2.setEnabled(false);
                 }
@@ -489,9 +490,10 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             if (sensorEvent.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
                 exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
                 exerciseOnTrack = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
+                inPositionRot = exerciseOnTrack;
                 exerciseTrackingList.add(exerciseOnTrack);
                 if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
-                    inPositionRot = false;
+                    //inPositionRot = false;
                     binding.fullscreenContent.setText("Fix your form!");
                     if (currentlyPlaying != UtilAudio.OFF_POSITION) {
                         mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
@@ -500,42 +502,47 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     }
 
                 } else if(exerciseOnTrack == true && Instant.now().getEpochSecond() - previousWarning > 3) {
-                    inPositionRot = true;
-                    binding.fullscreenContent.setText("You're doing great!");
-                    if (currentlyPlaying != UtilAudio.IN_POSITION) {
-                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
-                        currentlyPlaying = UtilAudio.IN_POSITION;
-                        previousWarning = Instant.now().getEpochSecond();
+                    //inPositionRot = true;
+                    if(inPositionGyro){
+                        binding.fullscreenContent.setText("You're doing great!");
+                        if (currentlyPlaying != UtilAudio.IN_POSITION) {
+                            mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
+                            currentlyPlaying = UtilAudio.IN_POSITION;
+                            previousWarning = Instant.now().getEpochSecond();
+                        }
                     }
                 }
             }
 
-//            else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-//                exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
-//                exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
-//                exerciseTrackingList.add(exerciseOnTrack);
-//
-//                if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
-//                    inPositionGyro = true;
-//                    binding.fullscreenContent.setText("outside gyro range!");
-//                    if (currentlyPlaying != UtilAudio.OFF_POSITION) {
-//                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
-//                        currentlyPlaying = UtilAudio.OFF_POSITION;
-//                        previousWarning = Instant.now().getEpochSecond();
-//                    }
-//
-//                } else if(exerciseOnTrack == true && Instant.now().getEpochSecond() - previousWarning > 3){
-//                    inPositionGyro = true;
-//                    binding.fullscreenContent.setText("inside gyro range!");
-//                    if (currentlyPlaying != UtilAudio.IN_POSITION) {
-//                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
-//                        currentlyPlaying = UtilAudio.IN_POSITION;
-//                        previousWarning = Instant.now().getEpochSecond();
-//                    }
-//                    //inPosition = true;
-//                    // binding.fullscreenContent.setText("inside gyro range!");
-//                }
-//            }
+            else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+                exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
+                exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
+                inPositionGyro =  exerciseOnTrack;
+                exerciseTrackingList.add(exerciseOnTrack);
+
+                if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
+                    //inPositionGyro = true;
+                    binding.fullscreenContent.setText("outside gyro range!");
+                    if (currentlyPlaying != UtilAudio.OFF_POSITION) {
+                        mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.OFF_POSITION);
+                        currentlyPlaying = UtilAudio.OFF_POSITION;
+                        previousWarning = Instant.now().getEpochSecond();
+                    }
+
+                } else if(exerciseOnTrack == true && Instant.now().getEpochSecond() - previousWarning > 3){
+                    inPositionGyro = true;
+                    if(inPositionRot) {
+                        binding.fullscreenContent.setText("inside gyro range!");
+                        if (currentlyPlaying != UtilAudio.IN_POSITION) {
+                            mediaPlayer = UtilAudio.playNow(getApplicationContext(), mediaPlayer, UtilAudio.IN_POSITION);
+                            currentlyPlaying = UtilAudio.IN_POSITION;
+                            previousWarning = Instant.now().getEpochSecond();
+                        }
+                    }
+                    //inPosition = true;
+                    // binding.fullscreenContent.setText("inside gyro range!");
+                }
+            }
         }
     }
 
