@@ -140,8 +140,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         Intent intent = new Intent("clicked_exercise_id");
                         intent.putExtra("EXERCISE_ID", exerciseId);
                         LocalBroadcastManager.getInstance(view.getContext()).sendBroadcast(intent);
-
-                        // textViewHistory.setText(exerciseId);
                     }
                 });
             }
