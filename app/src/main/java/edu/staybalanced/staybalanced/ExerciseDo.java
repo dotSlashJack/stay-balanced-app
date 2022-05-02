@@ -218,8 +218,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
         binding.dummyButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //binding.fullscreenContent.setText("Dummy Button 2 Pressed");
-
                 isExercising = !isExercising;
                 if (isExercising && current_exercise.getRotationX() == 0 && current_exercise.getRotationY() == 0 && current_exercise.getRotationZ() == 0) {
                     Toast.makeText(getApplicationContext(), "Please calibrate before starting exercise", Toast.LENGTH_LONG).show();
@@ -304,20 +302,20 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                                         .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
                                         .targetRadius(60),
                         TapTarget.forView(binding.dummyButton2,"Tutorial Final Part",s3)
-                                .outerCircleColor(android.R.color.holo_orange_dark)      // Specify a color for the outer circle
-                                .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
-                                .targetCircleColor(R.color.white)   // Specify a color for the target circle
-                                .titleTextSize(28)                  // Specify the size (in sp) of the title text
-                                .titleTextColor(R.color.white)      // Specify the color of the title text
-                                .descriptionTextSize(24)            // Specify the size (in sp) of the description text
-                                .descriptionTextColor(R.color.orange)  // Specify the color of the description text
-                                .textColor(R.color.white)            // Specify a color for both the title and description text
-                                .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
-                                .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
-                                .drawShadow(true)                   // Whether to draw a drop shadow or not
-                                .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                                .tintTarget(true)                   // Whether to tint the target view's color
-                                .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
+                                .outerCircleColor(android.R.color.holo_orange_dark)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(28)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(24)
+                                .descriptionTextColor(R.color.orange)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
                                 .targetRadius(60))
                         .listener(new TapTargetSequence.Listener() {
                             @Override
@@ -423,7 +421,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        //TextView t = findViewById(R.id.fullscreen_content);
+
         // if the user is calibrations
         if (isCalibrating) {
             // get rotation vector and sensor
@@ -437,7 +435,6 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
                 gyroObject.updateEvent(sensorEvent, null);
                 gyroVals = gyroObject.returnGyroVals();
-                //gyroObject.saveCalibration(gyroVals.get("gyro_x"), gyroVals.get("gyro_y"),gyroVals.get("gyro_z"), "GYROSCOPE");
             }
         } else if(isExercising){
             if (seconds >= secondsToRun) {
@@ -451,14 +448,14 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
 
 
                 if(exerciseTrackingList!=null && exerciseTrackingList.size() > 0){
-                    //binding.fullscreenContent.setText("Exercised for " + String.valueOf(seconds)+" seconds \n with a total of " + String.valueOf(secondsInPos())+ " seconds in good form");
+
                     try{
                         DatabaseHelper exerciseSaver =  new DatabaseHelper(getApplicationContext());
                         ExerciseHistory current_exercise_history = new ExerciseHistory(-1, exerciseId, System.currentTimeMillis(), secondsInPos());
-                        //public Exercises(int id, String name, String description, int sets, int reps, int secondsPerRep, double gyroX, double gyroY, double gyroZ, double rotationX, double rotationY, double rotationZ, int image)
+
                         exerciseSaver.addExerciseHistory(current_exercise_history);
                     } catch(Exception e){
-                        //binding.fullscreenContent.setText("Exercise complete");
+
                         Toast toast = Toast.makeText(getApplicationContext(), "Error saving your exercise, it may not show up in history.", Toast.LENGTH_LONG);
                         toast.show();
                     }
