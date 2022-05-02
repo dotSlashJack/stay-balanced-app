@@ -147,6 +147,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
             //Toast.makeText(this,"error in gyroscope, please be sure you have a phone with that capability", Toast.LENGTH_LONG).show();
             binding.fullscreenContent.setText("You are missing some of the recommended sensors, so exercises only track total time");
             hasSensors = false;
+            binding.dummyButton1.setEnabled(false);
             //finish();
         } else if(rotationVector == null){
             //Toast.makeText(this,"error in rotation sensor, please make sure your phone has that capability", Toast.LENGTH_LONG).show();
