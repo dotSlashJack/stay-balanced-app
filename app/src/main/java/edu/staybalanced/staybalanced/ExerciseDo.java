@@ -178,7 +178,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 toggle();
             }
         });
-
+//
         isCalibrating = false;
         boolean didSave = false;
         // Upon interacting with UI controls, delay any scheduled hide()
