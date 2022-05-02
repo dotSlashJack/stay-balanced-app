@@ -53,7 +53,7 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
     private SensorManager sensorManagerRotation;
     private Sensor gyro;
     private Sensor rotationVector;
-
+//
     boolean isCalibrating;
     boolean isExercising;
     int exerciseId;
