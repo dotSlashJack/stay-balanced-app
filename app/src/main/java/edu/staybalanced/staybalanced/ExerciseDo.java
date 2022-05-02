@@ -493,6 +493,11 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                     exerciseGyro.updateEvent(sensorEvent, "ROTATION_VECTOR");
                     exerciseOnTrack = exerciseGyro.exerciseTracker("ROTATION_VECTOR");
                     inPositionRot = exerciseOnTrack;
+                    if(exerciseOnTrack && inPositionGyro){
+                        exerciseTrackingList.add(exerciseOnTrack);
+                    } else{
+                        exerciseTrackingList.add(false);
+                    }
                     exerciseTrackingList.add(exerciseOnTrack);
                     if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
                         inPositionRot = false;
@@ -521,7 +526,12 @@ public class ExerciseDo extends AppCompatActivity implements SensorEventListener
                 else if (sensorEvent.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
                     exerciseGyro.updateEvent(sensorEvent, "GYROSCOPE");
                     exerciseOnTrack = exerciseGyro.exerciseTracker("GYROSCOPE");
-                    exerciseTrackingList.add(exerciseOnTrack);
+                    if(exerciseOnTrack && inPositionRot){
+                        exerciseTrackingList.add(exerciseOnTrack);
+                    } else{
+                        exerciseTrackingList.add(false);
+                    }
+
                     inPositionGyro = exerciseOnTrack;
 
                     if(exerciseOnTrack == false && Instant.now().getEpochSecond() - previousWarning > 3){
